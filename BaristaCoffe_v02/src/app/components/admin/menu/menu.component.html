@@ -1,0 +1,345 @@
+<div class="main">
+    <!-- <p-toast position="bottom-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" /> -->
+    <p-toast position="bottom-right" styleClass="my-toast"></p-toast>
+
+    <div class="backdrop" [class.active]="isBackdropActive" (click)="resetShow()"></div>
+
+    <div class="nav">
+
+        <div class="search">
+            <h2>Tìm kiếm</h2>
+            <p-floatlabel variant="on">
+                <input pInputText [(ngModel)]="keyword" type="text" pSize="large" placeholder="Nhập từ khoá"
+                    (ngModelChange)="search()" />
+            </p-floatlabel>
+        </div>
+
+        <div class="filter">
+            <h2>Danh mục</h2>
+            <div class="cate cursor-pointer" [class.bg-blue-500]="!selectedCategory"
+                [class.text-white]="!selectedCategory" (click)="filterByCategory(null)">Tất cả</div>
+            <div class="cate cursor-pointer" [class.bg-blue-500]="selectedCategory === item.menu_category_name"
+                [class.text-white]="selectedCategory === item.menu_category_name" *ngFor="let item of categories"
+                (click)="filterByCategory(item.menu_category_name)">
+                {{ item.menu_category_name }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <p-table #dt [value]="filteredMenus" stripedRows [paginator]="true" [rows]="5"
+            [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <!-- <span class="text-xl font-bold">Sản Phẩm</span> -->
+                    <span>Có <strong>{{ menus.length || 0 }}</strong> sản phẩm</span>
+
+                    <div class="btnAction flex gap-1">
+                        <div class="relative">
+                            <p-button icon="pi pi-plus" label="Thêm món" [size]="'small'"
+                                (onClick)="showCreateItemForm = true"></p-button>
+
+                            <!-- form tao mon -->
+                            <div class="create-item-container" [class.active]="showCreateItemForm">
+                                <h2>Tạo món mới</h2>
+                                <i class="pi pi-times" (click)="showCreateItemForm = false"></i>
+
+                                <form [formGroup]="createItemData" (ngSubmit)="submitCreateItem()" class="form-grid">
+                                    <div class="form-group">
+                                        <label for="menu_name">Tên món</label>
+                                        <input id="menu_name" type="text" formControlName="menu_name"
+                                            placeholder="Nhập tên món" />
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['menu_name'].invalid && createItemData.controls['menu_name'].touched">
+                                            Tên món không được để trống
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="import_price">Giá nhập</label>
+                                        <input id="import_price" type="number" formControlName="import_price"
+                                            placeholder="Nhập giá nhập" />
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['import_price'].invalid && createItemData.controls['import_price'].touched">
+                                            Giá nhập không được để trống
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="price">Giá bán</label>
+                                        <input id="price" type="number" formControlName="price"
+                                            placeholder="Nhập giá bán" />
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['price'].invalid && createItemData.controls['price'].touched">
+                                            Giá bán không được để trống
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="menu_category_id">Danh mục</label>
+                                        <select id="menu_category_id" formControlName="menu_category_id">
+                                            <option value="">-- Chọn danh mục --</option>
+                                            <option *ngFor="let cate of categories" [value]="cate.menu_category_id">
+                                                {{ cate.menu_category_name }}
+                                            </option>
+                                        </select>
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['menu_category_id'].invalid && createItemData.controls['menu_category_id'].touched">
+                                            Vui lòng chọn danh mục
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="sweetness_level">Độ ngọt</label>
+                                        <select id="sweetness_level" formControlName="sweetness_level">
+                                            <option value="">-- Chọn độ ngọt --</option>
+                                            <option *ngFor="let item of sweetness_level" [value]="item.value">{{
+                                                item.label }}</option>
+                                        </select>
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['sweetness_level'].invalid && createItemData.controls['sweetness_level'].touched">
+                                            Vui lòng chọn độ ngọt
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="temperature">Nhiệt độ</label>
+                                        <select id="temperature" formControlName="temperature">
+                                            <option value="">-- Chọn nhiệt độ --</option>
+                                            <option *ngFor="let item of temperature" [value]="item.value">{{ item.label
+                                                }}</option>
+                                        </select>
+                                        <div class="error"
+                                            *ngIf="createItemData.controls['temperature'].invalid && createItemData.controls['temperature'].touched">
+                                            Vui lòng chọn nhiệt độ
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="quantity">Số lượng</label>
+                                        <input id="quantity" type="number" formControlName="quantity" />
+                                    </div>
+
+                                    <div class="form-group col-span-3 ">
+                                        <label for="description">Mô tả</label>
+                                        <input id="description" type="text" formControlName="description"
+                                            placeholder="Nhập mô tả" />
+                                    </div>
+
+                                    <div class="form-group col-span-3 ">
+                                        <label for="image_url">Ảnh</label>
+                                        <p-fileUpload name="file" accept="image/*" [showUploadButton]="false"
+                                            [showCancelButton]="false" (onSelect)="onImageSelect($event)">
+                                        </p-fileUpload>
+                                    </div>
+
+                                    <div class="full-width">
+                                        <p-button icon="pi pi-plus" label="Tạo món" type="submit"
+                                            [size]="'small'"></p-button>
+                                    </div>
+                                </form>
+
+                                <div class="message" *ngIf="message">{{ message }}</div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <p-button icon="pi pi-bars" label="Tạo danh mục" [size]="'small'"
+                                (onClick)="showCreateCateForm = true"></p-button>
+
+                            <!-- form tao danh muc -->
+                            <div class="create-item-container" [class.active]="showCreateCateForm">
+                                <h2>Tạo danh mục</h2>
+                                <i class="pi pi-times" (click)="showCreateCateForm = false"></i>
+
+                                <div class="form-group">
+                                    <label for="menu_category_name">Tên danh mục</label>
+                                    <input id="menu_category_name" [(ngModel)]="menuCategoryName" type="text"
+                                        placeholder="Nhập tên danh mục" />
+                                </div>
+
+                                <div class="full-width">
+                                    <p-button icon="pi pi-plus" label="Tạo danh mục" [size]="'small'"
+                                        (onClick)="createCategory()"></p-button>
+                                </div>
+
+                                <div class="message" *ngIf="message">{{ message }}</div>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <p-button icon="pi pi-pencil" label="Sửa danh mục" [size]="'small'"
+                                (onClick)="showUpdateCateForm = true"></p-button>
+                            <!-- Form sửa cate -->
+                            <div class="update-cate-container create-item-container"
+                                [class.active]="showUpdateCateForm">
+                                <h2>Sửa danh mục</h2>
+                                <i class="pi pi-times" (click)="showUpdateCateForm = false"></i>
+
+                                <div>
+                                    <p-table [value]="categories" stripedRows>
+                                        <ng-template #header>
+                                            <tr>
+                                                <th [style.width.px]="300">Tên danh mục</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </ng-template>
+                                        <ng-template #body let-categories>
+                                            <tr>
+                                                <td>{{ categories.menu_category_name }}</td>
+                                                <td class="tdAction">
+                                                    <p-button icon="pi pi-pencil" label="Sửa" [size]="'small'"
+                                                        severity="warn"
+                                                        (onClick)="showUpdateCategory(categories)"></p-button>
+                                                    <p-button icon="pi pi-trash" label="Xoá" [size]="'small'"
+                                                        severity="danger"
+                                                        (onClick)="deleteCategory(categories.menu_category_id)"></p-button>
+                                                </td>
+                                            </tr>
+                                            @if(editingCate?.menu_category_id === categories.menu_category_id){
+                                            <tr>
+                                                <td>
+                                                    <input type="text" pInputText
+                                                        [(ngModel)]="editingCate.menu_category_name"
+                                                        placeholder="Nhập tên khu vực" [pSize]="'large'" />
+                                                </td>
+                                                <td>
+                                                    <div class="editingZoneBtn tdAction">
+                                                        <p-button label="Lưu" (onClick)="updateCategory()"
+                                                            [size]="'small'" [severity]="'success'"></p-button>
+                                                        <p-button label="Huỷ" (onClick)="editingCate = null"
+                                                            [size]="'small'" [severity]="'secondary'"></p-button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            }
+                                        </ng-template>
+                                    </p-table>
+                                </div>
+                            </div>
+                        </div>
+                        <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th class="w-[120px]" pSortableColumn="menu_name">Tên <p-sortIcon field="menu_name" /></th>
+                    <th>Ảnh</th>
+                    <th pSortableColumn="import_price">Giá nhập<p-sortIcon field="import_price" /></th>
+                    <th pSortableColumn="price">Giá bán<p-sortIcon field="price" /></th>
+                    <th class="w-[95px]" pSortableColumn="menu_category_name">Danh mục<p-sortIcon
+                            field="menu_category_name" /></th>
+                    <th>Độ ngọt</th>
+                    <th class="w-[70px]">Nhiệt độ</th>
+                    <th>Mô tả</th>
+                    <th class="w-[87px]" pSortableColumn="quantity">Số lượng<p-sortIcon field="quantity" /></th>
+                    <th>Hành động</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-product class="body">
+                <tr>
+                    <td>{{ product.menu_name }}</td>
+                    <td>
+                        <img [src]="backendURL + product.image_url" [alt]="product.menu_name"
+                            class="w-[70px] h-[70px] rounded object-cover" />
+                    </td>
+                    <td>{{product.import_price | currency: 'VND'}}</td>
+                    <td>{{ product.price | currency: 'VND' }}</td>
+                    <td>{{product.menu_category_name}}</td>
+                    <td>{{ product.sweetness_level }}</td>
+                    <td>{{ product.temperature }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>
+                        <p-badge [value]="product.quantity" [severity]="stockSeverity(product)" />
+                    </td>
+                    <!-- <td>{{product.quantity}}</td> -->
+                    <!-- <td>{{ product.is_active == 1 ? 'Còn' : 'Hết' }}</td> -->
+                    <td>
+                        <div class="btn">
+                            <p-button label="Sửa" icon="pi pi-pencil" [severity]="'warn'" [size]="'small'"
+                                (onClick)="editMenu(product)"></p-button>
+                            <p-button label="Xoá" icon="pi pi-trash" [severity]="'danger'" [size]="'small'"
+                                (onClick)="deleteMenu(product.menu_id)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Form sửa món -->
+        <div class="update-item-container create-item-container" [class.active]="showUpdateItemForm">
+            <h2>Sửa món</h2>
+            <i class="pi pi-times" (click)="showUpdateItemForm = false"></i>
+
+            <form [formGroup]="updateItemData" (ngSubmit)="submitUpdateItem()" class="form-grid">
+                <div class="form-group">
+                    <label for="menu_name">Tên món</label>
+                    <input id="menu_name" type="text" formControlName="menu_name" placeholder="Nhập tên món" />
+                </div>
+
+                <div class="form-group">
+                    <label for="import_price">Giá nhập</label>
+                    <input id="import_price" type="number" formControlName="import_price" />
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Giá bán</label>
+                    <input id="price" type="number" formControlName="price" />
+                </div>
+
+                <div class="form-group">
+                    <label for="menu_category_id">Danh mục</label>
+                    <select id="menu_category_id" formControlName="menu_category_id">
+                        <option *ngFor="let cate of categories" [value]="cate.menu_category_id">
+                            {{ cate.menu_category_name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sweetness_level">Độ ngọt</label>
+                    <select id="sweetness_level" formControlName="sweetness_level">
+                        <option *ngFor="let item of sweetness_level" [value]="item.value">{{ item.label }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="temperature">Nhiệt độ</label>
+                    <select id="temperature" formControlName="temperature">
+                        <option *ngFor="let item of temperature" [value]="item.value">{{ item.label }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="is_active">Trạng thái</label>
+                    <select id="is_active" formControlName="is_active">
+                        <option *ngFor="let item of is_active" [value]="item.value">{{ item.label }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Số lượng</label>
+                    <input id="quantity" type="number" formControlName="quantity" />
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="description">Mô tả</label>
+                    <input id="description" type="text" formControlName="description" />
+                </div>
+
+                <div class="form-group col-span-3">
+                    <label for="image_url">Ảnh</label>
+                    <p-fileUpload name="file" accept="image/*" [showUploadButton]="false" [showCancelButton]="false"
+                        (onSelect)="onUpdateImageSelect($event)">
+                    </p-fileUpload>
+                </div>
+
+                <div class="full-width">
+                    <p-button icon="pi pi-save" label="Cập nhật" type="submit" [size]="'small'"></p-button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>

@@ -1,0 +1,147 @@
+19.8
+tạo dự án mới: ng new <tên dự án>
+cài đặt ngPrime: npm install primeng @primeuix/themes
+    import providePrimeNG và provideAnimationsAsync vào app.config.ts
+    hướng dẫn: https://primeng.org/installation
+
+20.8
+khởi tạo backend Express + MySql
+    npm init -y
+    npm i express sequelize mysql2 dotenv cors morgan bcryptjs jsonwebtoken
+    npm i -D nodemon
+khởi tạo cấu trúc thư mục
+    backend/
+    │── index.js            (file chính)
+    │── db.js               (kết nối MySQL)
+    │── .env                (thông tin server MySQL)
+    │── routes/             (các route API)
+    │── controllers/        (xử lý logic)
+    │── middleWares/        (xác thực)
+
+21.8
+cấu hình .env, db.js và index.js để kết nối server MySQL và chạy server backend
+chạy server: node index.js hoặc npx nodemon index.js (tự restart server khi code có thay đổi)
+sơ đồ luồng xử lý API
+    Client -> HTTP Request -> Express Router (In Folder Router) -> Controller (In Folder Controler)-> Database Layer (db.js) -> MySQL Database -> Response JSON
+viết:
+    authMiddleware.js
+    userController.js
+    │── regiter
+    │── registerStaff
+    │── staff login
+    │── customer login
+    │── get all user
+    │── get user by id
+    │── getMe
+    │── update user
+    │── delete user
+    │── change password
+    │── change is_active
+
+22.8
+roleMiddleware.js - xác thực role người dùng, phân quyền sử dụng API
+
+26.8
+zoneControler.js
+    │──getAllZones
+    │──createZone
+    │──updateZone
+    │──deleteZone
+    
+tablesController.js
+    │── getAllTables
+    │── getAllTablesByStatus
+    │── getTablesById
+    │── getTablesByZone
+    │── createTable
+    │── updateTable
+    │── deleteTable
+
+menuCategoryController.js
+    │── getAllMenuCategory  (admin, staff)
+    │── createMenuCategory  (amdin)
+    │── updateMenuCategory  (amdin)
+    │── deleteMenuCategory  (amdin)
+
+menuController.js
+    │── getAllMenu      (admin, staff)
+    │── getMenuById     (admin, staff)
+    │── changeIsActive  (amdin)
+    │── createMenu      (amdin)
+    │── updateMenu      (amdin)
+    │── deleteMenu      (amdin)
+
+28.8
+front-end
+npm install chart.js
+npm install primeicons
+front-end admin navbar
+
+3.9
+npm install chart.js --save
+front-end admin dashboard
+
+4-5.9
+front-end admin bàn
+    - giao diện hiển thị bàn, khu vực
+    - form thêm bàn, form thêm khu vực
+Chức năng xoá khu vực
+
+6.9
+chức năng thêm sửa xoá bàn - khu vực
+front-end biểu đồ bàn được sử dụng nhiều
+
+9.9
+front-end admin menu
+
+11.9
+npm install tailwindcss @tailwindcss/vite
+npm install ngx-currency --save --force
+admin menu
+    - Lấy menu
+    - Tạo món
+    - Sửa món
+
+12-13.9
+admin category
+    - tạo danh mục
+    - sửa danh mục
+    - tìm kiếm
+    - lọc
+api order
+    - getAllOrder
+    - getOrdersByDate
+    - getOrdersByRange
+    - getOrdersByCustomerName
+Database
+    -trigger update total_price  cho bảng order khi thêm/sửa item_order
+
+14.9
+admin order
+    - hiển thị chi tiết order
+    - lọc theo thời gian
+    - tìm kiếm theo tên, sdt khách
+
+15.9
+backend user
+    - getStaffAcount
+    - getCustomerAcount
+16.9
+admin staff
+    - hiển thị danh sách
+    - CRUD acount nhân viên
+    - reset mật khẩu
+    - tìm kiếm
+
+17.9
+admin customer
+    - hiển thị danh sách
+    - view chi tiết
+    - CRUD
+    - goto order detail
+admin ingredients
+    - hiển thị danh sách
+    - CRUD
+    - tìm kiếm
+    - lọc sản phẩm sắp hết
+

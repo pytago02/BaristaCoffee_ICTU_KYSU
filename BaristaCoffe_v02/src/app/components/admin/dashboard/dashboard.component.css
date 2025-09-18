@@ -1,0 +1,172 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+p-chart {
+    min-height: 500px;
+}
+
+.main {
+    position: relative;
+}
+
+.overPlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5;
+}
+
+.formAddExpense {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    gap: 20px;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    background-color: #f8f9fa;
+    z-index: 10;
+    
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+
+    &.active {
+        max-width: 700px;
+        opacity: 1;
+        pointer-events: auto;
+        visibility: unset;
+    }
+}
+
+.btnCancel {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: red;
+}
+
+.inputInfor {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    justify-content: end;
+}
+
+.formAddExpense .form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.formAddExpense .form-group input {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.fillter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.fillter .filterTime {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+
+.fillter .filterTime .btnExpense {
+    position: relative;
+}
+
+.overView {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.overView .card {
+    flex: 1 0 250px;
+    height: 150px;
+    padding: 20px;
+    /* border-radius: 8px; */
+}
+
+.overView .card h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #5b6b79;
+}
+
+.overView .card .infor {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.overView .card .infor i {
+    font-size: 2.5rem;
+    color: #5b6b79;
+}
+
+.overView .card .infor p {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.overView .doanhThu{
+    background-color: #4cdb7c7c;
+}
+
+.overView .loiNhuan{
+    background-color: #def1ff;
+}
+
+.overView .tiLeLoiNhuan{
+    background-color: #fef7da;
+}
+
+.overView .soDonHang{
+    background-color:#f0dcff;
+}
+
+.chars {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.charRevenue {
+    flex: 2;
+    min-width: 300px;
+}
+
+
+.charPie {
+    flex: 1;
+    min-width: 300px;
+}
+
+.product {
+    margin-top: 50px;
+}
+
+.line {
+    height: 2px;
+    background-color: #eee;
+    margin: 20px 0;
+}

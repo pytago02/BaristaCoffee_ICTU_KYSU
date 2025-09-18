@@ -1,0 +1,114 @@
+<div class="main">
+
+    <div class="fillter">
+        <div class="filterTime">
+            <div class="card flex-column justify-center">
+                <h2>Tháng</h2>
+                <p-autocomplete [(ngModel)]="value" [dropdown]="true" [suggestions]="items"
+                    (completeMethod)="search($event)" [size]="'small'" />
+            </div>
+            <div class="card flex-column justify-center">
+                <h2>Năm</h2>
+                <p-autocomplete [(ngModel)]="value" [dropdown]="true" [suggestions]="items"
+                    (completeMethod)="search($event)" [size]="'small'" />
+            </div>
+
+        </div>
+        <div class="btnExpense">
+            <p-button label="Thêm Chi Phí" icon="pi pi-plus" [size]="'small'"(click)="viewAddExpense = !viewAddExpense"></p-button>
+
+            <div class="formAddExpense" [class.active]="viewAddExpense">
+                <h1>Thêm Chi Phí</h1>
+                <i class="pi pi-times btnCancel" (click)="viewAddExpense = false"></i>
+                <div class="inputInfor">
+                    <div class="form-group">
+                        <label for="staff_salary">Lương nhân viên:</label>
+                        <input type="text" id="staff_salary" [(ngModel)]="expenseData.staff_salary" name="staff_salary"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="eletricity_bill">Tiền điện:</label>
+                        <input type="text" id="eletricity_bill" [(ngModel)]="expenseData.eletricity_bill"
+                            name="eletricity_bill" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="water_bill">Tiền nước:</label>
+                        <input type="text" id="water_bill" [(ngModel)]="expenseData.water_bill" name="water_bill"
+                            required />
+                    </div>
+                    <div class="form-group">
+                        <label for="rent">Tiền thuê:</label>
+                        <input type="text" id="rent" [(ngModel)]="expenseData.rent" name="rent" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="other">Chi phí khác:</label>
+                        <input type="text" id="other" [(ngModel)]="expenseData.other" name="other" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="overView">
+        <div class="card doanhThu">
+            <h1>Doanh Thu</h1>
+
+            <div class="infor">
+                <i class="pi pi-dollar"></i>
+                <p>{{ 10000000 | number:'1.0-0'}}₫</p>
+            </div>
+        </div>
+
+        <div class="card loiNhuan">
+            <h1>Lợi Nhuận</h1>
+            <div class="infor">
+                <i class="pi pi-wallet"></i>
+                <p>{{ 10000000 | number:'1.0-0'}}₫</p>
+            </div>
+        </div>
+
+        <div class="card tiLeLoiNhuan">
+            <h1>Tỉ lệ Lợi Nhuận</h1>
+            <div class="infor">
+                <i class="pi pi-percentage"></i>
+                <p>{{ 23.5 | number:'1.0-1'}}%</p>
+            </div>
+        </div>
+
+        <div class="card soDonHang">
+            <h1>Số Đơn Hàng</h1>
+            <div class="infor">
+                <i class="pi pi-shopping-cart"></i>
+                <p>{{ 1000 | number:'1.0-0'}}</p>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="chars">
+        <div class="chart charRevenue">
+            <p>Doanh thu - Lợi nhuận từng tháng</p>
+            <div class="card">
+                <p-chart type="line" [data]="data" [options]="options" class="h-[30rem]" />
+            </div>
+        </div>
+
+        <div class="chart charPie">
+            <p>Doanh thu theo danh mục sản phẩm</p>
+            <div class="card flex justify-center">
+                <p-chart type="pie" [data]="dataPie" [options]="optionsPie" class="w-full md:w-[30rem]" />
+            </div>
+        </div>
+    </div>
+
+    <div class="product">
+        <div class="line"></div>
+        <h1>Sản phẩm</h1>
+
+        <div class="card">
+            <p-chart type="bar" [data]="dataProduct" [options]="optionsProduct" class="h-[30rem]" />
+        </div>
+    </div>
+
+
+</div>

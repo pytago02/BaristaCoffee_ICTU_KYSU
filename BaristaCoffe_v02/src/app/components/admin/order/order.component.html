@@ -1,0 +1,157 @@
+<div class="main">
+    <!-- <p-toast position="bottom-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" /> -->
+    <p-toast position="bottom-right" styleClass="my-toast"></p-toast>
+
+    <div class="backdrop" [class.active]="isBackdropActive" (click)="resetShow()"></div>
+
+    <div class="navbar">
+        <div class="flex-column">
+            <label for="icondisplay" class="font-bold block mb-2"> Chọn thời gian </label>
+            <p-datepicker [(ngModel)]="rangeDates" selectionMode="range" [iconDisplay]="'input'" [showIcon]="true"
+                inputId="icondisplay" (onSelect)="filterByRange()" />
+        </div>
+
+        <div class="flex-column">
+            <label for="search" class="font-bold block mb-2"> Tìm kiếm </label>
+            <p-iconfield>
+                <input type="text" pInputText placeholder="Tên khách hàng" [(ngModel)]="keyword"
+                    (ngModelChange)="search()" />
+                <p-inputicon class="pi pi-search" />
+            </p-iconfield>
+        </div>
+
+        <div class="flex-column">
+            <p-iconfield>
+                <input type="text" pInputText placeholder="Order Id" [(ngModel)]="keywordId"
+                    (ngModelChange)="searchById()" />
+                <p-inputicon class="pi pi-search" />
+            </p-iconfield>
+        </div>
+
+        <div class="flex-column">
+            <p-button label="Clear" severity="secondary" (onClick)="clearFilter()"></p-button>
+        </div>
+    </div>
+
+    <div class="card">
+        <p-table #dt [value]="filterOrderData" stripedRows [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20, 50]" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <!-- <span class="text-xl font-bold">Sản Phẩm</span> -->
+                    <span>Có <strong>{{ filterOrderData.length || 0 }}</strong> Order</span>
+
+                    <div class="btnAction flex gap-1">
+                        <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th>Id</th>
+                    <th pSortableColumn="customer_name">Khách hàng<p-sortIcon field="customer_name" /></th>
+                    <th>Số điện thoại</th>
+                    <th>Bàn</th>
+                    <th>Tổng hoá đơn</th>
+                    <th>Trạng thái</th>
+                    <th>Nhân viên</th>
+                    <th pSortableColumn="order_date">Thời gian order<p-sortIcon field="order_date" /></th>
+
+                </tr>
+            </ng-template>
+            <ng-template #body let-product class="body">
+                <tr (click)="selectedOrder(product)">
+                    <td>{{product.order_id}}</td>
+                    <td>{{ product.customer_name }}</td>
+                    <td>{{product.customer_phone}}</td>
+                    <td>{{product.table_name}}</td>
+                    <td>{{ product.total_price | currency: 'VND' }}</td>
+                    <!-- <td>{{product.status}}</td> -->
+                    <td>
+                        <p-badge [value]="getStatusLabel(product.status)" [severity]="stockSeverity(product)" />
+                    </td>
+                    <td>{{ product.staff_name }}</td>
+                    <td>{{ product.order_date | date:'dd/MM/yyyy HH:mm'}}</td>
+                </tr>
+                <tr *ngIf="selectedOrderData && product.order_id === selectedOrderData.order_id">
+                    <td colspan="8">
+                        <div class="orderDetail">
+                            <div class="orderInfor">
+                                <h2><b>Thông tin Order/ Hoá đơn</b></h2>
+                                <div class="field">
+                                    <label><b>Khách hàng:</b></label>
+                                    <span>{{ selectedOrderData.customer_name }}</span>
+                                </div>
+                                <div class="field">
+                                    <label><b>Số điện thoại:</b></label>
+                                    <span>{{ selectedOrderData.customer_phone }}</span>
+                                </div>
+
+                                <div class="field">
+                                    <label><b>Bàn:</b></label>
+                                    <span>{{ selectedOrderData.table_name }}</span>
+                                </div>
+
+                                <div class="field">
+                                    <label><b>Nhân viên:</b></label>
+                                    <span>{{ selectedOrderData.staff_name }}</span>
+                                </div>
+
+                                <div class="field">
+                                    <label><b>Trạng thái:</b></label>
+                                    <!-- <span>{{ selectedOrderData.status }}</span> -->
+                                    <p-badge [value]="getStatusLabel(selectedOrderData.status)"
+                                        [severity]="stockSeverity(selectedOrderData)" />
+                                </div>
+
+                                <div class="field">
+                                    <label><b>Ngày đặt:</b></label>
+                                    <span>{{ selectedOrderData.order_date | date:'dd/MM/yyyy HH:mm' }}</span>
+                                </div>
+
+                                <div class="field">
+                                    <label><b>Tổng tiền:</b></label>
+                                    <span>{{ selectedOrderData.total_price | currency:'VND' }}</span>
+                                </div>
+                            </div>
+                            <div class="report">
+                                <h2><b>Phản hồi</b></h2>
+                            </div>
+
+                            <div class="listItemOrder">
+                                <p-card styleClass="w-full">
+                                    <p-table [value]="selectedOrderData.items" responsiveLayout="scroll">
+                                        <ng-template pTemplate="header">
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Ghi chú</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr>
+                    <td>
+                        <img [src]="backendURL + item.image_url" [alt]="item.menu_item"
+                            class="w-4rem h-4rem border-round" />
+                    </td>
+                    <td>{{ item.menu_item }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{item.price | currency: 'VND'}}</td>
+                    <td>{{ item.note }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </p-card>
+    </div>
+
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>
+
+</div>
+
+</div>

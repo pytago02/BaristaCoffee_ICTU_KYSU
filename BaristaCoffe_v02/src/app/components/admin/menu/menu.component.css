@@ -1,0 +1,213 @@
+/* ========== Reset & Global ========== */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+}
+
+button {
+  padding: 10px 20px;
+  background: #1976d2;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #115293;
+}
+button:disabled {
+  background: #999;
+}
+
+/* ========== Layout chính ========== */
+.main {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+
+/* backdrop khi bật form */
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 9;
+  display: none;
+}
+.backdrop.active {
+  display: block;
+}
+
+/* ========== Nav (sidebar) ========== */
+.nav {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 300px;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  /* border-right: 1px dashed #ccc; */
+}
+
+/* search */
+.search {
+  margin-top: 20px;
+}
+.search input {
+  padding: 4px 8px;
+}
+.search p-floatlabel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.search i:hover {
+  color: red;
+}
+
+/* filter */
+.filter {
+  margin-top: 20px;
+  gap: 5px;
+  overflow-y: auto;
+}
+.nav .filter .cate {
+  padding: 8px 16px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.nav .filter .cate:hover {
+  color: blue;
+  background-color: #e8eaec;
+}
+
+/* ========== Card (bảng + nội dung chính) ========== */
+.card {
+  position: relative;
+  flex: 1;
+  padding: 10px;
+  overflow-x: auto;
+  height: 800px;
+}
+
+.card .btn {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.card tr th {
+  font-size: 0.8rem;
+  padding: 12px 8px;
+}
+
+.tdAction {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+/* ========== Form chung ========== */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.full-width {
+  grid-column: span 3;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+.message {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* ========== Modal tạo item/cate ========== */
+.create-item-container {
+  width: 600px;
+  margin: 20px auto;
+  padding: 16px;
+  border: 1px dashed #ccc;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  visibility: hidden;
+}
+.create-item-container.active {
+  visibility: visible;
+}
+
+.create-item-container h2 {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.create-item-container .pi-times {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: red;
+  cursor: pointer;
+}
+
+/* ========== Modal sửa item ========== */
+.update-item-container {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+.update-item-container.active {
+  display: block;
+}
+
+/* ========== Modal sửa cate ========== */
+.update-cate-container {
+  max-height: 600px;
+  width: 500px;
+  overflow-y: auto;
+}
+.update-cate-container .pi-times {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: red;
+  cursor: pointer;
+}
+.update-cate-container .tdAction i {
+  cursor: pointer;
+}
