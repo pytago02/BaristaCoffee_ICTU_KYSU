@@ -4,7 +4,7 @@ import { ImportModule } from '../../../modules/import/import.module';
 import { UrlbackendService } from '../../../services/urlbackend.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-import { IngredientsService } from '../../../services/ingrendient.service';
+import { IngredientsService } from '../../../services/ingredient.service';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({

@@ -43,7 +43,7 @@ exports.createMenu = (req, res) => {
     price,
     sweetness_level,
     temperature,
-    quantity
+    quantity,
   } = req.body;
   const image_url = req.file ? `/assets/menu/${req.file.filename}` : null;
   db.query(
@@ -84,18 +84,42 @@ exports.createMenu = (req, res) => {
 //     });
 // };
 exports.updateMenu = (req, res) => {
-  const {menu_name, menu_category_id, description, import_price, price, sweetness_level, temperature, is_active, quantity} = req.body;
+  const {
+    menu_name,
+    menu_category_id,
+    description,
+    import_price,
+    price,
+    sweetness_level,
+    temperature,
+    is_active,
+    quantity,
+  } = req.body;
 
   const id = req.params.id;
 
   // Nếu có upload ảnh mới thì dùng ảnh mới, nếu không thì giữ ảnh cũ (truyền từ body lên)
-  const image_url = req.file? `/assets/menu/${req.file.filename}`: req.body.image_url || null;
+  const image_url = req.file
+    ? `/assets/menu/${req.file.filename}`
+    : req.body.image_url || null;
 
   db.query(
     `UPDATE menu 
      SET menu_name = ?, menu_category_id = ?, description = ?, import_price = ?, price = ?, sweetness_level = ?, temperature = ?, image_url = ?, is_active = ?, quantity = ?
      WHERE menu_id = ?`,
-    [menu_name,menu_category_id,description,import_price,price,sweetness_level,temperature,image_url,is_active,quantity,id,],
+    [
+      menu_name,
+      menu_category_id,
+      description,
+      import_price,
+      price,
+      sweetness_level,
+      temperature,
+      image_url,
+      is_active,
+      quantity,
+      id,
+    ],
     (err, results) => {
       if (err) {
         return res
@@ -133,6 +157,26 @@ exports.deleteMenu = (req, res) => {
         return res.status(500).json({ error: "Lỗi khi xóa thực đơn", err });
       }
       res.json({ message: "Xóa thực đơn thành công" });
+    }
+  );
+};
+
+exports.updateMenuTutorial = (req, res) => {
+  const { menu_id, tutorial } = req.body;
+  db.query(
+    `
+      UPDATE menu
+      SET tutorial = ?
+      WHERE menu_id = ?
+      `,
+    [tutorial, menu_id],
+    (err, results) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Lỗi khi cập nhật tutorial", err });
+      }
+      res.json({ message: "Cập nhật tutorial thành công" });
     }
   );
 };

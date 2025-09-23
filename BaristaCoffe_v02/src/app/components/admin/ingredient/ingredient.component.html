@@ -21,7 +21,7 @@
             </div>
 
             <div class="flex-column">
-                <p-button label="Sắp hết" severity="danger"  (onClick)="filterLowStock()" ></p-button>
+                <p-button label="Sắp hết" severity="danger" (onClick)="filterLowStock()"></p-button>
             </div>
         </div>
 
@@ -42,13 +42,12 @@
 
                 <div class="form-group">
                     <label for="unit">Đơn vị</label>
-                    <input pInputText id="unit" [(ngModel)]="addItemData.unit" type="text"
-                        placeholder="Nhập đơn vị" />
+                    <input pInputText id="unit" [(ngModel)]="addItemData.unit" type="text" placeholder="Nhập đơn vị" />
                 </div>
 
                 <div class="form-group">
                     <label for="stock_quantity">Số lượng</label>
-                    <input pInputText id="stock_quantity" [(ngModel)]="addItemData.stock_quantity" type="number"/>
+                    <input pInputText id="stock_quantity" [(ngModel)]="addItemData.stock_quantity" type="number" />
                 </div>
 
                 <div class="form-group">
@@ -103,9 +102,10 @@
                     <td>{{product.unit}}</td>
                     <!-- <td>{{product.stock_quantity}}</td> -->
                     <td>
-                        <p-badge [value]="product.stock_quantity" [severity]="stockSeverity(product)" />
+                        <p-badge [value]="(product.stock_quantity | number:'1.0-2') || ''"
+                            [severity]="stockSeverity(product)" />
                     </td>
-                    <td>{{product.min_stock}}</td>
+                    <td>{{product.min_stock | number:'1.0-2'}}</td>
                 </tr>
                 <tr *ngIf="seletedItem && product.ingredient_id === seletedItem.ingredient_id">
                     <td colspan="6">

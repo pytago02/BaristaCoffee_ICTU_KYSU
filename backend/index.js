@@ -14,6 +14,8 @@ const menuRouter = require("./routers/menuRouter");
 const menuCategoryRouter = require("./routers/menuCategoryRouter");
 const orderRouter = require("./routers/orderRouter")
 const ingredientsRouter = require("./routers/ingredientsRoutes");
+const recipesRouter = require("./routers/recipesRouter");
+
 
 const app = express(); // Tạo một ứng dụng Express mới.
 app.use(cors());
@@ -28,6 +30,7 @@ app.use("/menu", menuRouter);
 app.use("/menuCategory", menuCategoryRouter);
 app.use("/order", orderRouter);
 app.use("/ingredients", ingredientsRouter);
+app.use("/recipes", recipesRouter);
 
 // test API
 app.get("/", (req, res) => {

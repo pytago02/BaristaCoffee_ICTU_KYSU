@@ -10,6 +10,7 @@ router.get("/getMenuById/:id", auth, authRole(["admin", "staff"]), menuControlle
 router.post("/createMenu", auth, authRole("admin"), upload.single("image"), menuController.createMenu);
 router.put("/updateMenu/:id", auth, authRole("admin"), upload.single("image"), menuController.updateMenu);
 router.put("/deleteMenu/:id", auth, authRole("admin"), menuController.deleteMenu);
-router.put("/changeIsActive/:id", auth, authRole("admin"), menuController.changeIsActive);  
+router.put("/changeIsActive/:id", auth, authRole("admin"), menuController.changeIsActive);
+router.put("/updateMenuTutorial", auth, authRole("admin"), menuController.updateMenuTutorial);
 
 module.exports = router;

@@ -65,4 +65,14 @@ export class MenuService {
       }
     );
   }
+
+  updateMenuTutorial(menu_id: number, tutorial: string): Observable<any> {
+    return this.http.put(
+      `${this.apiUrl}/updateMenuTutorial`,
+      { menu_id, tutorial },
+      {
+        headers: this.auth.getAuthHeaders(),
+      }
+    );
+  }
 }

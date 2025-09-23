@@ -9,6 +9,7 @@ import { OrderComponent } from './components/admin/order/order.component';
 import { StaffComponent } from './components/admin/staff/staff.component';
 import { CustomerComponent } from './components/admin/customer/customer.component';
 import { IngredientComponent } from './components/admin/ingredient/ingredient.component';
+import { RecipesComponent } from './components/admin/recipes/recipes.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -26,6 +27,7 @@ export const routes: Routes = [
       {path: 'staff', component: StaffComponent},
       {path: 'customers', component: CustomerComponent},
       {path: 'ingredients', component: IngredientComponent},
+      {path: 'recipes', component: RecipesComponent},
 
     ],
   },
