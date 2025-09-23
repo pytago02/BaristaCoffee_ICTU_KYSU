@@ -120,6 +120,11 @@ span {
 .infor .inforDetail {
     display: flex;
     flex-direction: column;
+    
+}
+
+.infor .inforDetail p{
+    font-size: 14px;
 }
 
 .infor i {

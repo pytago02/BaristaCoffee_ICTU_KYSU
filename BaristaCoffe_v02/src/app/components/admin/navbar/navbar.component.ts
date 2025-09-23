@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { ImportModule } from '../../../modules/import/import.module';
 import { RouterLink } from '@angular/router';
 import { RouterOutlet, RouterModule } from '@angular/router';
+import { UrlbackendService } from '../../../services/urlbackend.service';
+import { ppid } from 'process';
 
 @Component({
   selector: 'app-navbar',
@@ -23,8 +25,25 @@ export class NavbarComponent {
   viewOption: boolean = false;
   viewNavbar: boolean = true;
   titleHeader: string = 'DashBoard';
+  backendURL: any;
+  userData: any = {
+    avatar: '',
+    full_name: '',
+    email: '',
+    phone: '',
+  }
 
   @Output() viewNavbarChange = new EventEmitter<boolean>();
+
+  constructor(private urlBackendService: UrlbackendService) {
+    this.backendURL = this.urlBackendService.urlBackend;
+    const userString = localStorage.getItem('user');
+    if(userString){
+      this.userData = JSON.parse(userString);
+    }
+    console.log(this.userData);
+    
+  }
 
   toggleViewNavbar() {
     this.viewNavbar = !this.viewNavbar;

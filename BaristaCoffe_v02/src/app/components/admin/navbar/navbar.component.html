@@ -16,12 +16,12 @@
             <div class="view">
                 <div class="avatar">
                     <p-avatar class="p-overlay-badge"
-                        image="https://primefaces.org/cdn/primeng/images/demo/avatar/walter.jpg" size="xlarge"
+                        image="{{backendURL + userData.avatar}}" size="xlarge"
                         shape="circle" />
                 </div>
                 <div class="inforDetail">
-                    <p class="name">Tên người dùng</p>
-                    <p class="email">Email người dùng</p>
+                    <p class="name">{{userData.full_name}}</p>
+                    <p class="email">{{userData.email}}</p>
                 </div>
                 <i class="pi pi-caret-down caret" [class.active]="viewOption" (click)="viewOption = !viewOption">
                 </i>
