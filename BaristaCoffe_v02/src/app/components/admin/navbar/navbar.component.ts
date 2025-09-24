@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ImportModule } from '../../../modules/import/import.module';
 import { RouterLink } from '@angular/router';
 import { RouterOutlet, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { UrlbackendService } from '../../../services/urlbackend.service';
 import { ppid } from 'process';
 
@@ -35,7 +36,7 @@ export class NavbarComponent {
 
   @Output() viewNavbarChange = new EventEmitter<boolean>();
 
-  constructor(private urlBackendService: UrlbackendService) {
+  constructor(private urlBackendService: UrlbackendService, private router: Router) {
     this.backendURL = this.urlBackendService.urlBackend;
     const userString = localStorage.getItem('user');
     if(userString){
@@ -48,5 +49,11 @@ export class NavbarComponent {
   toggleViewNavbar() {
     this.viewNavbar = !this.viewNavbar;
     this.viewNavbarChange.emit(this.viewNavbar);
+  }
+
+  logOut(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 }

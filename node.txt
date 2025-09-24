@@ -156,4 +156,5 @@ front end recipes
     - xem chi tiết
     - CRUD nguyên liệu trong món
     - update cách làm
+Chức năng logout
 
