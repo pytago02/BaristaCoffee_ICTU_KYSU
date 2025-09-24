@@ -5,12 +5,12 @@
 
     <div class="nav">
 
-        <div class="search">
-            <h2>Tìm kiếm</h2>
-            <p-floatlabel variant="on">
-                <input pInputText [(ngModel)]="keyword" type="text" pSize="large" placeholder="Nhập từ khoá"
-                    (ngModelChange)="search()" />
-            </p-floatlabel>
+        <div class="flex-column">
+            <label for="search" class="font-bold block mb-2"> Tìm kiếm </label>
+            <p-iconfield>
+                <input type="text" pInputText placeholder="Tên món" [(ngModel)]="keyword" (ngModelChange)="search()" />
+                <!-- <p-inputicon class="pi pi-search" /> -->
+            </p-iconfield>
         </div>
 
         <div class="filter">
@@ -33,56 +33,87 @@
                 <h3>{{item.menu_name}}</h3>
             </div>
         </div>
-
-        <div class="detail" *ngIf="showUpdateItemForm">
-
-            <div class="ingredients">
-                <span class="text-xl font-bold">{{selectedItem?.menu_name}}</span>
-                <div class="card">
-                    <p-table [value]="ingredients" [tableStyle]="{ 'min-width': '30rem' }">
-                        <ng-template #caption>
-                            <div class="flex items-center justify-between">
-                                <span class="text-xl font-bold">Nguyên liệu</span>
-                                <p colspan="6">Có tất cả {{ ingredients ? ingredients.length : 0 }} nguyên liệu.</p>
-                                <i class="pi pi-plus"></i>
-                            </div>
-                        </ng-template>
-                        <ng-template #body let-product>
-                            <tr (click)="selectedIngredient(product)">
-                                <td>
-                                    <img [src]="backendURL + product.image" alt="">
-                                </td>
-                                <td>{{ product.name}}</td>
-                                <td>{{ product.quantity | number:'1.0-2' }} {{ product.unit }}</td>
-                            </tr>
-                            <tr *ngIf="product.ingredient_id === selectedIngredientData?.ingredient_id">
-                                <td colspan="3">
-                                    <div class="flex gap-2">
-                                        <h2>Số lượng: </h2>
-                                        <input type="number" pInputText [(ngModel)]="selectedIngredientData.quantity" />
-                                        <!-- <p-inputnumber inputId="integeronly" mode="decimal" [(ngModel)]="product.quantity" /> -->
-
-                                        <p-button icon="pi pi-check"></p-button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                </div>
-            </div>
-
-            <div class="tutorial">
-                <span class="text-xl font-bold">Cách làm</span>
-                <div class="card flex justify-center">
-                    <textarea rows="25" cols="60" pTextarea [(ngModel)]="selectedItem.tutorial"
-                        placeholder="Viết hướng dẫn ..."></textarea>
-                </div>
-                <p-button label="Lưu" icon="pi pi-check" (onClick)="updateTutorial()"></p-button>
-
-            </div>
-        </div>
     </div>
 
+    <div class="detail" *ngIf="showUpdateItemForm">
+
+        <div class="ingredients">
+            <span class="text-xl font-bold">{{selectedItem?.menu_name}}</span>
+            <div class="card">
+                <p-table [value]="ingredients" [tableStyle]="{ 'min-width': '30rem' }">
+                    <ng-template #caption>
+                        <div class="flex items-center justify-between relative">
+                            <span class="text-xl font-bold">Nguyên liệu</span>
+                            <p colspan="6">Có tất cả {{ ingredients ? ingredients.length : 0 }} nguyên liệu.</p>
+                            <i class="pi pi-plus" (click)="showAddIngredientForm = !showAddIngredientForm"></i>
+
+                            <div class="listIngredients" *ngIf="showAddIngredientForm">
+                                <p-floatlabel variant="on">
+                                    <input pInputText [(ngModel)]="keywordIngredient" type="text" pSize="large"
+                                        placeholder="Tìm nguyên liệu..." (ngModelChange)="filterIngredients()" />
+                                </p-floatlabel>
+
+                                <p-table [value]="filteredIngredients" [tableStyle]="{ 'min-width': '20rem' }">
+                                    <ng-template #body let-ingredient>
+                                        <tr>
+                                            <td>
+                                                <img [src]="backendURL + ingredient.image" alt="">
+                                            </td>
+                                            <td>{{ ingredient.name}}</td>
+                                            <td><input type="number" pInputText [(ngModel)]="ingredient.quantity"
+                                                    pSize="small" />
+                                            </td>
+                                            <td>{{ ingredient.unit }}</td>
+                                            <td><i class="pi pi-plus"
+                                                    (click)="addIngredientToMenu(selectedItem.menu_id, ingredient.ingredient_id, ingredient.quantity)"></i>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table>
+                            </div>
+
+                        </div>
+                    </ng-template>
+                    <ng-template #body let-product>
+                        <tr (click)="selectedIngredient(product)">
+                            <td>
+                                <img [src]="backendURL + product.image" alt="">
+                            </td>
+                            <td>{{ product.name}}</td>
+                            <td>{{ product.quantity | number:'1.0-2' }} {{ product.unit }}
+                            </td>
+                            <td><i class="pi pi-trash"
+                                    (click)="deleteIngredientFromMenu(selectedItem.menu_id, product.ingredient_id)"></i>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="product.ingredient_id === selectedIngredientData?.ingredient_id">
+                            <td>
+                                <span>Số lượng: </span>
+                            </td>
+                            <td colspan="2">
+                                <input type="number" pInputText [(ngModel)]="selectedIngredientData.quantity" />
+                            </td>
+                            <td>
+                                <p-button icon="pi pi-check"
+                                    (onClick)="updateIngredientInMenu(selectedItem.menu_id, selectedIngredientData.ingredient_id, selectedIngredientData.quantity)"></p-button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+        <div class="tutorial">
+            <span class="text-xl font-bold">Cách làm</span>
+            <div class="card flex justify-center">
+                <textarea rows="25" cols="60" pTextarea [(ngModel)]="selectedItem.tutorial"
+                    placeholder="Viết hướng dẫn ..."></textarea>
+            </div>
+            <p-button label="Lưu" icon="pi pi-check" (onClick)="updateTutorial()"></p-button>
+
+        </div>
+    </div>
 
 
 </div>

@@ -145,8 +145,15 @@ admin ingredients
     - tìm kiếm
     - lọc sản phẩm sắp hết
 
-23.9
+23-24.9
 backend recipes
     - API CRUD
 backend menu
     - API update colunm tutorial
+front end recipes
+    - hiển thị danh sách
+    - tìm/lọc
+    - xem chi tiết
+    - CRUD nguyên liệu trong món
+    - update cách làm
+

@@ -28,8 +28,8 @@
     </div>
 
     <div class="card">
-        <p-table #dt [value]="filteredMenus" stripedRows [paginator]="true" [rows]="5"
-            [rowsPerPageOptions]="[5, 10, 20]" [tableStyle]="{ 'min-width': '60rem' }">
+        <p-table #dt [value]="filteredMenus" stripedRows [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20, 50]" [tableStyle]="{ 'min-width': '60rem' }">
             <ng-template #caption>
                 <div class="flex items-center justify-between">
                     <!-- <span class="text-xl font-bold">Sản Phẩm</span> -->
@@ -139,8 +139,6 @@
                                             [size]="'small'"></p-button>
                                     </div>
                                 </form>
-
-                                <div class="message" *ngIf="message">{{ message }}</div>
                             </div>
                         </div>
                         <div class="relative">

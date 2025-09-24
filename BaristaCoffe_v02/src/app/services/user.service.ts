@@ -38,6 +38,10 @@ export class UsersService {
     return this.http.post(`${this.apiUrl}/customerLogin`, data);
   }
 
+  logOut(): void {
+    this.auth.clearToken();
+  }
+
   // ======= USER =======
   getAllUsers(): Observable<any> {
     return this.http.get(`${this.apiUrl}/getAllUser`, {
