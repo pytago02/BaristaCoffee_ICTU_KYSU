@@ -31,7 +31,7 @@
             <div class="option" [class.active]="viewOption">
                 <ul>
                     <li><i class="pi pi-user"></i> Thông tin cá nhân</li>
-                    <li><i class="pi pi-key"></i> Đổi mật khẩu</li>
+                    <li (click)="titleHeader = 'Đổi mật khẩu'" [routerLink]="['/admin/change-password']"><i class="pi pi-key"></i> Đổi mật khẩu</li>
                     <li><i class="pi pi-cog"></i> Cài đặt</li>
                     <li (click)="logOut()" class="logout"><span class="pi pi-power-off"></span> Đăng xuất</li>
                 </ul>

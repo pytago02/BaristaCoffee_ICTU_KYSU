@@ -73,11 +73,13 @@ export class UsersService {
     });
   }
 
-  changePassword(id: number, data: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/changePassword/${id}`, data, {
-      headers: this.auth.getAuthHeaders(),
-    });
-  }
+changePassword(id: number, data: { password: string; new_password: string }) {
+  return this.http.put<any>(
+    `${this.apiUrl}/changePassword/${id}`,
+    data,
+    { headers: this.auth.getAuthHeaders() }
+  );
+}
 
   changeIsActive(id: number, isActive: boolean): Observable<any> {
     return this.http.put(

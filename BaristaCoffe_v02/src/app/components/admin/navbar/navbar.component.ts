@@ -42,7 +42,7 @@ export class NavbarComponent {
     if(userString){
       this.userData = JSON.parse(userString);
     }
-    console.log(this.userData);
+    // console.log(this.userData);
     
   }
 
