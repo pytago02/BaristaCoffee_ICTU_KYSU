@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
 import { RouterOutlet, RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { UrlbackendService } from '../../../services/urlbackend.service';
-import { ppid } from 'process';
+import { UsersService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -32,18 +32,21 @@ export class NavbarComponent {
     full_name: '',
     email: '',
     phone: '',
-  }
+  };
 
   @Output() viewNavbarChange = new EventEmitter<boolean>();
 
-  constructor(private urlBackendService: UrlbackendService, private router: Router) {
+  constructor(
+    private urlBackendService: UrlbackendService,
+    private router: Router,
+    private usersService: UsersService
+  ) {
     this.backendURL = this.urlBackendService.urlBackend;
     const userString = localStorage.getItem('user');
-    if(userString){
+    if (userString) {
       this.userData = JSON.parse(userString);
     }
-    // console.log(this.userData);
-    
+    this.getMe();
   }
 
   toggleViewNavbar() {
@@ -51,9 +54,20 @@ export class NavbarComponent {
     this.viewNavbarChange.emit(this.viewNavbar);
   }
 
-  logOut(){
+  logOut() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
+  }
+
+  getMe() {
+    this.usersService.getMe().subscribe({
+      next: (res) => {
+        this.userData = res.data;
+      },
+      error: (err) => {
+        console.error('error getMe: ', err);
+      },
+    });
   }
 }

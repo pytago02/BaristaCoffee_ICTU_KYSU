@@ -10,7 +10,8 @@ import { StaffComponent } from './components/admin/staff/staff.component';
 import { CustomerComponent } from './components/admin/customer/customer.component';
 import { IngredientComponent } from './components/admin/ingredient/ingredient.component';
 import { RecipesComponent } from './components/admin/recipes/recipes.component';
-import { ChangepasswordComponent } from './components/admin/changepassword/changepassword.component';
+import { ChangepasswordComponent } from './components/changepassword/changepassword.component';
+import { PersonalInforComponent } from './components/personal-infor/personal-infor.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -24,13 +25,13 @@ export const routes: Routes = [
       { path: 'tables', component: TableComponent },
       { path: 'menus', component: MenuComponent },
       { path: 'categories', component: CategoryComponent },
-      {path: 'orders', component: OrderComponent},
-      {path: 'staff', component: StaffComponent},
-      {path: 'customers', component: CustomerComponent},
-      {path: 'ingredients', component: IngredientComponent},
-      {path: 'recipes', component: RecipesComponent},
-      {path: 'change-password', component: ChangepasswordComponent},
-
+      { path: 'orders', component: OrderComponent },
+      { path: 'staff', component: StaffComponent },
+      { path: 'customers', component: CustomerComponent },
+      { path: 'ingredients', component: IngredientComponent },
+      { path: 'recipes', component: RecipesComponent },
+      { path: 'change-password', component: ChangepasswordComponent },
+      { path: 'personal-info', component: PersonalInforComponent },
     ],
   },
 ];

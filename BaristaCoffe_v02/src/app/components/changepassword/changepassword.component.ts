@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { ImportModule } from '../../../modules/import/import.module';
+import { ImportModule } from '../../modules/import/import.module';
 import { MessageService } from 'primeng/api';
-import { UsersService } from '../../../services/user.service';
-import { AuthService } from '../../../services/auth.service';
+import { UsersService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-changepassword',

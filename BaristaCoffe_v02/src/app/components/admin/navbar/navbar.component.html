@@ -15,10 +15,9 @@
         <div class="infor">
             <div class="view">
                 <div class="avatar">
-                    <p-avatar class="p-overlay-badge"
-                        image="{{backendURL + userData.avatar}}" size="xlarge"
-                        shape="circle" />
+                    <p-avatar class="p-overlay-badge border-2" image="{{backendURL + userData.avatar}}" size="xlarge" />
                 </div>
+
                 <div class="inforDetail">
                     <p class="name">{{userData.full_name}}</p>
                     <p class="email">{{userData.email}}</p>
@@ -30,7 +29,7 @@
 
             <div class="option" [class.active]="viewOption">
                 <ul>
-                    <li><i class="pi pi-user"></i> Thông tin cá nhân</li>
+                    <li (click)="titleHeader = 'Thông tin cá nhân'" [routerLink]="['/admin/personal-info']"><i class="pi pi-user"></i> Thông tin cá nhân</li>
                     <li (click)="titleHeader = 'Đổi mật khẩu'" [routerLink]="['/admin/change-password']"><i class="pi pi-key"></i> Đổi mật khẩu</li>
                     <li><i class="pi pi-cog"></i> Cài đặt</li>
                     <li (click)="logOut()" class="logout"><span class="pi pi-power-off"></span> Đăng xuất</li>

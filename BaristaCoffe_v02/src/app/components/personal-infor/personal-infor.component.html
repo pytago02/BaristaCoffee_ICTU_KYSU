@@ -1,0 +1,43 @@
+<div class="main">
+    <p-toast position="bottom-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+
+    <div class="container">
+        <h1>Thông tin cá nhân</h1>
+
+        <div class="infor">
+            <div class="col avatar-col avatar-wrapper">
+                <img [src]="backendURL + user.avatar" alt="avatar" class="avatar" />
+                <i class="pi pi-pencil edit-avatar-btn" (click)="fileInput.click()"></i>
+                <input type="file" #fileInput accept="image/*" (change)="onAvatarChange($event, user.user_id)" hidden />
+            </div>
+
+            <div class="col">
+                <div class="field">
+                    <label for="full_name">Họ tên</label>
+                    <input pInputText id="full_name" [(ngModel)]="user.full_name" />
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <input pInputText id="email" [(ngModel)]="user.email" />
+                </div>
+
+                <div class="field">
+                    <label for="phone">Số điện thoại</label>
+                    <input pInputText id="phone" [(ngModel)]="user.phone" />
+                </div>
+
+                <div class="field">
+                    <label for="role">Vai trò</label>
+                    <input pInputText id="role" disabled="true" [(ngModel)]="user.role" />
+                </div>
+
+                <div class="actions field">
+                    <p-button label="Lưu thay đổi" icon="pi pi-check"></p-button>
+                    <p-button [routerLink]="['/admin/change-password']" label="Đổi mật khẩu"
+                        icon="pi pi-key"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
