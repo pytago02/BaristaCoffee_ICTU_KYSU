@@ -23,7 +23,7 @@ span {
 
 .header {
     flex: 1;
-    background-color: #f8f9fa;
+    background-color: var(--bg-main);
     height: 80px;
     display: flex;
     align-items: center;
@@ -41,8 +41,8 @@ span {
 .navbar {
     width: 280px;
     height: 100vh;
-    background-color: #f8f9fa;
-    border-right: 1px dashed #cccccc;
+    background-color: var(--bg-main);
+    border-right: 1px dashed var(--border-color);
     position: absolute;
     top: 0;
     left: 0;
@@ -64,7 +64,7 @@ span {
     padding: 15px;
     left: 280px;
     cursor: pointer;
-    background-color: #f8f9fa;
+    background-color: var(--bg-main);
     border-radius: 8px;
     transition: left 0.3s ease-in-out;
 
@@ -74,7 +74,7 @@ span {
 }
 
 .btnOnOff:hover {
-    background-color: #f3f5f7;
+    background-color: var(--bg-sub);
 }
 
 .logo {
@@ -91,9 +91,9 @@ span {
     align-items: center;
     padding: 20px;
     border-radius: 8px;
-    border: 1px solid #5b6b79;
+    border: 1px solid var(--text-main);
     margin: 0 5px;
-    background-color: #f3f5f7;
+    background-color: var(--bg-sub);
 }
 
 .infor .view {
@@ -154,11 +154,11 @@ span {
 
 .infor .option li:hover {
     transition: all 0.3s ease-in-out;
-    color: blue;
+    color: var(--text-hover);
 }
 
 .logout:hover {
-    color: red !important;
+    color: var(--text-danger) !important;
 }
 
 .infor .option span {
@@ -167,7 +167,7 @@ span {
 
 .navList {
     padding: 0 15px;
-    color: #5b6b79;
+    color: var(--text-main);
 }
 
 .navList .navListContent {
@@ -189,11 +189,11 @@ span {
 }
 
 .navList li:hover {
-    background-color: #e8eaec;
-    color: blue;
+    background-color: var(--bg-hover);
+    color: var(--text-hover);
 }
 
 .navList li.active {
-    background-color: #e8eaec;
-    color: blue;
+    background-color: var(--bg-hover);
+    color: var(--text-hover);
 }

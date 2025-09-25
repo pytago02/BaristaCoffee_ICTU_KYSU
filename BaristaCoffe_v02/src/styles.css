@@ -2,10 +2,79 @@
 @import "primeicons/primeicons.css";
 @import "tailwindcss";
 
-html, body {
+html,
+body {
   height: 100vh;
   margin: 0;
   overflow-x: hidden;
   /* font-size: 62.5%; */
   font-family: Roboto, sans-serif;
+}
+
+:root {
+  /* Light mode */
+  --bg-main: #f8f9fa;
+  --bg-sub: #f3f5f7;
+  --bg-hover: #e8eaec;
+
+  --text-main: #5b6b79;
+  --text-secondary: #000;
+  --text-hover: blue;
+  --text-danger: red;
+
+  --border-color: #ccc;
+
+  --card-bg-revenue: #4cdb7c7c;
+  --card-bg-profit: #def1ff;
+  --card-bg-profit-rate: #fef7da;
+  --card-bg-orders: #f0dcff;
+  --line-color: #eee;
+
+  --bg-card: #fff;
+  --bg-table: #0fb980;
+  --bg-table-hover: #049669;
+  --bg-overlay: #ffffffcc;
+
+  --bg-button-primary: #1976d2;
+  --bg-button-primary-hover: #115293;
+  --bg-button-disabled: #999;
+
+  --bg-button-success: #28a745;
+  --bg-button-danger: #dc3545;
+
+  --text-heading: #333;
+}
+
+html.my-app-dark {
+  /* Dark mode */
+  --bg-main: #1e1e2f;
+  --bg-sub: #2c2c3c;
+  --bg-hover: #3a3a4f;
+
+  --text-main: #e0e0e0;
+  --text-secondary: #fff;
+  --text-hover: #66b2ff;
+  --text-danger: #ff6666;
+
+  --border-color: #555;
+
+  --card-bg-revenue: #265d3c;
+  --card-bg-profit: #1a3a4d;
+  --card-bg-profit-rate: #4a4125;
+  --card-bg-orders: #402b52;
+  --line-color: #444;
+
+  --bg-card: #2c2c3c;
+  --bg-table: #007d55;
+  --bg-table-hover: #009966;
+  --bg-overlay: #1e1e2fcc;
+
+  --bg-button-primary: #1565c0;
+  --bg-button-primary-hover: #0d47a1;
+  --bg-button-disabled: #555;
+
+  --bg-button-success: #1e7e34;
+  --bg-button-danger: #a71d2a;
+
+  --text-heading: #e0e0e0;
 }

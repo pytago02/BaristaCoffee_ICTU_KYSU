@@ -33,6 +33,7 @@ export class NavbarComponent {
     email: '',
     phone: '',
   };
+  isDarkMode = false;
 
   @Output() viewNavbarChange = new EventEmitter<boolean>();
 
@@ -69,5 +70,13 @@ export class NavbarComponent {
         console.error('error getMe: ', err);
       },
     });
+  }
+
+  toggleDarkMode(){
+    this.isDarkMode = !this.isDarkMode;
+    const element = document.querySelector('html');
+    if(element != null){
+      element.classList.toggle('my-app-dark');
+    }
   }
 }

@@ -29,9 +29,14 @@
 
             <div class="option" [class.active]="viewOption">
                 <ul>
-                    <li (click)="titleHeader = 'Thông tin cá nhân'" [routerLink]="['/admin/personal-info']"><i class="pi pi-user"></i> Thông tin cá nhân</li>
-                    <li (click)="titleHeader = 'Đổi mật khẩu'" [routerLink]="['/admin/change-password']"><i class="pi pi-key"></i> Đổi mật khẩu</li>
-                    <li><i class="pi pi-cog"></i> Cài đặt</li>
+                    <li (click)="titleHeader = 'Thông tin cá nhân'" [routerLink]="['/admin/personal-info']"><i
+                            class="pi pi-user"></i> Thông tin cá nhân</li>
+                    <li (click)="titleHeader = 'Đổi mật khẩu'" [routerLink]="['/admin/change-password']"><i
+                            class="pi pi-key"></i> Đổi mật khẩu</li>
+                    <li (click)="toggleDarkMode()">
+                        <i class="{{ isDarkMode ? 'pi pi-sun' : 'pi pi-moon' }}"></i>
+                        {{ isDarkMode ? 'Chế độ sáng' : 'Chế độ tối' }}
+                    </li>
                     <li (click)="logOut()" class="logout"><span class="pi pi-power-off"></span> Đăng xuất</li>
                 </ul>
             </div>
@@ -41,29 +46,39 @@
             <div class="navListContent overView">
                 <span>Tổng Quan</span>
                 <ul>
-                    <li (click)="titleHeader = 'DashBoard'" routerLink="/admin/dashboard"  routerLinkActive="active"><i class="pi pi-chart-line"></i>DashBoard</li>
-                    <li (click)="titleHeader = 'Phân tích'" routerLink="/admin/analytics" routerLinkActive="active"><i class="pi pi-chart-bar"></i>Phân tích</li>
-                    <li (click)="titleHeader = 'Báo cáo'" routerLink="/admin/report" routerLinkActive="active"><i class="pi pi-star"></i>Báo cáo</li>
+                    <li (click)="titleHeader = 'DashBoard'" routerLink="/admin/dashboard" routerLinkActive="active"><i
+                            class="pi pi-chart-line"></i>DashBoard</li>
+                    <li (click)="titleHeader = 'Phân tích'" routerLink="/admin/analytics" routerLinkActive="active"><i
+                            class="pi pi-chart-bar"></i>Phân tích</li>
+                    <li (click)="titleHeader = 'Báo cáo'" routerLink="/admin/report" routerLinkActive="active"><i
+                            class="pi pi-star"></i>Báo cáo</li>
                 </ul>
             </div>
 
             <div class="navListContent shop">
                 <span>Cửa hàng</span>
                 <ul>
-                    <li (click)="titleHeader = 'Bàn'" routerLink="/admin/tables" routerLinkActive="active"><i class="pi pi-th-large"></i>Bàn</li>
-                    <li (click)="titleHeader = 'Thực đơn'" routerLink="/admin/menus" routerLinkActive="active"><i class="pi pi-book"></i>Thực đơn</li>
+                    <li (click)="titleHeader = 'Bàn'" routerLink="/admin/tables" routerLinkActive="active"><i
+                            class="pi pi-th-large"></i>Bàn</li>
+                    <li (click)="titleHeader = 'Thực đơn'" routerLink="/admin/menus" routerLinkActive="active"><i
+                            class="pi pi-book"></i>Thực đơn</li>
                     <!-- <li (click)="titleHeader = 'Danh mục'" routerLink="/admin/categories" routerLinkActive="active"><i class="pi pi-tags"></i>Danh mục</li> -->
-                    <li (click)="titleHeader = 'Hoá đơn'" routerLink="/admin/orders" routerLinkActive="active"><i class="pi pi-receipt"></i>Hoá đơn</li>
-                    <li (click)="titleHeader = 'Kho'" routerLink="/admin/ingredients" routerLinkActive="active"><i class="pi pi-box"></i>Kho</li>
-                    <li (click)="titleHeader = 'Công thức'" routerLink="/admin/recipes" routerLinkActive="active"><i class="pi pi-file"></i>Công thức</li>
+                    <li (click)="titleHeader = 'Hoá đơn'" routerLink="/admin/orders" routerLinkActive="active"><i
+                            class="pi pi-receipt"></i>Hoá đơn</li>
+                    <li (click)="titleHeader = 'Kho'" routerLink="/admin/ingredients" routerLinkActive="active"><i
+                            class="pi pi-box"></i>Kho</li>
+                    <li (click)="titleHeader = 'Công thức'" routerLink="/admin/recipes" routerLinkActive="active"><i
+                            class="pi pi-file"></i>Công thức</li>
                 </ul>
             </div>
 
             <div class="navListContent account">
                 <span>Tài khoản</span>
                 <ul>
-                    <li (click)="titleHeader = 'Nhân viên'" routerLink="/admin/staff"><i class="pi pi-user"></i>Nhân viên</li>
-                    <li (click)="titleHeader = 'Khách hàng'" routerLink="/admin/customers"><i class="pi pi-users"></i>Khách hàng</li>
+                    <li (click)="titleHeader = 'Nhân viên'" routerLink="/admin/staff"><i class="pi pi-user"></i>Nhân
+                        viên</li>
+                    <li (click)="titleHeader = 'Khách hàng'" routerLink="/admin/customers"><i
+                            class="pi pi-users"></i>Khách hàng</li>
                 </ul>
             </div>
 

@@ -22,17 +22,16 @@ select {
 
 button {
   padding: 10px 20px;
-  background: #1976d2;
+  background: var(--bg-button-primary);
   border: none;
-  color: white;
   border-radius: 6px;
   cursor: pointer;
 }
 button:hover {
-  background: #115293;
+  background: var(--bg-button-primary-hover);
 }
 button:disabled {
-  background: #999;
+  background: var(--bg-button-disabled);
 }
 
 /* ========== Layout chính ========== */
@@ -64,8 +63,8 @@ button:disabled {
   flex-wrap: wrap;
   width: 300px;
   padding: 10px 20px;
-  background-color: #f8f9fa;
-  /* border-right: 1px dashed #ccc; */
+  background-color: var(--bg-main);
+  /* border-right: 1px dashed var(--border-color); */
 }
 
 /* search */
@@ -81,7 +80,7 @@ button:disabled {
   align-items: center;
 }
 .search i:hover {
-  color: red;
+  color: var(--text-danger);
 }
 
 /* filter */
@@ -97,8 +96,8 @@ button:disabled {
   border-radius: 8px;
 }
 .nav .filter .cate:hover {
-  color: blue;
-  background-color: #e8eaec;
+  color: var(--text-hover);
+  background-color: var(--bg-hover);
 }
 
 /* ========== Card (bảng + nội dung chính) ========== */
@@ -145,7 +144,7 @@ button:disabled {
 }
 
 .error {
-  color: red;
+  color: var(--text-danger);
   font-size: 12px;
 }
 
@@ -159,12 +158,12 @@ button:disabled {
   width: 600px;
   margin: 20px auto;
   padding: 16px;
-  border: 1px dashed #ccc;
+  border: 1px dashed var(--border-color);
   position: absolute;
   top: 20px;
   right: 0;
   z-index: 10;
-  background: #fff;
+  background: var(--bg-card);
   visibility: hidden;
 }
 .create-item-container.active {
@@ -180,7 +179,7 @@ button:disabled {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: red;
+  color: var(--text-danger);
   cursor: pointer;
 }
 
@@ -205,7 +204,7 @@ button:disabled {
   position: absolute;
   top: 10px;
   right: 10px;
-  color: red;
+  color: var(--text-danger);
   cursor: pointer;
 }
 .update-cate-container .tdAction i {

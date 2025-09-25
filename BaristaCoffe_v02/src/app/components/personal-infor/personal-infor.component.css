@@ -9,7 +9,7 @@
 .container {
     width: 100%;
     max-width: 800px;
-    background: #fff;
+    background: var(--bg-card);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -21,7 +21,7 @@
     margin-bottom: 1.5rem;
     font-size: 1.4rem;
     font-weight: 600;
-    color: #333;
+    color: var(--text-heading);
 }
 
 .infor {
@@ -52,7 +52,7 @@
     position: absolute;
     bottom: 30px;
     right: 10px;
-    background: #ffffffcc;
+    background: var(--bg-overlay);
     border: none;
     border-radius: 50%;
     padding: 6px;
@@ -67,7 +67,7 @@
 
 .edit-avatar-btn i {
     font-size: 1rem;
-    color: #333;
+    color: var(--text-heading);
 }
 
 .col{

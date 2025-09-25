@@ -22,7 +22,7 @@ select {
 
 button {
     padding: 10px 20px;
-    background: #1976d2;
+    background: var(--bg-button-primary);
     border: none;
     color: white;
     border-radius: 6px;
@@ -30,11 +30,11 @@ button {
 }
 
 button:hover {
-    background: #115293;
+    background: var(--bg-button-primary-hover);
 }
 
 button:disabled {
-    background: #999;
+    background: var(--bg-button-disabled);
 }
 
 /* ========== Layout chính ========== */
@@ -67,8 +67,8 @@ button:disabled {
     flex-wrap: wrap;
     width: 300px;
     padding: 10px 20px;
-    background-color: #f8f9fa;
-    /* border-right: 1px dashed #ccc; */
+    background-color: var(--bg-main);
+    /* border-right: 1px dashed var(--border-color); */
 }
 
 /* search */
@@ -89,8 +89,8 @@ button:disabled {
 }
 
 .nav .filter .cate:hover {
-    color: blue;
-    background-color: #e8eaec;
+    color: var(--text-hover);
+    background-color: var(--bg-hover);
 }
 
 /* MENU */
@@ -101,7 +101,7 @@ button:disabled {
     grid-auto-rows: 200px;
     gap: 10px;
     margin-left: 20px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--border-color);
     padding: 10px;
     overflow-y: auto;
     /* justify-content: flex-start;
@@ -112,7 +112,7 @@ button:disabled {
 .menu .item {
     padding: 10px;
     border-radius: 8px;
-    background-color: #f8f9fa;
+    background-color: var(--bg-main);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -120,7 +120,7 @@ button:disabled {
 
 .menu .item:hover {
     transform: scale(1.05);
-    background-color: #ccc;
+    background-color: var(--border-color);
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
@@ -135,7 +135,7 @@ button:disabled {
 .detail {
     position: absolute;
     right: 100px;
-    background-color: #f8f9fa;
+    background-color: var(--bg-main);
     display: flex;
     gap: 20px;
     z-index: 10;
@@ -165,7 +165,7 @@ button:disabled {
 .ingredients .card .pi-trash {}
 
 .ingredients .card .pi-trash:hover {
-    color: red;
+    color: var(--text-danger);
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
@@ -174,7 +174,7 @@ button:disabled {
     width: 450px;
     max-height: 500px;
     overflow-y: auto;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -182,7 +182,7 @@ button:disabled {
     position: absolute;
     right: 0;
     top: 40px;
-    background-color: #fff;
+    background-color: var(--bg-card);
 }
 
 .listIngredients img {

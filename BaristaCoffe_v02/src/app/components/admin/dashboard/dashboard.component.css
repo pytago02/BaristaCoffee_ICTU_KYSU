@@ -29,8 +29,8 @@ p-chart {
     right: 0;
     gap: 20px;
     padding: 20px;
-    border: 1px dashed #ccc;
-    background-color: #f8f9fa;
+    border: 1px dashed var(--border-color);
+    background-color: var(--bg-main);
     z-index: 10;
     
     visibility: hidden;
@@ -51,7 +51,7 @@ p-chart {
     right: 5px;
     cursor: pointer;
     font-size: 1.2rem;
-    color: red;
+    color: var(--text-danger);
 }
 
 .inputInfor {
@@ -69,7 +69,7 @@ p-chart {
 
 .formAddExpense .form-group input {
     padding: 5px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
 
@@ -108,7 +108,7 @@ p-chart {
     font-size: 1.5rem;
     margin-bottom: 10px;
     font-weight: 600;
-    color: #5b6b79;
+    color: var(--text-main);
 }
 
 .overView .card .infor {
@@ -119,7 +119,7 @@ p-chart {
 
 .overView .card .infor i {
     font-size: 2.5rem;
-    color: #5b6b79;
+    color: var(--text-main);
 }
 
 .overView .card .infor p {
@@ -128,19 +128,19 @@ p-chart {
 }
 
 .overView .doanhThu{
-    background-color: #4cdb7c7c;
+    background-color: var(--card-bg-revenue);
 }
 
 .overView .loiNhuan{
-    background-color: #def1ff;
+    background-color: var(--card-bg-profit);
 }
 
 .overView .tiLeLoiNhuan{
-    background-color: #fef7da;
+    background-color: var(--card-bg-profit-rate);
 }
 
 .overView .soDonHang{
-    background-color:#f0dcff;
+    background-color:var(--card-bg-orders);
 }
 
 .chars {
@@ -167,6 +167,6 @@ p-chart {
 
 .line {
     height: 2px;
-    background-color: #eee;
+    background-color: var(--line-color);
     margin: 20px 0;
 }

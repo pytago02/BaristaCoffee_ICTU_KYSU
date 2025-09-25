@@ -28,11 +28,11 @@
     width: 300px;
     /* margin: 100px auto; */
     padding: 20px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     background-color: rgba(255, 255, 255, 0.3);
-    color: #fff;
+    color: var(--bg-card);
 }
 .login-container h2{
     font-size: 3rem;
