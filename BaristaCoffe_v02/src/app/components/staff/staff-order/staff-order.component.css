@@ -1,0 +1,60 @@
+.main {
+    position: relative;
+}
+
+.navbar {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+}
+
+.nav .btnFilter {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+}
+
+.card .orderDetail {
+    display: flex;
+    gap: 10px;
+    height: 300px;
+}
+
+
+.card .orderDetail .orderInfor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: #F1F5F9;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.card .orderDetail .report {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    background-color: #F1F5F9;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.card .orderDetail .listItemOrder {
+    flex: 2;
+    overflow-y: auto;
+    border-radius: 8px;
+}
+
+.orderDetail .orderInfor .field {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    margin-left: 10px;
+}
+
+.orderDetail .listItemOrder img {
+    height: 70px;
+}

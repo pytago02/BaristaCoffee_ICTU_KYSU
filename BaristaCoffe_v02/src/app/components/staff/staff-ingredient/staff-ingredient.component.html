@@ -1,0 +1,123 @@
+<div class="main">
+    <p-toast position="bottom-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+    <p-confirmpopup />
+    <p-toast position="bottom-right" styleClass="my-toast"></p-toast>
+    <div class="backdrop" [class.active]="isBackdropActive" (click)="resetShow()"></div>
+
+    <div class="navbar">
+
+        <div class="navSearch">
+            <div class="flex-column">
+                <label for="search" class="font-bold block mb-2"> Tìm kiếm </label>
+                <p-iconfield>
+                    <input type="text" pInputText placeholder="Tên sản phẩm" [(ngModel)]="keyword"
+                        (ngModelChange)="search()" />
+                    <p-inputicon class="pi pi-search" />
+                </p-iconfield>
+            </div>
+
+            <div class="flex-column">
+                <p-button label="Clear" severity="secondary" (onClick)="clearFilter()"></p-button>
+            </div>
+
+            <div class="flex-column">
+                <p-button label="Sắp hết" severity="danger" (onClick)="filterLowStock()"></p-button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <p-table #dt [value]="filterIngredientData" stripedRows [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20, 50]" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <!-- <span class="text-xl font-bold">Sản Phẩm</span> -->
+                    <span>Có <strong>{{ filterIngredientData.length || 0 }}</strong> sản phẩm</span>
+
+                    <div class="btnAction flex gap-1">
+                        <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th pSortableColumn="name">Tên sản phẩm<p-sortIcon field="name" /></th>
+                    <th>Đơn vị</th>
+                    <th>Số lượng tồn kho</th>
+                    <th>Số lượng tối thiểu</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-product class="body">
+                <tr (click)="seletedAcount(product)">
+                    <td>
+                        <img class="imgPreview" [src]="backendURL + product.image" alt="">
+                    </td>
+                    <td>{{ product.name }}</td>
+                    <td>{{product.unit}}</td>
+                    <!-- <td>{{product.stock_quantity}}</td> -->
+                    <td>
+                        <p-badge [value]="(product.stock_quantity | number:'1.0-2') || ''"
+                            [severity]="stockSeverity(product)" />
+                    </td>
+                    <td>{{product.min_stock | number:'1.0-2'}}</td>
+                </tr>
+                <tr *ngIf="seletedItem && product.ingredient_id === seletedItem.ingredient_id">
+                    <td colspan="6">
+                        <div class="user-form">
+                            <!-- Cột 1: Image -->
+                            <div class="col avatar-col avatar-wrapper">
+                                <img [src]="backendURL + seletedItem.image" alt="image" class="image" />
+                            </div>
+
+                            <!-- Cột 2: -->
+                            <div class="col">
+                                <div class="field">
+                                    <label for="name">Tên sản phẩm</label>
+                                    <input pInputText disabled id="name" [(ngModel)]="seletedItem.name" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="unit">Đơn vị</label>
+                                    <input pInputText disabled id="unit" [(ngModel)]="seletedItem.unit" />
+                                </div>
+
+                            </div>
+
+                            <!-- Cột 3:-->
+                            <div class="col">
+                                <div class="field">
+                                    <label for="stock_quantity">Số lượng tồn kho</label>
+                                    <input pInputText disabled id="stock_quantity" type="number"
+                                        [(ngModel)]="seletedItem.stock_quantity" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="min_stock">Số lượng tối thiểu</label>
+                                    <input pInputText disabled id="min_stock" type="number"
+                                        [(ngModel)]="seletedItem.min_stock" />
+                                </div>
+
+
+                            </div>
+
+                            <!-- Cột 4: -->
+                            <div class="col listOrder">
+                                <div class="field">
+                                    <label for="updated_at">Ngày cập nhật</label>
+                                    <input pInputText disabled id="updated_at"
+                                        [value]="seletedItem.updated_at | date:'dd/MM/yyyy HH:mm'" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                </tr>
+
+            </ng-template>
+        </p-table>
+
+    </div>
+
+</div>

@@ -374,3 +374,81 @@ exports.getOrdersByUserId = (req, res) => {
     }
   );
 };
+
+exports.getOrdersByTableId = (req, res) => {
+  const { table_id } = req.params;
+
+  if (!table_id) {
+    return res.status(400).json({ error: "Thiếu tham số table_id" });
+  }
+
+  db.query(
+    `
+    SELECT 
+        o.order_id,
+        o.created_at AS order_date,
+        o.status,
+        o.payment_method,
+        o.total_price,
+        c.full_name AS customer_name,
+        c.phone AS customer_phone,
+        s.full_name AS staff_name,
+        t.table_name,
+        z.zone_name,
+        m.menu_name AS menu_item,
+        m.image_url,
+        oi.quantity,
+        m.price,
+        oi.note,
+        (oi.quantity * m.price) AS item_total
+    FROM orders o
+    LEFT JOIN users c ON o.customer_id = c.user_id
+    LEFT JOIN users s ON o.staff_id = s.user_id
+    LEFT JOIN tables t ON o.table_id = t.table_id
+    LEFT JOIN zone z ON t.zone_id = z.zone_id
+    JOIN order_items oi ON o.order_id = oi.order_id
+    JOIN menu m ON oi.menu_id = m.menu_id
+    WHERE o.table_id = ?
+    ORDER BY o.created_at DESC, oi.order_item_id ASC;
+    `,
+    [table_id],
+    (err, results) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Lỗi khi lấy danh sách order theo table_id", err });
+      }
+
+      const orders = new Map();
+
+      results.forEach((row) => {
+        if (!orders.has(row.order_id)) {
+          orders.set(row.order_id, {
+            order_id: row.order_id,
+            order_date: row.order_date,
+            status: row.status,
+            payment_method: row.payment_method,
+            total_price: row.total_price,
+            customer_name: row.customer_name,
+            customer_phone: row.customer_phone,
+            staff_name: row.staff_name,
+            table_name: row.table_name,
+            zone_name: row.zone_name,
+            items: [],
+          });
+        }
+
+        orders.get(row.order_id).items.push({
+          menu_item: row.menu_item,
+          quantity: row.quantity,
+          price: row.price,
+          item_total: row.item_total,
+          note: row.note,
+          image_url: row.image_url,
+        });
+      });
+
+      res.json(Array.from(orders.values()));
+    }
+  );
+};

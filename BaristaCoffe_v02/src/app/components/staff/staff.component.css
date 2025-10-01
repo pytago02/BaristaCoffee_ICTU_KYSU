@@ -1,0 +1,21 @@
+.main {
+    position: relative;
+}
+
+.mainContent {
+    margin-top: 80px;
+    position: absolute;
+    right: 0;
+    left: 0;
+    transition: all 0.3s ease-in-out;
+    padding: 30px 150px;
+
+    overflow-y: auto;
+    margin-top: 80px;
+    height: calc(100vh - 80px);
+
+    &.active {
+        left: 280px;
+        padding: 30px;
+    }
+}

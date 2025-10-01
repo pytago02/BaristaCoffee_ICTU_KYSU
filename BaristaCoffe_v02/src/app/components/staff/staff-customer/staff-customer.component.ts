@@ -1,28 +1,30 @@
+import { OrderService } from './../../../services/order.service';
 import { Component, OnInit } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { UrlbackendService } from '../../../services/urlbackend.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UsersService } from '../../../services/user.service';
+import { ShareDataService } from '../../../services/sharedata.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-staff',
+  selector: 'app-staff-customer',
   imports: [ImportModule],
-  templateUrl: './staff.component.html',
-  styleUrl: './staff.component.css',
+  templateUrl: './staff-customer.component.html',
+  styleUrl: './staff-customer.component.css',
   providers: [ConfirmationService, MessageService],
 })
-export class StaffComponent implements OnInit {
+export class StaffCustomerComponent implements OnInit {
   // ===== DATA =====
   backendURL: any;
-  staffAcountData: any[] = [];
-  filterstaffAcountData: any[] = [];
+  customerAcountData: any[] = [];
+  filtercustomerAcountData: any[] = [];
   keyword: string = '';
   seletedAcountData: any = [];
   addItemData: any = {
     full_name: '',
     email: '',
     phone: '',
-    role: '',
   };
 
   // ===== SHOW LAYOUT =====
@@ -33,17 +35,19 @@ export class StaffComponent implements OnInit {
     private usersService: UsersService,
     private urlbackendService: UrlbackendService,
     private confirmService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private orderService: OrderService,
+    private shareDataService: ShareDataService,
+    private router: Router
   ) {
     this.backendURL = this.urlbackendService.urlBackend;
   }
 
   ngOnInit(): void {
-    this.getStaffAcount();
-    this.loadData();
+    this.getcustomerAcount();
   }
   loadData() {
-    this.getStaffAcount();
+    this.getcustomerAcount();
   }
 
   resetShow() {
@@ -51,15 +55,15 @@ export class StaffComponent implements OnInit {
     this.showCreateForm = false;
   }
 
-  getStaffAcount() {
-    this.usersService.getStaffAcount().subscribe({
+  getcustomerAcount() {
+    this.usersService.getCustomerAcount().subscribe({
       next: (data) => {
-        this.staffAcountData = data;
-        this.filterstaffAcountData = data;
-        console.log('getStaffAcount:', this.staffAcountData);
+        this.customerAcountData = data;
+        this.filtercustomerAcountData = data;
+        console.log('getcustomerAcount:', this.customerAcountData);
       },
       error: (err) => {
-        console.error('error getStaffAcount:', err);
+        console.error('error getcustomerAcount:', err);
       },
     });
   }
@@ -72,10 +76,10 @@ export class StaffComponent implements OnInit {
   search() {
     const keywordLower = this.keyword.trim().toLowerCase();
     if (!keywordLower) {
-      this.filterstaffAcountData = [...this.staffAcountData];
+      this.filtercustomerAcountData = [...this.customerAcountData];
       return;
     }
-    this.filterstaffAcountData = this.staffAcountData.filter(
+    this.filtercustomerAcountData = this.customerAcountData.filter(
       (order) =>
         order.full_name.toLowerCase().includes(keywordLower) ||
         order.phone.toLowerCase().includes(keywordLower) ||
@@ -85,7 +89,7 @@ export class StaffComponent implements OnInit {
 
   clearFilter() {
     this.keyword = '';
-    this.getStaffAcount();
+    this.getcustomerAcount();
   }
 
   seletedAcount(data: any) {
@@ -98,6 +102,7 @@ export class StaffComponent implements OnInit {
     }
     this.seletedAcountData = { ...data };
     console.log(this.seletedAcountData);
+    this.getOrderByUserId();
   }
 
   isActiveMap: { [key: string]: { label: string; severity: string } } = {
@@ -106,18 +111,18 @@ export class StaffComponent implements OnInit {
   };
 
   roleMap: { [key: string]: { label: string; severity: string } } = {
-    staff: { label: 'Phục vụ', severity: 'danger' },
+    customer: { label: 'Phục vụ', severity: 'danger' },
     barista: { label: 'Pha chế', severity: 'success' },
   };
 
   roleList = [
-    { name: 'Phục vụ', value: 'staff' },
+    { name: 'Phục vụ', value: 'customer' },
     { name: 'Pha chế', value: 'barista' },
   ];
 
   isActiveList = [
     { name: 'Hoạt động', value: 1 },
-    { name: 'Đã khoá', value: 0 },
+    { name: 'Ngừng hoạt động', value: 0 },
   ];
 
   getRoleLabel(role: string): string {
@@ -136,73 +141,36 @@ export class StaffComponent implements OnInit {
     role: string
   ): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
     if (role === 'admin') return 'success';
-    if (role === 'staff') return 'info';
+    if (role === 'customer') return 'info';
     if (role === 'barista') return 'warn';
     return 'secondary';
   }
 
-  onAvatarChange(event: Event, userId: number): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-
-      this.usersService.updateAvatar(userId, file).subscribe({
-        next: (res) => {
-          this.getStaffAcount();
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Thành công',
-            detail: 'Đổi avatar thành công!',
-          });
-          this.seletedAcountData.avatar =
-            res.avatar + '?t=' + new Date().getTime();
-        },
-        error: (err) => {
-          console.error('Lỗi updateAvatar:', err);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Lỗi',
-            detail: 'Không thể đổi avatar!',
-          });
-        },
-      });
-    }
-  }
 
   createUser() {
-    if (
-      !this.addItemData.full_name ||
-      !this.addItemData.email ||
-      !this.addItemData.phone ||
-      !this.addItemData.role
-    ) {
-      this.messageService.add({
-        severity: 'warm',
-        summary: 'Thông báo',
-        detail: 'Cần điền đủ thông tin',
-      });
-      console.log(this.addItemData);
-      
+    if (!this.addItemData.full_name || !this.addItemData.phone) {
+      console.log('Điền đủ thông tin');
       return;
     }
-    this.usersService.registerStaff(this.addItemData).subscribe({
+
+    this.usersService.register(this.addItemData).subscribe({
       next: (res) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Thành công',
           detail: 'Tạo tài khoản thành công',
         });
-        this.getStaffAcount();
         this.addItemData = {
           full_name: '',
           email: '',
           phone: '',
-          role: '',
+          password: '',
         };
+        this.getcustomerAcount();
       },
-      error: (err)=>{
-        console.error("error createUser:", err);
-      }
+      error: (err) => {
+        console.error('error createUser:', err);
+      },
     });
   }
 
@@ -217,7 +185,7 @@ export class StaffComponent implements OnInit {
               summary: 'Thành công',
               detail: 'Cập nhật tài khoản thành công!',
             });
-            this.getStaffAcount();
+            this.getcustomerAcount();
           },
           error: () => {
             this.messageService.add({
@@ -230,28 +198,6 @@ export class StaffComponent implements OnInit {
     }
   }
 
-  deleteUser() {
-    if (confirm('Bạn có chắc muốn xoá tài khoản này?')) {
-      this.usersService.deleteUser(this.seletedAcountData.user_id).subscribe({
-        next: () => {
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Thành công',
-            detail: 'Xoá tài khoản thành công!',
-          });
-          this.getStaffAcount();
-          this.seletedAcountData = null;
-        },
-        error: () => {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Lỗi',
-            detail: 'Không thể xoá tài khoản!',
-          });
-        },
-      });
-    }
-  }
 
   resetPassword() {
     console.log('resetPasword');
@@ -265,7 +211,7 @@ export class StaffComponent implements OnInit {
               summary: 'Thành công',
               detail: 'Đặt lại mật khẩu thành công!',
             });
-            this.getStaffAcount();
+            this.getcustomerAcount();
           },
           error: () => {
             this.messageService.add({
@@ -276,5 +222,46 @@ export class StaffComponent implements OnInit {
           },
         });
     }
+  }
+
+  orderByUserIdData: any[] = [];
+  getOrderByUserId() {
+    this.orderService
+      .getOrdersByUserId(this.seletedAcountData.user_id)
+      .subscribe({
+        next: (data) => {
+          this.orderByUserIdData = data;
+          console.log('getOrderByUserID:', this.orderByUserIdData);
+        },
+        error: (err) => {
+          console.error('error getOrdeByUserId:', err);
+        },
+      });
+  }
+
+  stockSeverity(data: any) {
+    if (data.status === 'pending') return 'warn';
+    if (data.status === 'preparing') return 'secondary';
+    if (data.status === 'completed') return 'info';
+    if (data.status === 'cancell') return 'danger';
+    if (data.status === 'paid') return 'success';
+    return 'contrast';
+  }
+
+  statusMap: { [key: string]: { label: string; severity: string } } = {
+    pending: { label: 'Chờ xử lý', severity: 'danger' },
+    preparing: { label: 'Đang chuẩn bị', severity: 'secondary' },
+    completed: { label: 'Hoàn tất', severity: 'info' },
+    cancelled: { label: 'Đã hủy', severity: 'danger' },
+    paid: { label: 'Đã thanh toán', severity: 'success' },
+  };
+
+  getStatusLabel(status: string): string {
+    return this.statusMap[status]?.label || status;
+  }
+
+  goToOrder(data: any) {
+    this.shareDataService.changeMessage(data);
+    this.router.navigate(['admin/orders']);
   }
 }

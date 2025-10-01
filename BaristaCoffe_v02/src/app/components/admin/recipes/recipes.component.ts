@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {ReactiveFormsModule } from '@angular/forms';
 import { ImportModule } from '../../../modules/import/import.module';
 import { MenuCategoryService } from '../../../services/menucategory.service';
 import { MenuService } from '../../../services/menu.service';
 import { UrlbackendService } from '../../../services/urlbackend.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { RecipesService } from '../../../services/recipes.service';
 import { IngredientsService } from '../../../services/ingredient.service';
 
@@ -13,7 +13,7 @@ import { IngredientsService } from '../../../services/ingredient.service';
   imports: [ImportModule, ReactiveFormsModule],
   templateUrl: './recipes.component.html',
   styleUrl: './recipes.component.css',
-  providers: [ConfirmationService, MessageService],
+  providers: [MessageService],
 })
 export class RecipesComponent implements OnInit {
   // ====== DATA ======
@@ -44,7 +44,6 @@ export class RecipesComponent implements OnInit {
     private menuCategoryService: MenuCategoryService,
     private menuService: MenuService,
     private urlbackendService: UrlbackendService,
-    private confirmService: ConfirmationService,
     private messageService: MessageService,
     private recipesService: RecipesService,
     private ingredientsService: IngredientsService

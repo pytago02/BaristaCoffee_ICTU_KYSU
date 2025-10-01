@@ -25,7 +25,7 @@ router.put("/changePassword/:id", auth, (req, res, next) => {
 
 router.put("/changeIsActive/:id", auth, authRole(["admin"]), userController.changeIsActive);
 router.get("/getStaffAcount", auth, authRole(["admin"]), userController.getStaffAcount);
-router.get("/getCustomerAcount", auth, authRole(["admin"]), userController.getCustomerAcount);
+router.get("/getCustomerAcount", auth, authRole(["admin", "staff"]), userController.getCustomerAcount);
 router.put("/resetPassword/:id", auth, authRole(["admin"]), userController.resetPassword);
 
 router.put("/updateAvatar/:id", auth, uploadAvatar.single("avatar"), userController.updateAvatar);

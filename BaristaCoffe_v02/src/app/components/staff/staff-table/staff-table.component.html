@@ -1,0 +1,197 @@
+<div class="staff-layout">
+    <!-- Cột trái: Menu -->
+    <div class="menu-column">
+        <div class="navSearch">
+            <!-- ô tìm kiếm -->
+            <div class="flex-column">
+                <p-iconfield>
+                    <input type="text" pInputText placeholder="Tên sản phẩm" [(ngModel)]="keyword"
+                        (ngModelChange)="search()" />
+                    <p-inputicon class="pi pi-search" />
+                </p-iconfield>
+            </div>
+
+            <!-- chọn danh mục -->
+            <div class="flex-column">
+                <p-select class=" min-w-[200px]" [options]="categoryOptions" [(ngModel)]="selectedCategory"
+                    optionLabel="label" optionValue="value" placeholder="Chọn danh mục"
+                    (onChange)="search()"></p-select>
+            </div>
+
+            <!-- nút clear -->
+            <div class="flex-column">
+                <p-button label="Clear" severity="secondary" (onClick)="clearFilter()"></p-button>
+            </div>
+        </div>
+
+        <div *ngFor="let category of groupedMenuData" class="menu-category">
+            <h3>{{ category.categoryName }}</h3>
+            <div class="menu-grid">
+                <div *ngFor="let item of category.items" class="menu-card" (click)="selectedItem(item)">
+                    <img [src]="backendURL+ item.image_url" [alt]="item.menu_name" />
+                    <div class="menu-info">
+                        <h4>{{ item.menu_name }}</h4>
+                        <p class="price">{{ item.price | currency:'VND':'symbol':'1.0-0' }}</p>
+                        <p class="quantity">SL: {{ item.quantity }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="addOrder">
+            <div class="feild">
+                <label for="">Tên món</label>
+                <input class="min-w-[300px]" type="text" pInputText disabled [(ngModel)]="selectedItemData.menu_name">
+            </div>
+            <div class="feild">
+                <label for="">Giá</label>
+                <input type="text" pInputText disabled
+                    [value]="selectedItemData.price | currency:'VND':'symbol':'1.0-0'" />
+
+            </div>
+            <div class="feild">
+                <label for="">Số lượng</label>
+                <input class="w-[100px]" type="number" pInputText [(ngModel)]="selectedItemData.order_quantity">
+            </div>
+
+            <div class="feild">
+                <label for="">Thành tiền</label>
+                <input type="text" pInputText disabled
+                    [value]="selectedItemData.price * selectedItemData.order_quantity | currency:'VND':'symbol':'1.0-0'" />
+            </div>
+
+            <p-button label="Thêm"></p-button>
+        </div>
+    </div>
+
+    <!-- Cột phải: Bàn -->
+    <div class="table-column">
+        <div *ngFor="let zone of zoneWithTableData" class="zone-section">
+            <h3>{{ zone.zone_name }}</h3>
+            <div class="table-grid">
+                <div *ngFor="let table of zone.tables" class="table-card" [ngClass]="table.table_status"
+                    (click)="selectedTable(table)">
+                    <h4>{{ table.table_name }}</h4>
+                    <p>{{ table.table_status }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hiển thị inforTable ngay trong cột bàn -->
+        <div *ngIf="showInfoTable" class="inforTable">
+            <!-- Header -->
+            <div class="header">
+                <div class="flex justify-content-between align-items-center">
+                    <span class="text-xl font-bold">Bàn: {{ selectedTableData?.table_name }}</span>
+                    <p-button icon="pi pi-times" styleClass="p-button-rounded p-button-text"
+                        (click)="closeInfoTable()"></p-button>
+                </div>
+                <small class="text-color-secondary">Khu vực: {{ orderByTableIdData[0]?.zone_name }}</small>
+            </div>
+
+            <!-- Nội dung chính có thể cuộn -->
+            <div class="inforTable-content">
+                <ng-container *ngIf="orderByTableIdData.length > 0; else emptyOrder">
+                    <h3 class="mt-3">Order hiện tại</h3>
+                    <div class="mb-3">
+                        <p><b>Khách hàng:</b> {{ orderByTableIdData[0]?.customer_name }} ({{
+                            orderByTableIdData[0]?.customer_phone }})</p>
+                        <p><b>Nhân viên:</b> {{ orderByTableIdData[0]?.staff_name }}</p>
+                        <p><b>Thời gian:</b> {{ orderByTableIdData[0]?.order_date | date:'short' }}</p>
+                        <p><b>Trạng thái:</b> {{ orderByTableIdData[0]?.status }}</p>
+                    </div>
+
+                    <!-- PrimeNG Table -->
+                    <p-table [value]="orderByTableIdData[0]?.items" [responsiveLayout]="'scroll'" [ngStyle]="{flex: 1}">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Món</th>
+                                <th>SL</th>
+                                <th>Giá</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item>
+                            <tr>
+                                <td>
+                                    <img [src]="backendURL + item.image_url" width="40" height="40" class="mr-2" />
+                                    {{ item.menu_item }}
+                                </td>
+                                <td>{{ item.quantity }}</td>
+                                <td>{{ item.price | currency:'VND' }}</td>
+                                <td>{{ item.item_total | currency:'VND' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+
+                    <div class="flex justify-content-end mt-3">
+                        <h3 class="text-right text-red-500">
+                            Tổng: {{ orderByTableIdData[0]?.total_price | currency:'VND' }}
+                        </h3>
+                    </div>
+                </ng-container>
+
+                <ng-template #emptyOrder>
+                    <p class="text-center">Chưa có order nào cho bàn này.</p>
+                </ng-template>
+            </div>
+
+            <!-- Footer -->
+            <div class="inforTable-footer">
+                <p-button label="Phục vụ" icon="pi pi-send" styleClass="p-button-success"
+                    (click)="serveOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0"></p-button>
+
+                <p-button label="Thanh toán" icon="pi pi-credit-card" styleClass="p-button-warning"
+                    (click)="payOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0"></p-button>
+
+                <p-button label="Hủy bàn" icon="pi pi-trash" styleClass="p-button-danger"
+                    (click)="cancelTable(selectedTableData)" [disabled]="orderByTableIdData.length === 0"></p-button>
+            </div>
+        </div>
+
+        <!-- <div class="inforTable" *ngIf="showInfoTable">
+            <button class="close-btn" (click)="closeInfoTable()">✖</button>
+
+            <h2>Bàn: {{ selectedTableData?.table_name }} ({{ selectedTableData?.table_status }})</h2>
+            <p>Khu vực: {{ orderByTableIdData[0]?.zone_name }}</p>
+
+            <div *ngIf="orderByTableIdData.length > 0">
+                <h3>Order hiện tại</h3>
+                <p>Khách hàng: {{ orderByTableIdData[0]?.customer_name }} ({{ orderByTableIdData[0]?.customer_phone }})
+                </p>
+                <p>Nhân viên: {{ orderByTableIdData[0]?.staff_name }}</p>
+                <p>Thời gian: {{ orderByTableIdData[0]?.order_date | date:'short' }}</p>
+                <p>Trạng thái: {{ orderByTableIdData[0]?.status }}</p>
+                <p>Thanh toán: {{ orderByTableIdData[0]?.payment_method }}</p>
+
+                <table class="order-items">
+                    <thead>
+                        <tr>
+                            <th>Món</th>
+                            <th>SL</th>
+                            <th>Giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of orderByTableIdData[0]?.items">
+                            <td>
+                                <img [src]="backendURL + item.image_url" width="40" height="40" /> {{ item.menu_item }}
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.price | currency:'VND' }}</td>
+                            <td>{{ item.item_total | currency:'VND' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3 class="total">Tổng: {{ orderByTableIdData[0]?.total_price | currency:'VND' }}</h3>
+            </div>
+
+            <div *ngIf="orderByTableIdData.length === 0">
+                <p>Chưa có order nào cho bàn này.</p>
+            </div>
+        </div> -->
+    </div>
+
+</div>

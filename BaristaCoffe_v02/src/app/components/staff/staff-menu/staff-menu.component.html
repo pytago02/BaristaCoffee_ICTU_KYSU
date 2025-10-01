@@ -1,0 +1,68 @@
+<div class="main">
+    <div class="nav">
+
+        <div class="search">
+            <h2>Tìm kiếm</h2>
+            <p-floatlabel variant="on">
+                <input pInputText [(ngModel)]="keyword" type="text" pSize="large" placeholder="Nhập từ khoá"
+                    (ngModelChange)="search()" />
+            </p-floatlabel>
+        </div>
+
+        <div class="filter">
+            <h2>Danh mục</h2>
+            <div class="cate cursor-pointer" [class.bg-blue-500]="!selectedCategory"
+                [class.text-white]="!selectedCategory" (click)="filterByCategory(null)">Tất cả</div>
+            <div class="cate cursor-pointer" [class.bg-blue-500]="selectedCategory === item.menu_category_name"
+                [class.text-white]="selectedCategory === item.menu_category_name" *ngFor="let item of categories"
+                (click)="filterByCategory(item.menu_category_name)">
+                {{ item.menu_category_name }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <p-table #dt [value]="filteredMenus" stripedRows [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20, 50]" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <span>Có <strong>{{ menus.length || 0 }}</strong> sản phẩm</span>
+                    <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th class="w-[200px]" pSortableColumn="menu_name">Tên <p-sortIcon field="menu_name" /></th>
+                    <th>Ảnh</th>
+                    <th pSortableColumn="price">Giá bán<p-sortIcon field="price" /></th>
+                    <th class="w-[120px]" pSortableColumn="menu_category_name">Danh mục<p-sortIcon
+                            field="menu_category_name" /></th>
+                    <th>Độ ngọt</th>
+                    <th class="w-[70px]">Nhiệt độ</th>
+                    <th>Mô tả</th>
+                    <th class="w-[87px]" pSortableColumn="quantity">Số lượng<p-sortIcon field="quantity" /></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-product class="body">
+                <tr>
+                    <td>{{ product.menu_name }}</td>
+                    <td>
+                        <img [src]="backendURL + product.image_url" [alt]="product.menu_name"
+                            class="w-[70px] h-[70px] rounded object-cover" />
+                    </td>
+                    <td>{{ product.price | currency: 'VND' }}</td>
+                    <td>{{product.menu_category_name}}</td>
+                    <td>{{ product.sweetness_level }}</td>
+                    <td>{{ product.temperature }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>
+                        <p-badge [value]="product.quantity" [severity]="stockSeverity(product)" />
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+    </div>
+
+</div>

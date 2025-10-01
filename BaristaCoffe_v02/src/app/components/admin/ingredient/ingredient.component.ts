@@ -1,4 +1,3 @@
-import { OrderService } from './../../../services/order.service';
 import { Component, OnInit } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { UrlbackendService } from '../../../services/urlbackend.service';
@@ -12,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [ImportModule, ReactiveFormsModule],
   templateUrl: './ingredient.component.html',
   styleUrl: './ingredient.component.css',
-  providers: [ConfirmationService, MessageService],
+  providers: [ MessageService],
 })
 export class IngredientComponent implements OnInit {
   // ===== DATA =====

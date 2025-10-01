@@ -161,4 +161,11 @@ Chức năng logout
 25.9
 Đổi mật khẩu
 Xem thông tin cá nhân
+dark mode
+front end
+    - staff menu
+    - staff order
+    - staff ingredient
+    - staff recipes
+    - staff customer
 

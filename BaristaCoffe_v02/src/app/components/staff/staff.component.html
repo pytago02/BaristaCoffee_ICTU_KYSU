@@ -1,0 +1,8 @@
+<div class="main">
+    <div class="navbar">
+        <app-staff-navbar (viewNavbarChange)="onViewNavbarChange($event)"></app-staff-navbar>
+    </div>
+    <div class="mainContent" [class.active]="viewNavbar">
+        <router-outlet/>
+    </div>
+</div>

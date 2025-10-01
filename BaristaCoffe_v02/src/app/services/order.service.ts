@@ -30,20 +30,24 @@ export class OrderService {
 
   getOrdersByRange(from: string, to: string): Observable<any[]> {
     let params = new HttpParams().set('from', from).set('to', to);
+    return this.http.get<any[]>(`${this.apiUrl}/getOrdersByRange`, {
+      params,
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
+
+  getOrdersByUserId(userId: number): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/getOrdersByUserId/${userId}`, {
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
+
+  getOrdersByTableId(tableId: number): Observable<any[]> {
     return this.http.get<any[]>(
-      `${this.apiUrl}/getOrdersByRange`,
+      `${this.apiUrl}/getOrdersByTableId/${tableId}`,
       {
-        params,
         headers: this.auth.getAuthHeaders(),
       }
     );
-  }
-
-  getOrdersByUserId(userId: number):Observable<any>{
-    return this.http.get<any[]>(
-      `${this.apiUrl}/getOrdersByUserId/${userId}`, {
-        headers: this.auth.getAuthHeaders(),
-      }
-    )
   }
 }

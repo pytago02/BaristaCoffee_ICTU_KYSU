@@ -1,0 +1,177 @@
+<div class="main">
+    <p-toast position="bottom-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+    <p-confirmpopup />
+    <p-toast position="bottom-right" styleClass="my-toast"></p-toast>
+
+    <div class="navbar">
+
+        <div class="navSearch">
+            <div class="flex-column">
+                <label for="search" class="font-bold block mb-2"> Tìm kiếm </label>
+                <p-iconfield>
+                    <input type="text" pInputText placeholder="Tên/SDT khách hàng" [(ngModel)]="keyword"
+                        (ngModelChange)="search()" />
+                    <p-inputicon class="pi pi-search" />
+                </p-iconfield>
+
+            </div>
+
+            <div class="flex-column">
+                <p-button label="Clear" severity="secondary" (onClick)="clearFilter()"></p-button>
+            </div>
+
+
+        </div>
+
+        <div class="relative">
+            <p-button label="Thêm" (onClick)="showCreateForm = true; isBackdropActive = true"></p-button>
+
+            <!-- form tao san pham -->
+            <div class="create-item-container" [class.active]="showCreateForm">
+                <h2>Tạo sản phẩm</h2>
+                <i class="pi pi-times" (click)="showCreateForm = false"></i>
+
+                <div class="form-group">
+                    <label for="full_name">Họ tên</label>
+                    <input pInputText id="full_name" [(ngModel)]="addItemData.full_name" type="text"
+                        placeholder="Nhập họ tên khách hàng" />
+
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input pInputText id="email" [(ngModel)]="addItemData.email" type="text" placeholder="Nhập email" />
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input pInputText id="phone" [(ngModel)]="addItemData.phone" type="text" />
+                </div>
+
+                <div class="form-group">
+                    <p>Mật khẩu được đặt mặc định là : 1</p>
+                </div>
+
+                <div class="full-width">
+                    <p-button icon="pi pi-plus" label="Tạo tài khoản" [size]="'small'"
+                        (onClick)="createUser()"></p-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <p-table #dt [value]="filtercustomerAcountData" stripedRows [paginator]="true" [rows]="10"
+            [rowsPerPageOptions]="[10, 20, 50]" [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <!-- <span class="text-xl font-bold">Sản Phẩm</span> -->
+                    <span>Có <strong>{{ filtercustomerAcountData.length || 0 }}</strong> tài khoản</span>
+
+                    <div class="btnAction flex gap-1">
+                        <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th>Hình ảnh</th>
+                    <th pSortableColumn="full_name">Họ tên<p-sortIcon field="full_name" /></th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th pSortableColumn="created_at">Ngày tạo<p-sortIcon field="created_at" /></th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-product class="body">
+                <tr (click)="seletedAcount(product)">
+                    <td>
+                        <img class="imgPreview" [src]="backendURL + product.avatar" alt="">
+                    </td>
+                    <td>{{ product.full_name }}</td>
+                    <td>{{product.email}}</td>
+                    <td>{{product.phone}}</td>
+                    <td>{{product.created_at | date:'dd/MM/yyyy HH:mm'}}</td>
+                </tr>
+                <tr *ngIf="seletedAcountData && product.user_id === seletedAcountData.user_id">
+                    <td colspan="6">
+                        <div class="user-form">
+                            <!-- Cột 1: Avatar -->
+                            <div class="col avatar-col avatar-wrapper">
+                                <img [src]="backendURL + seletedAcountData.avatar" alt="avatar" class="avatar" />
+                            </div>
+
+                            <!-- Cột 2: Họ tên, Email, SĐT -->
+                            <div class="col">
+                                <div class="field">
+                                    <label for="full_name">Họ tên</label>
+                                    <input pInputText id="full_name" [(ngModel)]="seletedAcountData.full_name" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="email">Email</label>
+                                    <input pInputText id="email" [(ngModel)]="seletedAcountData.email" />
+                                </div>
+
+                                <div class="field">
+                                    <label for="phone">Số điện thoại</label>
+                                    <input pInputText id="phone" [(ngModel)]="seletedAcountData.phone" />
+                                </div>
+                            </div>
+
+                            <!-- Cột 3: Ngày tạo, Ngày cập nhật, nút -->
+                            <div class="col">
+                                <div class="field">
+                                    <label for="created_at">Ngày tạo</label>
+                                    <input pInputText id="created_at"
+                                        [value]="seletedAcountData.created_at | date:'dd/MM/yyyy HH:mm'" disabled />
+                                </div>
+
+                                <div class="field">
+                                    <label for="updated_at">Ngày cập nhật</label>
+                                    <input pInputText id="updated_at"
+                                        [value]="seletedAcountData.updated_at | date:'dd/MM/yyyy HH:mm'" disabled />
+                                </div>
+
+                                <div class="actions">
+                                    <p-button label="Lưu" icon="pi pi-save" (onClick)="updateUser()"></p-button>
+                                    <p-button label="Reset mật khẩu" icon="pi pi-refresh" severity="warn"
+                                        (onClick)="resetPassword()"></p-button>
+                                </div>
+                            </div>
+
+                            <!-- Cột 4:  Danh sách hoá đơn-->
+                            <div class="col listOrder">
+                                <p-table [value]="orderByUserIdData">
+                                    <ng-template #header>
+                <tr>
+                    <th>id</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Nhân viên</th>
+                    <th>Thời gian</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-item>
+                <tr (click)="goToOrder(item.order_id)">
+                    <td>{{ item.order_id }}</td>
+                    <td>{{ item.total_price | currency: 'VND'}}</td>
+                    <td>
+                        <p-badge [value]="getStatusLabel(item.status)" [severity]="stockSeverity(item)" />
+                    </td>
+                    <td>{{ item.staff_name }}</td>
+                    <td>{{ item.order_date | date:'dd/MM/yyyy HH:mm'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+</td>
+</tr>
+
+</ng-template>
+</p-table>
+
+</div>
+
+</div>

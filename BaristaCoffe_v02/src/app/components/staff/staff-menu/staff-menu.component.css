@@ -1,0 +1,99 @@
+/* ========== Reset & Global ========== */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+}
+
+button {
+  padding: 10px 20px;
+  background: var(--bg-button-primary);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: var(--bg-button-primary-hover);
+}
+button:disabled {
+  background: var(--bg-button-disabled);
+}
+
+/* ========== Layout chính ========== */
+.main {
+  position: relative;
+  display: flex;
+  height: 100%;
+}
+
+/* ========== Nav (sidebar) ========== */
+.nav {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  width: 300px;
+  padding: 10px 20px;
+  background-color: var(--bg-main);
+}
+
+/* search */
+.search {
+  margin-top: 20px;
+}
+.search input {
+  padding: 4px 8px;
+}
+.search p-floatlabel {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.search i:hover {
+  color: var(--text-danger);
+}
+
+/* filter */
+.filter {
+  margin-top: 20px;
+  gap: 5px;
+  overflow-y: auto;
+}
+.nav .filter .cate {
+  padding: 8px 16px;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+.nav .filter .cate:hover {
+  color: var(--text-hover);
+  background-color: var(--bg-hover);
+}
+
+/* ========== Card (bảng + nội dung chính) ========== */
+.card {
+  position: relative;
+  flex: 1;
+  padding: 10px;
+  overflow-x: auto;
+  height: 800px;
+}
+
+.card tr th {
+  font-size: 0.8rem;
+  padding: 12px 8px;
+}

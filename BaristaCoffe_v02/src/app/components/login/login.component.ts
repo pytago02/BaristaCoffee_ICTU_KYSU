@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/admin/dashboard']);
           }
           if (res.user.role === 'staff') {
-            this.router.navigate(['/staff/tables']);
+            this.router.navigate(['/staff/table']);
           }
         },
         error: (err) => {
