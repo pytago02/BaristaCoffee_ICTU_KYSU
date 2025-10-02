@@ -13,6 +13,7 @@ router.get("/getAllZonesWithTables", auth, authRole(["admin", "staff"]), tablesC
 router.post("/createTable", auth, authRole("admin"), tablesController.createTable);
 router.put("/updateTable/:id", auth, authRole("admin"), tablesController.updateTable);
 router.put("/deleteTable/:id", auth, authRole("admin"), tablesController.deleteTable);
+router.put("/updateStausTable/:id", auth, authRole(["admin", "staff"]), tablesController.updateStausTable);
 
 
 module.exports = router;

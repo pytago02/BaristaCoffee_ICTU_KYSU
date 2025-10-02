@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (res) => {
           localStorage.setItem('token', res.token);
-          localStorage.setItem('user', JSON.stringify(res.user));
+          // localStorage.setItem('user', JSON.stringify(res.user));
           if (res.user.role === 'admin') {
             this.router.navigate(['/admin/dashboard']);
           }

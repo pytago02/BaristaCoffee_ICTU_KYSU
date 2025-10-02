@@ -116,23 +116,42 @@
 
 .table-card:hover {
     filter: brightness(1.1);
+    cursor: pointer;
 }
 
-/* Màu theo trạng thái (gắn biến sau này nếu muốn) */
-.table-card.available {
-    background: var(--bg-button-success);
+/* Màu theo trạng thái */
+.available {
+    background-color: #4caf50;
+    /* xanh lá */
 }
 
-.table-card.occupied {
-    background: var(--bg-button-danger);
+.pending {
+    background-color: #ff9800;
+    /* cam */
 }
 
-.table-card.reserved {
-    background: var(--bg-button-primary);
+.preparing {
+    background-color: #f44336;
+    /* đỏ */
 }
 
-.table-card.unavailable {
-    background: var(--border-color);
+.served {
+    background-color: #2196f3;
+    /* xanh dương */
+}
+
+.paid {
+    background-color: #9c27b0;
+    /* tím */
+}
+
+.unavailable {
+    background-color: #9e9e9e;
+    /* xám */
+}
+
+.table-grid p {
+    font-size: 14px;
 }
 
 /* search */
@@ -150,16 +169,16 @@
 
 /* Đè toàn bộ cột bàn */
 .inforTable {
-  position: absolute;
-  inset: 0;
-  background: var(--bg-card);
-  color: var(--text-main);
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+    position: absolute;
+    inset: 0;
+    background: var(--bg-card);
+    color: var(--text-main);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
 
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Nút đóng */
@@ -210,5 +229,10 @@
 /* Footer nút chức năng */
 .inforTable-footer {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+}
+
+.pi-trash{
+    color: var(--text-danger);
+    cursor: pointer;
 }

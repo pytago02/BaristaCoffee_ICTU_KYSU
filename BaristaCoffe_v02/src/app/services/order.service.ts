@@ -50,4 +50,22 @@ export class OrderService {
       }
     );
   }
+
+  addOrderToTable(payload: any) {
+    return this.http.post(`${this.apiUrl}/addOrderToTable`, payload, {
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
+
+  updateOrderItem(payload: any) {
+    return this.http.put(`${this.apiUrl}/updateOrderItem`, payload, {
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
+
+  updateStatusOrder(payload: any) {
+    return this.http.post(`${this.apiUrl}/updateStatusOrder`, payload, {
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
 }

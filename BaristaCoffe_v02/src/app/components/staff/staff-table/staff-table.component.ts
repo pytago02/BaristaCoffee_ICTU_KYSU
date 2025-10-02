@@ -1,3 +1,4 @@
+import { UsersService } from './../../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -31,6 +32,12 @@ export class StaffTableComponent implements OnInit {
     price: '',
     order_quantity: 1,
   };
+  userData: any = {
+    avatar: '',
+    full_name: '',
+    email: '',
+    phone: '',
+  };
 
   constructor(
     private tablesService: TableService,
@@ -38,7 +45,9 @@ export class StaffTableComponent implements OnInit {
     private urlbackendService: UrlbackendService,
     private menuService: MenuService,
     private menuCategoryService: MenuCategoryService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private usersService: UsersService,
+    private messageService: MessageService
   ) {
     this.backendURL = urlbackendService.urlBackend;
   }
@@ -48,10 +57,28 @@ export class StaffTableComponent implements OnInit {
     this.getAllZonesWithTables();
     this.getAllZones();
     this.getAllMenu();
+    this.getMe();
   }
 
-  loadData() {}
+  loadData() {
+    this.getAllTables();
+    this.getAllZonesWithTables();
+    this.getAllZones();
+    this.getAllMenu();
+    this.getMe();
+  }
 
+  getMe() {
+    this.usersService.getMe().subscribe({
+      next: (res) => {
+        this.userData = res.data;
+        console.log(this.userData);
+      },
+      error: (err) => {
+        console.error('error getMe: ', err);
+      },
+    });
+  }
   getAllTables(): void {
     this.tablesService.getAllTables().subscribe((data) => {
       this.tableData = data;
@@ -131,6 +158,27 @@ export class StaffTableComponent implements OnInit {
     return Object.values(grouped);
   }
 
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'available':
+        return 'Sẵn sàng';
+      case 'pending':
+        return 'Chờ xác nhận';
+      case 'preparing':
+        return 'Đang chuẩn bị';
+      case 'served':
+        return 'Đã phục vụ';
+      case 'paid':
+        return 'Đã thanh toán';
+      case 'unavailable':
+        return 'Không khả dụng';
+      case 'completed':
+        return 'Đã phục vụ';
+      default:
+        return status;
+    }
+  }
+
   search() {
     const key = this.keyword.trim().toLowerCase();
 
@@ -185,20 +233,145 @@ export class StaffTableComponent implements OnInit {
     this.showInfoTable = false;
     this.selectedTableData = null;
     this.orderByTableIdData = [];
-  }
-
-  serveOrder(order: any) {
-    // TODO: Gọi API chuyển trạng thái order sang "Serving"
-    console.log('Phục vụ order:', order);
+    this.loadData();
   }
 
   payOrder(order: any) {
-    // TODO: Gọi API thanh toán
-    console.log('Thanh toán order:', order);
+    this.orderService
+      .updateStatusOrder({ order_id: order.order_id, status: 'paid' })
+      .subscribe({
+        next: (res: any) => {
+          console.log('Thanh toán thành công:', res);
+          this.getOrdersByTableId(this.selectedTableData.table_id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Thành công',
+            detail: 'Đã Thanh toán order',
+          });
+          this.updateStatusTable(this.selectedTableData.table_id, 'paid');
+          this.getAllTables();
+        },
+        error: (err) => {
+          console.error('Lỗi thanh toán:', err);
+        },
+      });
   }
 
   cancelTable(table: any) {
     // TODO: Gọi API hủy bàn
     console.log('Hủy bàn:', table);
+  }
+
+  addItemToTable() {
+    if (!this.selectedTableData) {
+      alert('Vui lòng chọn bàn trước');
+      return;
+    }
+
+    const payload = {
+      table_id: this.selectedTableData.table_id,
+      staff_id: this.userData.user_id,
+      items: [
+        {
+          menu_id: this.selectedItemData.menu_id,
+          quantity: this.selectedItemData.order_quantity,
+          note: '',
+        },
+      ],
+    };
+
+    this.orderService.addOrderToTable(payload).subscribe({
+      next: (res: any) => {
+        console.log('Thêm món thành công:', res);
+        this.updateStatusTable(this.selectedTableData.table_id, 'pending');
+        this.getOrdersByTableId(this.selectedTableData.table_id);
+      },
+      error: (err) => {
+        console.error('Lỗi thêm món:', err);
+      },
+    });
+  }
+
+  updateItemQuantity(item: any) {
+    console.log('update');
+    const payload = {
+      order_item_id: item.order_item_id,
+      quantity: item.quantity,
+    };
+
+    this.orderService.updateOrderItem(payload).subscribe({
+      next: (res: any) => {
+        console.log('Cập nhật số lượng thành công:', res);
+        this.getOrdersByTableId(this.selectedTableData.table_id);
+        this.loadData();
+      },
+      error: (err) => {
+        console.error('Lỗi update số lượng:', err);
+      },
+    });
+  }
+
+  serveOrder(order: any) {
+    this.orderService
+      .updateStatusOrder({ order_id: order.order_id, status: 'completed' })
+      .subscribe({
+        next: (res: any) => {
+          console.log('Phục vụ thành công:', res);
+          this.getOrdersByTableId(this.selectedTableData.table_id);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Thành công',
+            detail: 'Đã phục vụ order',
+          });
+          this.updateStatusTable(this.selectedTableData.table_id, 'served');
+          this.getAllTables();
+        },
+        error: (err) => {
+          console.error('Lỗi phục vụ:', err);
+        },
+      });
+  }
+
+  updateStatusTable(id: number, status: string) {
+    this.tablesService.updateStausTable(id, status).subscribe({
+      next: (res) => {
+        console.log('updateStatuTable success');
+        this.getOrdersByTableId(this.selectedTableData.table_id);
+        this.loadData();
+      },
+      error: (err) => {
+        console.error('Error updateStatusTable:', err);
+      },
+    });
+  }
+
+  checkOutTable() {
+    console.log('checkOutTable');
+    if (this.orderByTableIdData[0].status != 'paid') {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Cảnh báo',
+        detail: 'Hoá đơn chưa được thanh toán!',
+      });
+      return;
+    } else {
+      const status = 'available';
+      this.tablesService
+        .updateStausTable(this.selectedTableData.table_id, status)
+        .subscribe({
+          next: (res) => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Thành công',
+              detail: 'Check out thành công',
+            });
+            this.getAllTables();
+            this.getOrdersByTableId(this.selectedTableData.table_id);
+          },
+          error: (err) => {
+            console.error('Error checkOutTable: ', err);
+          },
+        });
+    }
   }
 }

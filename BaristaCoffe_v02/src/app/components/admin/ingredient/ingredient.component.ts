@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { UrlbackendService } from '../../../services/urlbackend.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { IngredientsService } from '../../../services/ingredient.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [ImportModule, ReactiveFormsModule],
   templateUrl: './ingredient.component.html',
   styleUrl: './ingredient.component.css',
-  providers: [ MessageService],
+  providers: [MessageService],
 })
 export class IngredientComponent implements OnInit {
   // ===== DATA =====
@@ -34,15 +34,13 @@ export class IngredientComponent implements OnInit {
 
   constructor(
     private urlbackendService: UrlbackendService,
-    private confirmService: ConfirmationService,
     private messageService: MessageService,
     private router: Router,
     private ingredientsService: IngredientsService
-  ) {
-    this.backendURL = this.urlbackendService.urlBackend;
-  }
+  ) {}
 
   ngOnInit(): void {
+    this.backendURL = this.urlbackendService.urlBackend;
     this.getAllIngredients();
   }
   loadData() {

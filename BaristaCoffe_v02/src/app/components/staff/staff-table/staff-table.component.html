@@ -1,3 +1,4 @@
+<p-toast position="top-right" [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
 <div class="staff-layout">
     <!-- Cột trái: Menu -->
     <div class="menu-column">
@@ -60,7 +61,7 @@
                     [value]="selectedItemData.price * selectedItemData.order_quantity | currency:'VND':'symbol':'1.0-0'" />
             </div>
 
-            <p-button label="Thêm"></p-button>
+            <p-button label="Thêm" (onClick)="addItemToTable()"></p-button>
         </div>
     </div>
 
@@ -72,7 +73,7 @@
                 <div *ngFor="let table of zone.tables" class="table-card" [ngClass]="table.table_status"
                     (click)="selectedTable(table)">
                     <h4>{{ table.table_name }}</h4>
-                    <p>{{ table.table_status }}</p>
+                    <p>{{ getStatusLabel(table.table_status) }}</p>
                 </div>
             </div>
         </div>
@@ -98,7 +99,7 @@
                             orderByTableIdData[0]?.customer_phone }})</p>
                         <p><b>Nhân viên:</b> {{ orderByTableIdData[0]?.staff_name }}</p>
                         <p><b>Thời gian:</b> {{ orderByTableIdData[0]?.order_date | date:'short' }}</p>
-                        <p><b>Trạng thái:</b> {{ orderByTableIdData[0]?.status }}</p>
+                        <p><b>Trạng thái:</b> {{ getStatusLabel(orderByTableIdData[0].status) }}</p>
                     </div>
 
                     <!-- PrimeNG Table -->
@@ -109,6 +110,7 @@
                                 <th>SL</th>
                                 <th>Giá</th>
                                 <th>Thành tiền</th>
+                                <th></th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="body" let-item>
@@ -117,9 +119,13 @@
                                     <img [src]="backendURL + item.image_url" width="40" height="40" class="mr-2" />
                                     {{ item.menu_item }}
                                 </td>
-                                <td>{{ item.quantity }}</td>
+                                <td>
+                                    <input class="w-[60px]" type="number" pInputText [(ngModel)]="item.quantity" min="1"
+                                        (change)="updateItemQuantity(item)">
+                                </td>
                                 <td>{{ item.price | currency:'VND' }}</td>
                                 <td>{{ item.item_total | currency:'VND' }}</td>
+                                <td><i class="pi pi-trash"></i></td>
                             </tr>
                         </ng-template>
                     </p-table>
@@ -139,59 +145,19 @@
             <!-- Footer -->
             <div class="inforTable-footer">
                 <p-button label="Phục vụ" icon="pi pi-send" styleClass="p-button-success"
-                    (click)="serveOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0"></p-button>
+                    (click)="serveOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0 || orderByTableIdData[0]?.status == 'completed'"></p-button>
 
                 <p-button label="Thanh toán" icon="pi pi-credit-card" styleClass="p-button-warning"
-                    (click)="payOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0"></p-button>
+                    (click)="payOrder(orderByTableIdData[0])" [disabled]="orderByTableIdData.length === 0 || orderByTableIdData[0]?.status == 'paid'"></p-button>
+
+                <p-button label="Trả bàn" icon="pi pi-replay" severity="secondary"
+                    (click)="checkOutTable()" [disabled]="orderByTableIdData.length === 0"></p-button>
 
                 <p-button label="Hủy bàn" icon="pi pi-trash" styleClass="p-button-danger"
                     (click)="cancelTable(selectedTableData)" [disabled]="orderByTableIdData.length === 0"></p-button>
             </div>
         </div>
 
-        <!-- <div class="inforTable" *ngIf="showInfoTable">
-            <button class="close-btn" (click)="closeInfoTable()">✖</button>
-
-            <h2>Bàn: {{ selectedTableData?.table_name }} ({{ selectedTableData?.table_status }})</h2>
-            <p>Khu vực: {{ orderByTableIdData[0]?.zone_name }}</p>
-
-            <div *ngIf="orderByTableIdData.length > 0">
-                <h3>Order hiện tại</h3>
-                <p>Khách hàng: {{ orderByTableIdData[0]?.customer_name }} ({{ orderByTableIdData[0]?.customer_phone }})
-                </p>
-                <p>Nhân viên: {{ orderByTableIdData[0]?.staff_name }}</p>
-                <p>Thời gian: {{ orderByTableIdData[0]?.order_date | date:'short' }}</p>
-                <p>Trạng thái: {{ orderByTableIdData[0]?.status }}</p>
-                <p>Thanh toán: {{ orderByTableIdData[0]?.payment_method }}</p>
-
-                <table class="order-items">
-                    <thead>
-                        <tr>
-                            <th>Món</th>
-                            <th>SL</th>
-                            <th>Giá</th>
-                            <th>Thành tiền</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let item of orderByTableIdData[0]?.items">
-                            <td>
-                                <img [src]="backendURL + item.image_url" width="40" height="40" /> {{ item.menu_item }}
-                            </td>
-                            <td>{{ item.quantity }}</td>
-                            <td>{{ item.price | currency:'VND' }}</td>
-                            <td>{{ item.item_total | currency:'VND' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <h3 class="total">Tổng: {{ orderByTableIdData[0]?.total_price | currency:'VND' }}</h3>
-            </div>
-
-            <div *ngIf="orderByTableIdData.length === 0">
-                <p>Chưa có order nào cho bàn này.</p>
-            </div>
-        </div> -->
     </div>
 
 </div>

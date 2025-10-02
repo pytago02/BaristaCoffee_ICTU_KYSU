@@ -74,4 +74,10 @@ export class TableService {
       headers: this.auth.getAuthHeaders(),
     });
   }
+
+  updateStausTable(id: number, status: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/updateStausTable/${id}`,{status}, {
+      headers: this.auth.getAuthHeaders(),
+    });
+  }
 }

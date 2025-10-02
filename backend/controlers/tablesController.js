@@ -258,3 +258,18 @@ exports.deleteTable = (req, res) => {
     }
   );
 };
+
+exports.updateStausTable = (req, res)=>{
+  const id = req.params.id;
+  const {status} = req.body;
+  db.query(
+   "UPDATE tables SET table_status = ? WHERE table_id = ?",
+   [status, id],
+   (err, results) => {
+      if (err) {
+        return res.status(500).json({ error: "Lỗi khi checkoutTable" });
+      }
+      res.json({ message: "checkoutTable thành công" });
+    }
+  )
+};

@@ -43,10 +43,10 @@ export class NavbarComponent {
     private usersService: UsersService
   ) {
     this.backendURL = this.urlBackendService.urlBackend;
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      this.userData = JSON.parse(userString);
-    }
+    // const userString = localStorage.getItem('user');
+    // if (userString) {
+    //   this.userData = JSON.parse(userString);
+    // }
     this.getMe();
   }
 
