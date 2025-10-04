@@ -10,7 +10,7 @@ router.get("/getOrdersByDate", auth, authRole(["admin", "staff"]), orderControll
 router.get("/getOrdersByCustomerName", auth, authRole(["admin", "staff"]), orderController.getOrdersByCustomerName);
 router.get("/getOrdersByUserId/:user_id", auth, authRole(["admin", "staff"]), orderController.getOrdersByUserId);
 router.get("/getOrdersByTableId/:table_id", auth, authRole(["admin", "staff"]), orderController.getOrdersByTableId);
-router.post("/addOrderToTable", auth, authRole(["admin", "staff"]), orderController.addOrderToTable);
+router.post("/addOrderToTable", auth, orderController.addOrderToTable);
 router.put("/updateOrderItem", auth, authRole(["admin", "staff"]), orderController.updateOrderItem);
 router.post('/updateStatusOrder', auth, authRole(["admin", "staff"]), orderController.updateStatusOrder);
 

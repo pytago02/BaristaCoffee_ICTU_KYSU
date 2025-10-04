@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UrlbackendService } from './urlbackend.service';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from './auth.service';
+import { table } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +46,12 @@ export class TableService {
     return this.http.get(`${this.apiUrl}/getAllTablesByZone/${zoneId}`, {
       headers: this.auth.getAuthHeaders(),
     });
+  }
+
+  getInforTableById(table_id: number):Observable<any>{
+    return this.http.get(`${this.apiUrl}/getInforTableById/${table_id}`,{
+      headers: this.auth.getAuthHeaders(),
+    })
   }
 
   createTable(data: any): Observable<any> {

@@ -8,6 +8,7 @@ import { UrlbackendService } from '../../../services/urlbackend.service';
 import { MenuService } from '../../../services/menu.service';
 import { MenuCategoryService } from '../../../services/menucategory.service';
 import { OrderService } from '../../../services/order.service';
+import { SocketService } from '../../../services/socket.service';
 
 @Component({
   selector: 'app-staff-table',
@@ -47,13 +48,25 @@ export class StaffTableComponent implements OnInit {
     private menuCategoryService: MenuCategoryService,
     private orderService: OrderService,
     private usersService: UsersService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private socketService: SocketService
   ) {
     this.backendURL = urlbackendService.urlBackend;
   }
 
   ngOnInit(): void {
     this.getAllTables();
+
+    this.socketService.onNewOrder().subscribe((order: any) => {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Order mới',
+        detail: `Bàn ${order.table_id} vừa gửi order`,
+      });
+
+      this.getAllZonesWithTables();
+    });
+
     this.getAllZonesWithTables();
     this.getAllZones();
     this.getAllMenu();

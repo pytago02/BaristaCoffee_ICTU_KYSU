@@ -1,0 +1,207 @@
+<div class="main">
+  <p-toast [breakpoints]="{ '920px': { width: '90%', right: '', left: '0' } }" />
+
+  <div class="customer-container">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-left">
+        <h2>Bàn {{ tableID || '---' }}</h2>
+        <p>Khách: {{ userData?.name || 'Khách mới' }}</p>
+      </div>
+      <div class="header-right">
+        <button class="cart-btn" (click)="showCart = true">
+          <i class="pi pi-shopping-cart"></i>
+          <span *ngIf="cart.length" class="cart-badge">{{ cart.length }}</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- NAVIGATION -->
+    <nav class="bottom-nav">
+      <div class="btn" (click)="activePage='profile'"><i class="pi pi-user"></i>Cá nhân</div>
+      <div class="btn" (click)="activePage='menu'"><i class="pi pi-book"></i>Thực đơn</div>
+      <div class="btn home" (click)="activePage='home'"><i class="pi pi-home"></i>Trang chủ</div>
+      <div class="btn" (click)="callStaff()"><i class="pi pi-bell"></i>Gọi nhân viên</div>
+      <div class="btn" (click)="requestPayment()"><i class="pi pi-credit-card"></i>Thanh toán</div>
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <main class="page-content">
+
+      <!-- Trang Home -->
+      <section *ngIf="activePage === 'home'" class="page home">
+        <h3>Xin chào {{ userData?.name || 'Quý khách' }} 👋</h3>
+        <p>Bạn đang ngồi tại bàn <b>{{ tableInfor?.table_name || '---' }}</b></p>
+        <p>Chọn "Thực đơn" để bắt đầu order nhé!</p>
+      </section>
+
+      <!-- Trang Menu -->
+      <section *ngIf="activePage === 'menu'" class="page menu">
+        <!-- Món đề xuất -->
+        <div *ngIf="recomentDationData?.length" class="recommend-section">
+          <h3>✨ Gợi ý cho bạn</h3>
+          <div class="menu-grid">
+            <div *ngFor="let item of recomentDationData" class="menu-card" (click)="openDetail(item)">
+              <img [src]="urlBackend + item.image_url" alt="{{ item.menu_name }}">
+              <h4>{{ item.menu_name }}</h4>
+              <strong>{{ item.price | currency:'VND':'symbol' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bộ lọc -->
+        <div class="category-bar">
+          <button *ngFor="let cat of categoryOptions" (click)="selectedCategory = cat.value"
+            [class.active]="selectedCategory===cat.value">
+            {{ cat.label }}
+          </button>
+        </div>
+
+        <!-- Menu theo danh mục -->
+        <div *ngFor="let group of groupedMenuData" class="category-section"
+          [hidden]="selectedCategory && selectedCategory !== group.categoryId">
+          <h3>{{ group.categoryName }}</h3>
+          <div class="menu-grid">
+            <div *ngFor="let item of group.items" class="menu-card" (click)="openDetail(item)">
+              <img [src]="urlBackend + item.image_url" alt="{{ item.menu_name }}">
+              <h4>{{ item.menu_name }}</h4>
+              <strong>{{ item.price | currency:'VND':'symbol' }}</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Trang Profile -->
+      <section *ngIf="activePage === 'profile'" class="page profile">
+        <h3>Thông tin cá nhân</h3>
+
+        <!-- Avatar lớn, full chiều ngang -->
+        <div class="profile-avatar">
+          <img *ngIf="userData?.avatar; else defaultAvatar" [src]="urlBackend + userData?.avatar" alt="avatar">
+          <ng-template #defaultAvatar>
+            <div class="avatar-placeholder">Ảnh</div>
+          </ng-template>
+          <div class="edit-avatar-btn" (click)="changeAvatar()">
+            <i class="pi pi-pencil"></i>
+          </div>
+        </div>
+
+        <!-- Form thông tin -->
+        <div class="profile-info" *ngIf="!isChangePass">
+          <div class="form-field">
+            <label for="">Tên</label>
+            <input pInputText [(ngModel)]="userData.full_name" placeholder="Tên" [disabled]="!isEditing" />
+          </div>
+
+          <div class="form-field">
+            <label for="">Email</label>
+            <input pInputText [(ngModel)]="userData.email" placeholder="Email" [disabled]="!isEditing" />
+          </div>
+
+          <div class="form-field">
+            <label for="">Số điện thoại</label>
+            <input pInputText [(ngModel)]="userData.phone" placeholder="SĐT" [disabled]="!isEditing" />
+          </div>
+        </div>
+
+        <div class="changePass profile-info" *ngIf="isChangePass">
+          <div class="form-field">
+            <label for="">Mật khẩu hiện tại</label>
+            <!-- <input pInputText [(ngModel)]="changePassData.oldPass" type="password" /> -->
+            <p-password [(ngModel)]="changePassData.oldPass" [toggleMask]="true" [feedback]="false"/>
+          </div>
+
+          <div class="form-field">
+            <label for="">Mật khẩu mới</label>
+              <p-password [(ngModel)]="changePassData.newPass" [toggleMask]="true" />
+          </div>
+
+          <div class="form-field">
+            <label for="">Xác nhận mật khẩu mới</label>
+            <p-password [(ngModel)]="changePassData.confirmNewPass" [toggleMask]="true" [feedback]="false"/>
+          </div>
+        </div>
+
+        <div class="action">
+          <p-button (onClick)="cancelEdit()" *ngIf="isEditing || isChangePass" severity="danger" size="small"
+            label="Huỷ"></p-button>
+          <p-button (onClick)="toggleEdit()" [label]="isEditing ? 'Lưu' : 'Cập nhật'"
+            [icon]="isEditing ? 'pi pi-save' : 'pi pi-pencil'" [size]="'small'" *ngIf="!isChangePass"></p-button>
+          <p-button (onClick)="toggleChangePass()" [label]="isChangePass ? 'Đổi' : 'Đổi mật khẩu'"
+            [icon]="isChangePass ? 'pi pi-check' : 'pi pi-lock'" [size]="'small'" *ngIf="!isEditing"></p-button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- DIALOG chi tiết món -->
+    <p-dialog header="{{ selectedItem?.menu_name }}" [(visible)]="showDetail" [modal]="true" [style]="{width:'90vw'}">
+      <div *ngIf="selectedItem">
+        <img [src]="urlBackend + selectedItem.image_url" alt="{{ selectedItem.menu_name }}"
+          style="width:100%;border-radius:8px;">
+        <p>{{ selectedItem.description }}</p>
+        <h4>Giá: {{ selectedItem.price | currency:'VND':'symbol' }}</h4>
+        <button title="addToCart" pButton type="button" label="+ Thêm vào giỏ"
+          (click)="addToCart(selectedItem)"></button>
+      </div>
+    </p-dialog>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" [class.active]="showCart">
+      <div class="cart-header">
+        <h3>🛒 Giỏ hàng</h3>
+        <button class="close-btn" (click)="showCart=false">✖</button>
+      </div>
+
+      <div class="cart-body">
+        <div *ngIf="!cart.length" class="empty-cart">Giỏ hàng trống.</div>
+
+        <div *ngFor="let c of cart; let i = index" class="cart-item">
+          <span>{{ c.menu_name }}</span>
+
+          <div class="qty-controls">
+            <button (click)="decreaseQuantity(i)">-</button>
+            <span>{{ c.quantity }}</span>
+            <button (click)="increaseQuantity(i)">+</button>
+          </div>
+
+          <i class="pi pi-trash" (click)="removeFromCart(i)"></i>
+        </div>
+      </div>
+
+      <div class="cart-footer" *ngIf="cart.length">
+        <h4>Tổng: {{ getCartTotal() | currency:'VND':'symbol' }}</h4>
+        <button class="order-btn" (click)="submitOrder()">Gửi Order</button>
+      </div>
+    </div>
+  </div>
+
+  <p-dialog header="Chi tiết Order" [(visible)]="showOrderDetail" [modal]="true" [style]="{width:'90vw'}">
+    <div *ngIf="orderData" class="order-detail">
+      <p><b>Mã order:</b> {{ orderData.order_id }}</p>
+      <p><b>Trạng thái:</b> {{ getStatusLabel(orderData.status) }}</p>
+      <p><b>Ngày tạo:</b> {{ orderData.created_at | date:'short' }}</p>
+
+      <h4>Danh sách món:</h4>
+      <ul class="order-items">
+        <li *ngFor="let item of orderData.items">
+          <div class="order-item-left">
+            <img [src]="urlBackend + item.menu.image_url" alt="{{ item.menu.name }}">
+            <span class="order-item-name">{{ item.menu.name }}</span>
+          </div>
+          <span class="order-item-qty">x{{ item.quantity }}</span>
+        </li>
+      </ul>
+
+      <div class="order-total">
+        Tổng tiền: {{ orderData.total_price | currency:'VND':'symbol' }}
+      </div>
+
+      <div class="order-actions">
+        <p-button label="Yêu cầu thanh toán" icon="pi pi-credit-card" (click)="confirmPayment()"></p-button>
+      </div>
+    </div>
+  </p-dialog>
+
+
+</div>

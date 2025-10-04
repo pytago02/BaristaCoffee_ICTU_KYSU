@@ -9,6 +9,7 @@ router.get("/getAllTablesByStatus/:status", auth, authRole(["admin", "staff"]), 
 router.get("/getTablesById/:id", auth, authRole(["admin", "staff"]), tablesController.getTablesById);
 router.get("/getAllTablesByZone/:zoneId", auth, authRole(["admin", "staff"]), tablesController.getAllTablesByZone);
 router.get("/getAllZonesWithTables", auth, authRole(["admin", "staff"]), tablesController.getAllZonesWithTables);
+router.get("/getInforTableById/:table_id", tablesController.getInforTableById);
 
 router.post("/createTable", auth, authRole("admin"), tablesController.createTable);
 router.put("/updateTable/:id", auth, authRole("admin"), tablesController.updateTable);

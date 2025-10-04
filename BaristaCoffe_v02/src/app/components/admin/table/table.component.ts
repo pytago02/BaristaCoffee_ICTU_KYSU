@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { UrlbackendService } from '../../../services/urlbackend.service';
 
 export interface TableData {
   table_id: number;
@@ -68,6 +69,7 @@ export class TableComponent implements OnInit {
   status: string = 'available';
   tableId: number | undefined;
   // zoneData$: Observable<any> | undefined;
+  urlFrontEnd = '';
   zonesData: any;
   zones: any;
   showCreateTableForm = false;
@@ -82,6 +84,7 @@ export class TableComponent implements OnInit {
 
   selectedTableData: any;
   showEditTable = false;
+  qrData = '';
 
   constructor(
     private tablesService: TableService,
@@ -91,6 +94,7 @@ export class TableComponent implements OnInit {
     private cd: ChangeDetectorRef,
     private confirmService: ConfirmationService,
     private messageService: MessageService,
+    private urlbackendService: UrlbackendService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // this.zoneData$ = this.tablesService.getAllZonesWithTables();
@@ -105,6 +109,7 @@ export class TableComponent implements OnInit {
   }
 
   loadData() {
+    this.urlFrontEnd = this.urlbackendService.urlFrontend;
     this.getAllTables();
     this.getAllZones();
     this.initChart();
@@ -375,6 +380,7 @@ export class TableComponent implements OnInit {
 
   // select table
   selectedTable(table: any) {
+    console.log(table);
     this.tablesService.getTableById(table.table_id).subscribe({
       error: (err) => {
         console.error('Lỗi lấy table by id: ', err);
@@ -383,8 +389,11 @@ export class TableComponent implements OnInit {
         this.selectedTableData = data;
         this.showEditTable = true;
         console.log('selectedTableData: ', this.selectedTableData);
+        this.qrData = `${this.urlFrontEnd}/customer/?table_id=${this.selectedTableData.table_id}`;
+        console.log(this.qrData);
         this.cd.detectChanges();
       },
     });
   }
+
 }

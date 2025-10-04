@@ -72,7 +72,6 @@ exports.getTablesById = (req, res) => {
 
       oi.order_item_id,
       oi.quantity,
-      oi.price AS item_price,
       oi.note,
 
       m.*
@@ -152,6 +151,22 @@ exports.getTablesById = (req, res) => {
   });
 };
 
+exports.getInforTableById = (req, res)=>{
+  const table_id = req.params.table_id;
+  db.query(
+    `SELECT t.table_id, t.table_name, z.zone_name
+      FROM tables t
+      JOIN zone z ON t.zone_id = z.zone_id
+      WHERE t.table_id = ?`,
+    [table_id],
+    (err, results)=>{
+      if(err){
+        return res.status(500).json({error: "error getInforTableById:", err});
+      }
+      res.json(results);
+    }
+  )
+}
 
 
 exports.getAllTablesByZone = (req, res) => {

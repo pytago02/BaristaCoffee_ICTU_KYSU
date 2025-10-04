@@ -593,6 +593,11 @@ exports.addOrderToTable = (req, res) => {
               if (err4) return res.status(500).json({ error: "Lỗi thêm order items", err4 });
 
               db.query(`UPDATE orders SET total_price = total_price + ? WHERE order_id = ?`, [total, orderId]);
+
+              // ✅ Emit sự kiện qua socket
+              const io = req.app.get("io");
+              io.emit("orderCreated", { ...dataOrder });
+
               return res.json({ message: "Thêm món thành công", order_id: orderId });
             }
           );

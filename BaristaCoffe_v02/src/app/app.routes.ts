@@ -21,9 +21,10 @@ import { StaffTableComponent } from './components/staff/staff-table/staff-table.
 import { StaffMenuComponent } from './components/staff/staff-menu/staff-menu.component';
 import { StaffRecipesComponent } from './components/staff/staff-recipes/staff-recipes.component';
 import { StaffIngredientComponent } from './components/staff/staff-ingredient/staff-ingredient.component';
+import { CustommerComponent } from './components/custommer/custommer.component';
 
 export const routes: Routes = [
-  { path: '', component: LoginComponent },
+  { path: '', component: CustommerComponent },
   { path: 'login', component: LoginComponent },
 
   {
@@ -57,4 +58,6 @@ export const routes: Routes = [
       { path: 'recipes', component: StaffRecipesComponent },
     ],
   },
+
+  { path: 'customer', component: CustommerComponent },
 ];

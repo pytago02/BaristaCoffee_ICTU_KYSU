@@ -48,6 +48,9 @@ export class LoginComponent implements OnInit {
           if (res.user.role === 'staff') {
             this.router.navigate(['/staff/table']);
           }
+          if (res.user.role === 'customer') {
+            this.router.navigate(['/customer']);
+          }
         },
         error: (err) => {
           this.messageService.add({
