@@ -1,0 +1,32 @@
+[
+  {
+    "user": "guest",
+    "message": "Cho tôi biết giá cà phê latte nóng?",
+    "reply": "Latte nóng có giá 59.000đ ạ.\n",
+    "time": "2025-10-19T07:52:26.035Z"
+  },
+  {
+    "user": "guest",
+    "message": "xin chào",
+    "reply": "Chào bạn ạ! Bạn muốn dùng gì ở Mocha House không ạ?",
+    "time": "2025-10-19T07:52:36.377Z"
+  },
+  {
+    "user": "guest",
+    "message": "cách pha cà phê đen",
+    "reply": "Xin lỗi, tôi chỉ có thể giúp về dịch vụ và đồ uống tại quán Mocha House ạ.\n",
+    "time": "2025-10-19T07:52:51.473Z"
+  },
+  {
+    "user": "guest",
+    "message": "cà phê đen",
+    "reply": "Mocha House có cà phê đen nóng và đá, giá đồng giá 39.000đ ạ! Bạn muốn dùng loại nào ạ?\n",
+    "time": "2025-10-19T07:53:19.723Z"
+  },
+  {
+    "user": "guest",
+    "message": "cách pha cà phê đen",
+    "reply": "Xin lỗi, tôi chỉ có thể giúp về dịch vụ và đồ uống tại quán Mocha House ạ.\n",
+    "time": "2025-10-19T08:01:33.846Z"
+  }
+]

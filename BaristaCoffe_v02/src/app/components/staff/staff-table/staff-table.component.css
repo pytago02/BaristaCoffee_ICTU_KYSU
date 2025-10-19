@@ -167,6 +167,37 @@
     border-radius: 8px;
 }
 
+.notifi{
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+}
+
+.notifi i{
+    font-size: 24px;
+}
+
+.cartNotifi {
+  background: none;
+  border: none;
+  font-size: 20px;
+  position: relative;
+  color: inherit;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
 /* Đè toàn bộ cột bàn */
 .inforTable {
     position: absolute;

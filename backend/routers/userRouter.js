@@ -8,7 +8,7 @@ const { uploadAvatar } = require("../upload");
 router.post("/register", userController.register);
 router.post("/registerStaff",auth, authRole(["admin"]), userController.registerStaff);
 router.post("/staffLogin", userController.staffLogin);
-router.post("/customerLogin", userController.customerLogin);
+router.post("/login", userController.login);
 
 router.get("/getAllUser", auth, authRole(["admin", "staff"]), userController.getAllUsers);
 router.get("/getUserById/:id", auth, authRole(["admin", "staff"]), userController.getUserById);

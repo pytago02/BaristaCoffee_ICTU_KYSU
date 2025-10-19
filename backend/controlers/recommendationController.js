@@ -67,6 +67,23 @@ const getPreferenceBased = (user_id, limit) => {
   });
 };
 
+// Gợi ý dựa trên bảng recommendations
+const getRecommendationBased = (user_id, limit) => {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT m.*, r.score
+      FROM recommendations r
+      JOIN menu m ON m.menu_id = r.menu_id
+      WHERE r.user_id = ?
+      ORDER BY r.score DESC, r.generated_at DESC
+      LIMIT ?`;
+    db.query(sql, [user_id, limit], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+};
+
 // API chính
 exports.getRecommendations = async (req, res) => {
   const user_id = req.params.user_id;
@@ -88,18 +105,29 @@ exports.getRecommendations = async (req, res) => {
       // Khách ít đơn
       const bestsellers = await getBestsellers(4);
       const prefs = await getPreferenceBased(user_id, 4);
+      const recs = await getRecommendationBased(user_id, 4); // thêm
       const random = await new Promise((resolve, reject) => {
         db.query(`SELECT * FROM menu ORDER BY RAND() LIMIT 4`, (err, rows) =>
           err ? reject(err) : resolve(rows)
         );
       });
-      results = [...bestsellers, ...prefs, ...random];
+
+      // nếu có dữ liệu trong recommendations thì ưu tiên
+      results =
+        recs.length > 0
+          ? [...recs, ...prefs, ...bestsellers]
+          : [...bestsellers, ...prefs, ...random];
     } else {
       // Khách quen
+      const recs = await getRecommendationBased(user_id, 5); // thêm
       const history = await getHistoryBased(user_id, 5);
       const prefs = await getPreferenceBased(user_id, 4);
       const bestsellers = await getBestsellers(3);
-      results = [...history, ...prefs, ...bestsellers];
+
+      results =
+        recs.length > 0
+          ? [...recs, ...prefs, ...bestsellers]
+          : [...history, ...prefs, ...bestsellers];
     }
 
     // Loại trùng lặp menu_id

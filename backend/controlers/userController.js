@@ -131,42 +131,55 @@ exports.staffLogin = (req, res) => {
 };
 
 // customer login
-exports.customerLogin = (req, res) => {
-  const { phone, password } = req.body;
+exports.login = (req, res) => {
+  const { identifier, password } = req.body; 
+  // identifier = email hoặc phone
 
-  db.query(
-    "SELECT * FROM users WHERE phone = ? AND is_active = 1",
-    [phone],
-    (err, results) => {
-      if (err) {
-        return res.status(500).json({ message: "Đăng nhập không thành công!" });
-      }
-      if (results.length === 0) {
-        return res.status(404).json({ message: "Người dùng không tồn tại!" });
-      }
-      const user = results[0];
+  if (!identifier || !password) {
+    return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin!" });
+  }
 
-      // so sánh mật khẩu
-      const isPasswordValid = bcrypt.compareSync(password, user.password);
-      if (!isPasswordValid) {
-        return res
-          .status(401)
-          .json({ message: "Thông tin đăng nhập không chính xác!" });
-      }
+  const sql = `
+    SELECT * FROM users
+    WHERE (email = ? OR phone = ?)
+    AND is_active = 1
+    AND is_deleted = 0
+    LIMIT 1
+  `;
 
-      // Tạo token
-      const token = jwt.sign(
-        { user_id: user.user_id, role: user.role },
-        JWT_SECRET,
-        {
-          expiresIn: JWT_EXPIRES_IN,
-        }
-      );
-
-      // Trả về thông tin người dùng và token
-      return res.status(200).json({ message: "Đăng nhập thành công!", token });
+  db.query(sql, [identifier, identifier], (err, results) => {
+    if (err) {
+      console.error("❌ Lỗi DB khi đăng nhập:", err);
+      return res.status(500).json({ message: "Lỗi hệ thống!" });
     }
-  );
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Email hoặc SĐT không tồn tại!" });
+    }
+
+    const user = results[0];
+
+    // So sánh mật khẩu
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Mật khẩu không chính xác!" });
+    }
+
+    // Tạo token JWT
+    const token = jwt.sign(
+      { user_id: user.user_id, role: user.role },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
+    );
+
+    delete user.password; // ẩn mật khẩu trước khi gửi về FE
+
+    return res.status(200).json({
+      message: "Đăng nhập thành công!",
+      token,
+      user,
+    });
+  });
 };
 
 // get all users

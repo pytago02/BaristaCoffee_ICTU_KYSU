@@ -23,6 +23,8 @@ import { StaffRecipesComponent } from './components/staff/staff-recipes/staff-re
 import { StaffIngredientComponent } from './components/staff/staff-ingredient/staff-ingredient.component';
 import { CustommerComponent } from './components/custommer/custommer.component';
 
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
+
 export const routes: Routes = [
   { path: '', component: CustommerComponent },
   { path: 'login', component: LoginComponent },
@@ -60,4 +62,5 @@ export const routes: Routes = [
   },
 
   { path: 'customer', component: CustommerComponent },
+  { path: 'chatbot', component: ChatbotComponent },
 ];

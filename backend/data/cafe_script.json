@@ -1,0 +1,178 @@
+{
+  "intro": "Xin chào! Tôi là trợ lý ảo của quán Barista Coffee. Tôi có thể giúp bạn chọn đồ uống, giới thiệu menu hoặc hướng dẫn nhân viên pha chế.",
+  "faq": [
+    {
+      "q": "Giờ mở cửa",
+      "a": "Quán mở cửa từ 7h sáng đến 22h tối mỗi ngày nhé!"
+    },
+    {
+      "q": "Khuyến mãi",
+      "a": "Hiện tại quán đang có chương trình mua 2 tặng 1 vào thứ 3 hàng tuần và giảm 10% khi thanh toán qua Momo."
+    },
+    {
+      "q": "Liên hệ",
+      "a": "Bạn có thể liên hệ quán qua số 0909-123-456 hoặc fanpage Barista Coffee."
+    },
+    {
+      "q": ["đặt món", "mua món", "gọi món", "đặt ăn"],
+      "a": "📝 *Để đặt món bạn chọn món muốn đặt từ menu, chọn số lượng và nhấn: \"Thêm vào giỏ hàng\".\\nTiếp đó vào giỏ hàng bằng biểu tượng ở góc phải rồi chọn: \"Xác nhận gửi order\".*"
+    },
+    {
+      "q": ["menu", "danh sách món", "có món gì", "thực đơn"],
+      "a": "📋 *Để truy cập menu từ trang chủ bạn chọn: \"Xem menu - gọi món\".*"
+    },
+    {
+      "q": ["giờ mở cửa", "giờ hoạt động", "mở cửa lúc nào", "giờ làm việc"],
+      "a": "🕒 *Giờ mở cửa:*\\nNhà hàng mở cửa từ *8h sáng đến 9h tối*, từ thứ 2 đến chủ nhật.*"
+    },
+    {
+      "q": ["thanh toán", "trả tiền", "cách thanh toán", "thanh toán qua đâu"],
+      "a": "💳 *Thanh toán:*\\nChọn chức năng gọi thanh toán để nhân viên hỗ trợ thanh toán hoá đơn.\\nBạn có thể thanh toán khi nhận món (COD) hoặc qua Momo, ZaloPay, chuyển khoản.*"
+    },
+    {
+      "q": ["xác nhận", "gửi đơn", "đặt hàng", "xác minh"],
+      "a": "✅ *Đơn hàng của bạn đã được xác nhận.*\\nCảm ơn bạn đã đặt món!*"
+    },
+    {
+      "q": ["hủy", "huỷ đơn", "hủy món", "huỷ hàng"],
+      "a": "❌ *Hủy đơn hàng:*\\nVui lòng chọn gọi nhân viên để được hỗ trợ huỷ đơn.*"
+    },
+    {
+      "q": ["hỗ trợ", "giúp đỡ", "tư vấn", "cần giúp"],
+      "a": "📞 *Hỗ trợ khách hàng:*\\nBạn có thể gọi hotline: 0898 284 203 hoặc nhắn tại đây để được trợ giúp.*"
+    },
+    {
+      "q": ["địa chỉ", "ở đâu", "chỗ nào", "vị trí"],
+      "a": "📍 *Địa chỉ quán:*\\n123 Minh Tiến - Đại Từ - Thái Nguyên*"
+    },
+    {
+      "q": ["giao hàng", "ship", "vận chuyển", "giao tận nơi"],
+      "a": "🚚 *Giao hàng:*\\nChúng tôi giao hàng nội thành Thái Nguyên trong vòng 30 phút. Phí ship từ 15k – miễn phí nếu hóa đơn > 100k.*"
+    },
+    {
+      "q": ["đặt bàn", "giữ chỗ", "đặt chỗ", "bàn trống"],
+      "a": "📅 *Đặt bàn trước:*\\nBạn có thể đặt bàn bằng cách gọi số hotline 0898 284 203.*"
+    },
+    {
+      "q": ["wifi", "mật khẩu wifi", "wifi free", "wifi miễn phí"],
+      "a": "📶 *WiFi miễn phí:*\\nBạn có thể dùng WiFi miễn phí tại quán. Mật khẩu là: *basristacoffe*"
+    },
+    {
+      "q": ["toilet", "nhà vệ sinh", "wc", "phòng vệ sinh"],
+      "a": "🚻 *Nhà vệ sinh:*\\nToilet nằm ở cuối hành lang bên trái, sau quầy pha chế.*"
+    },
+    {
+      "q": ["trẻ em", "chỗ cho bé", "ghế trẻ em", "bé nhỏ"],
+      "a": "👶 *Dịch vụ cho trẻ em:*\\nQuán có ghế ăn cho trẻ nhỏ và khu vui chơi mini. Bạn có thể yêu cầu nhân viên hỗ trợ khi cần.*"
+    },
+    {
+      "q": ["thú cưng", "pet", "mang theo chó mèo", "chó mèo"],
+      "a": "🐾 *Thú cưng:*\\nQuán thân thiện với thú cưng! Bạn có thể mang theo chó mèo nhưng vui lòng giữ vệ sinh chung.*"
+    },
+    {
+      "q": ["hóa đơn", "xuất hóa đơn", "in bill", "bill đỏ"],
+      "a": "🧾 *Xuất hoá đơn:*\\nVui lòng yêu cầu nhân viên hoặc điền thông tin xuất hoá đơn khi thanh toán.*"
+    },
+    {
+      "q": ["món phổ biến", "best seller", "món được chọn nhiều", "món ngon"],
+      "a": "🌟 *Món được yêu thích nhất:*\\n- Capuchino\\n- Bánh mì thịt nướng\\n- Trà chanh đào sả.*"
+    },
+    {
+      "q": ["chờ lâu", "đợi lâu", "sao chưa có món", "món lâu ra"],
+      "a": "⌛ *Thời gian phục vụ:*\\nThông thường món sẽ lên trong 10–15 phút. Nếu chờ quá lâu, vui lòng gọi nhân viên để được kiểm tra.*"
+    },
+    {
+      "q": ["liên hệ", "số điện thoại", "email", "contact"],
+      "a": "📱 *Liên hệ:*\\nHotline: 0898 284 203\\nEmail: Barista@gmail.com\\nFacebook: fb.com/Barista.vn"
+    },
+    {
+      "q": ["xin lỗi", "lỗi rồi", "nhầm rồi", "mình nhầm"],
+      "a": "🙈 *Không sao đâu ạ!* Mình ở đây để hỗ trợ bạn bất cứ lúc nào.*"
+    },
+    {
+      "q": ["tên", "nhập tên", "bắt đầu", "vào quán"],
+      "a": "✍️ *Bạn vui lòng nhập tên* vào ô bên dưới logo Barista Coffee để bắt đầu gọi món nhé!*"
+    },
+    {
+      "q": ["xem menu", "gọi món", "đặt món", "menu đâu"],
+      "a": "📋 *Nhấn nút \\\"Xem menu - gọi món\\\"* ở giao diện chính để bắt đầu chọn món bạn yêu thích.*"
+    },
+    {
+      "q": ["lọc món", "chọn loại", "danh mục", "phân loại"],
+      "a": "🧃 Bạn có thể *chọn danh mục* (ví dụ: \\\"Cà phê\\\", \\\"Trà sữa\\\",...) phía trên menu để lọc món dễ hơn.*"
+    },
+    {
+      "q": ["mô tả món", "món này có gì", "chi tiết món", "thành phần"],
+      "a": "ℹ️ Khi bạn nhấn vào một món, chatbot sẽ hiển thị *giá, mô tả và ảnh* món ăn.*"
+    },
+    {
+      "q": ["gọi nhân viên", "gọi phục vụ", "gọi người", "cần nhân viên"],
+      "a": "🙋‍♂️ Bạn có thể nhấn vào *nút \\\"Gọi nhân viên\\\"* tại màn hình chính để được hỗ trợ nhé!*"
+    },
+    {
+      "q": ["gọi thanh toán", "trả tiền", "kết thúc", "thanh toán"],
+      "a": "💵 Nhấn vào biểu tượng *\\\"Gọi thanh toán\\\"* để báo nhân viên thanh toán tại bàn.*"
+    },
+    {
+      "q": ["giỏ hàng", "đã chọn gì", "xem giỏ", "xem món"],
+      "a": "🛒 Nhấn biểu tượng *giỏ hàng* ở góc trên phải hoặc chọn lại *menu > giỏ hàng* để xem món đã chọn.*"
+    },
+    {
+      "q": ["sửa món", "sửa số lượng", "chỉnh món", "chỉnh sửa"],
+      "a": "📝 Bạn có thể *nhấn vào biểu tượng bút chì ✏️* bên cạnh món trong giỏ để chỉnh sửa số lượng.*"
+    },
+    {
+      "q": ["xoá giỏ", "xoá hết", "xoá tất cả", "xoá món"],
+      "a": "🗑️ Nhấn *\\\"Xoá giỏ\\\"* ở giỏ hàng để xoá toàn bộ món đã chọn (cần xác nhận nhé!).*"
+    },
+    {
+      "q": ["gửi đơn", "gửi gọi món", "gửi yêu cầu", "xác nhận"],
+      "a": "📨 Nhấn vào nút *\\\"Xác nhận gửi yêu cầu gọi món\\\"* ở cuối giỏ hàng để gửi đơn đến nhân viên.*"
+    },
+    {
+      "q": ["reset", "làm lại", "chọn lại", "thoát"],
+      "a": "🔄 Nếu muốn đặt lại từ đầu, bạn có thể *tải lại trang hoặc chọn “Thoát”* để reset dữ liệu.*"
+    },
+    {
+      "q": ["xin chào", "chào bạn", "hello", "hi", "alo"],
+      "a": "👋 *Xin chào!* Rất vui được hỗ trợ bạn hôm nay. Bạn cần đặt món hay cần tư vấn gì ạ?*"
+    },
+    {
+      "q": ["cảm ơn", "thank you", "cám ơn", "cảm ơn nhé"],
+      "a": "🙏 *Cảm ơn bạn rất nhiều!* Chúc bạn ngon miệng và một ngày thật tuyệt vời!*"
+    },
+    {
+      "q": ["tạm biệt", "bye", "chào tạm biệt", "goodbye"],
+      "a": "👋 *Tạm biệt!* Rất mong sớm gặp lại bạn lần sau!*"
+    },
+    {
+      "q": ["bạn là ai", "đây là gì", "ai đang trả lời", "đang nói chuyện với ai"],
+      "a": "🤖 *Mình là trợ lý ảo của quán ăn*, luôn sẵn sàng hỗ trợ bạn đặt món, hỏi thông tin, hoặc bất cứ điều gì liên quan đến quán!*"
+    },
+    {
+      "q": ["khỏe không", "dạo này sao rồi", "ổn không"],
+      "a": "😊 *Mình ổn, cảm ơn bạn đã hỏi!* Còn bạn thì sao? Cần mình giúp gì không nào?*"
+    },
+    {
+      "q": ["đang làm gì", "đang bận không", "rảnh không"],
+      "a": "⌛ *Mình luôn sẵn sàng hỗ trợ bạn 24/7!* Có điều gì mình có thể giúp bạn hôm nay không?*"
+    },
+    {
+      "q": ["ngày mới", "buổi sáng", "chúc ngày mới", "chúc buổi sáng"],
+      "a": "🌞 *Chúc bạn một buổi sáng tốt lành và một ngày tràn đầy năng lượng!*"
+    },
+    {
+      "q": ["buổi tối", "chúc ngủ ngon", "tối rồi", "tối nay"],
+      "a": "🌙 *Buổi tối an lành nhé!* Nếu bạn cần đặt món khuya, mình vẫn luôn ở đây.*"
+    },
+    {
+      "q": ["chúc mừng", "congratulations", "mừng quá", "vui quá"],
+      "a": "🎉 *Chúc mừng bạn!* Mình cũng vui lây đó. Có món nào đặc biệt bạn muốn ăn mừng không?*"
+    },
+    {
+      "q": ["xin lỗi", "lỗi rồi", "nhầm rồi", "mình nhầm"],
+      "a": "🙈 *Không sao đâu ạ!* Mình ở đây để hỗ trợ bạn bất cứ lúc nào.*"
+    }
+  ],
+  "staffGuide": "Nhân viên nên luôn mỉm cười chào khách, phục vụ đồ uống trong vòng 5 phút, đảm bảo bàn sạch và ly được rửa kỹ."
+}

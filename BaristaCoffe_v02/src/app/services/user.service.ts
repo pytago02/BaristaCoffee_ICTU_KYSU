@@ -34,8 +34,8 @@ export class UsersService {
     return this.http.post(`${this.apiUrl}/staffLogin`, data);
   }
 
-  customerLogin(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/customerLogin`, data);
+  login(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, data);
   }
 
   logOut(): void {

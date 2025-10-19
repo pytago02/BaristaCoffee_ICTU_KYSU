@@ -1,10 +1,23 @@
+/* ===============================
+   GLOBAL LAYOUT
+================================*/
 .customer-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
 }
 
-/* HEADER */
+.page-content {
+  flex: 1;
+  padding: 10px;
+  margin-bottom: 50px;
+  /* chừa chỗ cho bottom nav */
+  overflow-y: auto;
+}
+
+/* ===============================
+   HEADER
+================================*/
 .header {
   padding: 10px;
   background: #ff9800;
@@ -33,7 +46,9 @@
   font-size: 12px;
 }
 
-/* NAVIGATION */
+/* ===============================
+   BOTTOM NAVIGATION
+================================*/
 .bottom-nav {
   display: flex;
   justify-content: space-around;
@@ -47,8 +62,8 @@
 .bottom-nav .btn {
   flex: 1;
   padding: 10px 0;
-  border: none;
   background: none;
+  border: none;
   font-size: 12px;
   display: flex;
   flex-direction: column;
@@ -56,21 +71,123 @@
   gap: 5px;
 }
 
-.bottom-nav .btn i { font-size: 20px; }
-.bottom-nav .home i { font-size: 30px; }
-
-/* PAGE CONTENT */
-.page-content {
-  flex: 1;
-  padding: 10px;
-  margin-bottom: 50px; /* chừa chỗ cho nav */
-  overflow-y: auto;
+.bottom-nav .btn i {
+  font-size: 20px;
 }
 
-/* MENU GRID */
+.bottom-nav .home i {
+  font-size: 30px;
+}
+
+/* ===============================
+   HOME PAGE
+================================*/
+.page.home {
+  text-align: center;
+  padding: 20px;
+}
+
+.home-banner {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.home-banner img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  filter: brightness(70%);
+}
+
+.banner-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+}
+
+.home-cards {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-cards .card {
+  flex: 1 1 30%;
+  background: #fff8f0;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.home-cards .card:hover {
+  transform: translateY(-5px);
+}
+
+.home-cards i {
+  font-size: 24px;
+  color: #8B4513;
+  margin-bottom: 8px;
+}
+
+.store-info {
+  margin-top: 25px;
+  padding: 15px;
+  background: #fff8f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  color: #4b2e2e;
+}
+
+.store-info h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #8B4513;
+}
+
+.store-info p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+.store-info i {
+  margin-right: 6px;
+  color: #8B4513;
+}
+
+/* ===============================
+   MENU PAGE
+================================*/
+.category-bar {
+  display: flex;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.category-bar button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  border-radius: 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.category-bar button.active {
+  background: #ff9800;
+  color: #fff;
+  border: none;
+}
+
 .menu-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
 }
 
@@ -80,37 +197,21 @@
   padding: 8px;
   text-align: center;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .menu-card img {
-  width: 100%;
-  height: 100px;
+  width: 80%;
+  height: 150px;
   object-fit: cover;
   border-radius: 8px;
 }
 
-/* CATEGORY BAR */
-.category-bar {
-  display: flex;
-  overflow-x: auto;
-  margin: 10px 0;
-}
-
-.category-bar button {
-  padding: 6px 12px;
-  margin-right: 8px;
-  border-radius: 16px;
-  border: 1px solid #ccc;
-  background: #fff;
-}
-
-.category-bar button.active {
-  background: #ff9800;
-  color: #fff;
-  border: none;
-}
-
-/* CART SIDEBAR */
+/* ===============================
+   CART SIDEBAR
+================================*/
 .cart-sidebar {
   position: fixed;
   top: 0;
@@ -125,13 +226,17 @@
   transition: right 0.3s ease;
   z-index: 1000;
 }
-.cart-sidebar.active { right: 0; }
+
+.cart-sidebar.active {
+  right: 0;
+}
 
 .cart-header,
 .cart-footer {
   padding: 1rem;
   border-bottom: 1px solid #ddd;
 }
+
 .cart-footer {
   border-top: 1px solid #ddd;
   text-align: center;
@@ -149,11 +254,13 @@
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
+
 .cart-item span:first-child {
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .cart-item .pi-trash {
   cursor: pointer;
   margin-left: 10px;
@@ -162,7 +269,7 @@
   flex-shrink: 0;
 }
 
-/* CART BUTTONS */
+/* Buttons */
 .close-btn,
 .order-btn {
   border: none;
@@ -171,10 +278,17 @@
   cursor: pointer;
   border-radius: 6px;
 }
-.close-btn { background: #f44336; }
-.order-btn { background: #4caf50; width: 100%; }
 
-/* Quantity Controls */
+.close-btn {
+  background: #f44336;
+}
+
+.order-btn {
+  background: #4caf50;
+  width: 100%;
+}
+
+/* Quantity controls */
 .qty-controls {
   display: flex;
   align-items: center;
@@ -182,6 +296,7 @@
   min-width: 90px;
   justify-content: center;
 }
+
 .qty-controls button {
   width: 20px;
   height: 20px;
@@ -197,6 +312,7 @@
   align-items: center;
   transition: background 0.2s;
 }
+
 .qty-controls span {
   min-width: 24px;
   text-align: center;
@@ -204,18 +320,24 @@
   font-size: 14px;
 }
 
-/* ORDER DETAIL DIALOG */
+/* ===============================
+   ORDER DETAIL DIALOG
+================================*/
 .p-dialog .order-detail {
   font-size: 14px;
   line-height: 1.6;
 }
-.order-detail p { margin: 4px 0; }
+
+.order-detail p {
+  margin: 4px 0;
+}
 
 .order-items {
   list-style: none;
   padding: 0;
   margin: 10px 0;
 }
+
 .order-items li {
   display: flex;
   align-items: center;
@@ -223,6 +345,7 @@
   padding: 6px 0;
   border-bottom: 1px solid #eee;
 }
+
 .order-items img {
   width: 40px;
   height: 40px;
@@ -230,13 +353,23 @@
   border-radius: 6px;
   margin-right: 10px;
 }
+
 .order-item-left {
   display: flex;
   align-items: center;
   flex: 1;
 }
-.order-item-name { font-weight: 500; margin-right: 10px; }
-.order-item-qty { font-size: 13px; color: #555; }
+
+.order-item-name {
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+.order-item-qty {
+  font-size: 13px;
+  color: #555;
+}
+
 .order-total {
   text-align: right;
   margin-top: 12px;
@@ -244,13 +377,16 @@
   font-weight: bold;
   color: #e67e22;
 }
+
 .order-actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 15px;
 }
 
-/* PROFILE */
+/* ===============================
+   PROFILE PAGE
+================================*/
 .page.profile {
   display: flex;
   flex-direction: column;
@@ -259,12 +395,14 @@
   gap: 10px;
 }
 
+/* Avatar */
 .profile-avatar {
   position: relative;
   width: 100%;
-  max-width: 400px;
+  max-width: 350px;
   aspect-ratio: 1 / 1;
 }
+
 .profile-avatar img,
 .avatar-placeholder {
   width: 100%;
@@ -279,7 +417,6 @@
   color: #999;
 }
 
-/* Edit avatar button */
 .edit-avatar-btn {
   position: absolute;
   bottom: 10px;
@@ -305,8 +442,22 @@
   flex-direction: column;
   gap: 15px;
 }
-.form-field { display: flex; flex-direction: column; }
-.form-field input { width: 100%; padding-right: 35px; }
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-field input {
+  width: 100%;
+  padding-right: 35px;
+}
 
 .action {
   width: 100%;
@@ -315,8 +466,177 @@
   gap: 10px;
 }
 
+/* PrimeNG fix */
 :host ::ng-deep .p-password,
 :host ::ng-deep .p-password input {
   width: 100% !important;
 }
 
+/* Not logged in */
+.not-logged-in {
+  text-align: center;
+  padding: 40px 10px;
+}
+
+.not-logged-in h3 {
+  margin-bottom: 10px;
+}
+
+.not-logged-in p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.not-logged-in .btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* ===============================
+   ORDER HISTORY (LỊCH SỬ ORDER)
+================================*/
+.order-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.order-history-table th,
+.order-history-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+.order-history-table th {
+  background: #f5f5f5;
+}
+
+.order-history-table tr:hover {
+  background: #f9f9f9;
+  cursor: pointer;
+}
+
+.order-history-table .order-detail {
+  background: #fdfdfd;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.order-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 5px;
+}
+
+.order-items-table th,
+.order-items-table td {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Nút mở chatbot (floating) */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 80px;
+  right: 25px;
+  background: linear-gradient(135deg, #8b4513, #c78b50);
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+  z-index: 2000;
+
+  /* &.active {
+    top: 20px;
+  } */
+}
+
+.chatbot-toggle:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #a05d2f, #d6a46b);
+}
+
+.chatbot-popup {
+  position: fixed;
+  bottom: 0;
+  right: 0px;
+  z-index: 1999;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .chatbot-toggle {
+    bottom: 100px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+
+  .chatbot-toggle.active {
+    bottom: calc(90vh);
+  }
+
+  .chatbot-popup {
+    width: 100vw;
+    /* height: 80vh; */
+    right: 0;
+    bottom: 0;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+  }
+}
+
+/* 👉 Desktop (>1024px) */
+@media (min-width: 1024px) {
+  .customer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+  }
+
+  .page-content {
+    padding: 20px;
+  }
+
+  .bottom-nav {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .chatbot-popup {
+    width: 420px;
+    height: 600px;
+    right: 30px;
+    bottom: 100px;
+  }
+
+  .chatbot-toggle {
+    bottom: 30px;
+    right: 30px;
+  }
+
+}

@@ -1,5 +1,5 @@
 import { UsersService } from './../../../services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableService } from '../../../services/table.service';
@@ -9,15 +9,18 @@ import { MenuService } from '../../../services/menu.service';
 import { MenuCategoryService } from '../../../services/menucategory.service';
 import { OrderService } from '../../../services/order.service';
 import { SocketService } from '../../../services/socket.service';
+import { RequestService } from '../../../services/request.service';
+import { ChangeDetectorRef } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-staff-table',
   imports: [ImportModule],
   templateUrl: './staff-table.component.html',
-  styleUrl: './staff-table.component.css',
+  styleUrls: ['./staff-table.component.css'],
   providers: [ConfirmationService, MessageService],
 })
-export class StaffTableComponent implements OnInit {
+export class StaffTableComponent implements OnInit, OnDestroy {
   backendURL: any;
   tableData: any[] = [];
   filterTableData: any[] = [];
@@ -39,6 +42,15 @@ export class StaffTableComponent implements OnInit {
     email: '',
     phone: '',
   };
+  callStaffRequests: any[] = [];
+  paymentRequests: any[] = [];
+  pendingOrders: any[] = [];
+
+  showDialog = false;
+  dialogData: any[] = [];
+  dialogTitle = '';
+
+  private socketSub?: Subscription;
 
   constructor(
     private tablesService: TableService,
@@ -49,14 +61,72 @@ export class StaffTableComponent implements OnInit {
     private orderService: OrderService,
     private usersService: UsersService,
     private messageService: MessageService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private reqService: RequestService,
+    private cdr: ChangeDetectorRef
   ) {
     this.backendURL = urlbackendService.urlBackend;
   }
 
   ngOnInit(): void {
-    this.getAllTables();
+    this.loadData();
+    this.initSocketListeners();
+  }
 
+  private initSocketListeners(): void {
+    // Order mới
+    this.socketSub = this.socketService.onNewOrder().subscribe((order: any) => {
+      console.log('📨 Nhận order mới:', order);
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Order mới',
+        detail: `Bàn ${order.table_id} vừa gửi order`,
+      });
+      this.playSound('order.mp3');
+      this.getAllZonesWithTables();
+      this.loadAllRequests();
+    });
+
+    // Gọi nhân viên
+    this.socketService.onStaffCalled().subscribe((req: any) => {
+      console.log('🧍‍♂️ Yêu cầu gọi nhân viên:', req);
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Khách gọi nhân viên',
+        detail: `Bàn ${req.table_id} vừa gọi nhân viên`,
+      });
+      this.playSound('caffStaff.mp3');
+      this.loadAllRequests();
+    });
+
+    // Yêu cầu thanh toán
+    this.socketService.onPaymentRequested().subscribe((req: any) => {
+      console.log('💳 Yêu cầu thanh toán:', req);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Yêu cầu thanh toán',
+        detail: `Bàn ${req.table_id} yêu cầu thanh toán`,
+      });
+      this.playSound('money.mp3');
+      this.loadAllRequests();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.socketSub?.unsubscribe();
+  }
+
+  loadData() {
+    console.log('loadData');
+    this.getAllTables();
+    this.getAllZonesWithTables();
+    this.getAllZones();
+    this.getAllMenu();
+    this.getMe();
+    this.loadAllRequests();
+  }
+
+  socket() {
     this.socketService.onNewOrder().subscribe((order: any) => {
       this.messageService.add({
         severity: 'info',
@@ -65,20 +135,16 @@ export class StaffTableComponent implements OnInit {
       });
 
       this.getAllZonesWithTables();
+      this.loadAllRequests();
     });
-
-    this.getAllZonesWithTables();
-    this.getAllZones();
-    this.getAllMenu();
-    this.getMe();
   }
 
-  loadData() {
-    this.getAllTables();
-    this.getAllZonesWithTables();
-    this.getAllZones();
-    this.getAllMenu();
-    this.getMe();
+  private playSound(soundFile: string): void {
+    const audio = new Audio(`/sounds/${soundFile}`);
+    audio.volume = 0.7; // âm lượng (0–1)
+    audio
+      .play()
+      .catch((err) => console.error('Không phát được âm thanh:', err));
   }
 
   getMe() {
@@ -169,6 +235,36 @@ export class StaffTableComponent implements OnInit {
     }, {});
 
     return Object.values(grouped);
+  }
+
+  loadAllRequests() {
+    this.reqService.getPendingRequests('call_staff').subscribe({
+      next: (res) => {
+        this.callStaffRequests = [...res];
+        if (this.typeRequest === 'call_staff') {
+          this.dialogData = [...this.callStaffRequests];
+          this.cdr.detectChanges();
+        }
+      },
+    });
+    this.reqService.getPendingRequests('payment').subscribe({
+      next: (res) => {
+        this.paymentRequests = [...res];
+        if (this.typeRequest === 'payment') {
+          this.dialogData = [...this.paymentRequests];
+          this.cdr.detectChanges();
+        }
+      },
+    });
+    this.orderService.getPendingOrders().subscribe({
+      next: (res) => {
+        this.pendingOrders = [...res];
+        if (this.typeRequest === 'order') {
+          this.dialogData = [...this.pendingOrders];
+          this.cdr.detectChanges();
+        }
+      },
+    });
   }
 
   getStatusLabel(status: string): string {
@@ -271,7 +367,6 @@ export class StaffTableComponent implements OnInit {
   }
 
   cancelTable(table: any) {
-    // TODO: Gọi API hủy bàn
     console.log('Hủy bàn:', table);
   }
 
@@ -386,5 +481,47 @@ export class StaffTableComponent implements OnInit {
           },
         });
     }
+  }
+
+  showRequestDialog = false;
+  showOrderRequestsDialog = false;
+  currentRequestType: string = '';
+
+  unhandledRequests: {
+    callStaff: { id: number; table: string; time: string; status: string }[];
+    payment: { id: number; table: string; time: string; status: string }[];
+    order: { id: number; table: string; time: string; status: string }[];
+  } = {
+    callStaff: [],
+    payment: [],
+    order: [],
+  };
+
+  typeRequest = '';
+  showRequests(type: string) {
+    this.showDialog = true;
+    if (type === 'call_staff') {
+      this.dialogTitle = '📞 Yêu cầu gọi nhân viên';
+      this.dialogData = this.callStaffRequests;
+      this.typeRequest = type;
+    } else if (type === 'payment') {
+      this.dialogTitle = '💳 Yêu cầu thanh toán';
+      this.dialogData = this.paymentRequests;
+      this.typeRequest = type;
+    } else {
+      this.dialogTitle = '🍽️ Yêu cầu đặt món';
+      this.dialogData = this.pendingOrders;
+      this.typeRequest = type;
+    }
+  }
+
+  markDone(data: any) {
+    this.reqService.updateRequestStatus(data.request_id).subscribe({
+      next: () => {
+        this.loadAllRequests();
+        this.showDialog = false;
+      },
+      error: (err) => console.error('Error updating request:', err),
+    });
   }
 }

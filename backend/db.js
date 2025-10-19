@@ -1,5 +1,5 @@
 const mysql = require('mysql2');
-require("dotenv").config(); //(Lấy thông tin từ .env) Thư viện dotenv dùng để quản lý biến môi trường, giúp bảo mật thông tin nhạy cảm như mật khẩu cơ sở dữ liệu.
+require("dotenv").config();
 
 const db = mysql.createConnection({
   host: process.env.DB_HOST,

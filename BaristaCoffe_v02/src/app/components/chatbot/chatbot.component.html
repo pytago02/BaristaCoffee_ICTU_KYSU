@@ -1,0 +1,27 @@
+<div class="chat-wrapper">
+  <div class="chat-header">
+    <img src="/logo-1.png" alt="logo" class="header-logo" />
+    <span>Barista chatbot</span>
+  </div>
+
+  <div class="chat-body" #chatBody>
+    <div *ngFor="let msg of messages" class="chat-bubble" [ngClass]="msg.sender === 'user' ? 'from-user' : 'from-bot'">
+      <!-- Ảnh đại diện -->
+      <img *ngIf="msg.sender === 'bot'" src="/logo-1.png" class="avatar" alt="bot" />
+      <img *ngIf="msg.sender === 'user'" [src]="urlBackend + userData.avatar" class="avatar" alt="user" />
+
+      <!-- Nội dung tin nhắn -->
+      <div class="bubble-content">
+        <div class="bubble-text" [innerHTML]="msg.text"></div>
+        <div class="bubble-time">{{ msg.time | date: 'shortTime' }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <input type="text" [(ngModel)]="inputText" placeholder="Nhập tin nhắn..." (keydown.enter)="sendMessage()" />
+    <button (click)="sendMessage()">
+      <i class="pi pi-send"></i> <!-- hoặc icon fontawesome -->
+    </button>
+  </div>
+</div>

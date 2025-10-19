@@ -1,14 +1,10 @@
 const express = require("express");
-const mysql = require("mysql2");
-const bcrypt = require("bcryptjs"); //- thư viện bcryptjs, dùng để mã hóa mật khẩu (hash) và so sánh mật khẩu đã mã hóa.
-const jwt = require("jsonwebtoken");
-const cors = require("cors"); // cho phép server chấp nhận yêu cầu từ các domain khác
-const db = require("./db");
+const cors = require("cors");
 const path = require("path");
 const http = require("http");
 const { Server } = require("socket.io");
 
-// import Routers
+// Routers
 const usersRouter = require("./routers/userRouter");
 const tablesRouter = require("./routers/tablesRouter");
 const zonesRouter = require("./routers/zonesRouter");
@@ -18,13 +14,17 @@ const orderRouter = require("./routers/orderRouter");
 const ingredientsRouter = require("./routers/ingredientsRoutes");
 const recipesRouter = require("./routers/recipesRouter");
 const recommendationRoutes = require("./routers/recommendationRoutes");
+const requestRouter = require("./routers/requestRouter");
+const chatbotRouter = require('./routers/chatbotRoute');
 
-const app = express(); // Tạo một ứng dụng Express mới.
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Gắn Routers
+// Static assets
 app.use("/assets", express.static(path.join(__dirname, "assets")));
+
+// API routes
 app.use("/users", usersRouter);
 app.use("/tables", tablesRouter);
 app.use("/zones", zonesRouter);
@@ -34,35 +34,39 @@ app.use("/order", orderRouter);
 app.use("/ingredients", ingredientsRouter);
 app.use("/recipes", recipesRouter);
 app.use("/recommendations", recommendationRoutes);
+app.use("/request", requestRouter);
+app.use("/chatbot", chatbotRouter);
 
-// test API
+// Test route
 app.get("/", (req, res) => {
-  res.send("Test API");
+  res.send("✅ API đang hoạt động");
 });
 
-// ✅ Tạo HTTP server từ Express
+// HTTP + Socket.IO server
 const server = http.createServer(app);
-
-// ✅ Khởi tạo Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: "*", // Cho phép tất cả FE kết nối, bạn có thể giới hạn domain
-  },
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
 });
 
-// Lắng nghe sự kiện kết nối
+app.set("io", io);
+
+// Socket.IO logic
 io.on("connection", (socket) => {
-  console.log("⚡ Nhân viên hoặc khách kết nối WebSocket:", socket.id);
+  console.log("🔌 Client connected:", socket.id);
 
   socket.on("disconnect", () => {
-    console.log("❌ Người dùng ngắt kết nối:", socket.id);
+    console.log("❌ Client disconnected:", socket.id);
   });
 });
 
-// ✅ Cho phép các router khác emit sự kiện qua io
+// Cho phép emit từ router
 app.set("io", io);
 
-// Chạy server
-app.listen(process.env.PORT, () => {
-  console.log(`Server chạy tại http://localhost:${process.env.PORT}`);
+// Start server
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`🚀 Server chạy tại http://localhost:${PORT}`);
 });

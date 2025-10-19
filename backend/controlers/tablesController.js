@@ -71,14 +71,14 @@ exports.getTablesById = (req, res) => {
       u.full_name AS customer_name,
 
       oi.order_item_id,
-      oi.quantity,
+      oi.quantity AS itemQuantity,
       oi.note,
 
       m.*
 
     FROM tables t
     JOIN zone z ON t.zone_id = z.zone_id
-    LEFT JOIN orders o ON o.table_id = t.table_id AND o.status NOT IN ('payed','cancelled','completed')
+    LEFT JOIN orders o ON o.table_id = t.table_id AND o.status NOT IN ('paid','cancelled')
     LEFT JOIN users u ON o.customer_id = u.user_id
     LEFT JOIN order_items oi ON o.order_id = oi.order_id
     LEFT JOIN menu m ON oi.menu_id = m.menu_id
@@ -133,7 +133,7 @@ exports.getTablesById = (req, res) => {
       if (row.order_item_id) {
         orderMap[row.order_id].items.push({
           order_item_id: row.order_item_id,
-          quantity: row.quantity,
+          quantity: row.itemQuantity,
           price: row.item_price,
           note: row.note,
           menu: {

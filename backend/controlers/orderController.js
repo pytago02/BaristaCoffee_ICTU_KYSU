@@ -384,7 +384,7 @@ exports.getOrdersByUserId = (req, res) => {
 
 //   db.query(
 //     `
-//     SELECT 
+//     SELECT
 //         o.order_id,
 //         o.created_at AS order_date,
 //         o.status,
@@ -496,11 +496,14 @@ exports.getOrdersByTableId = (req, res) => {
   `;
 
   db.query(sql, [table_id], (err, results) => {
-    if (err) return res.status(500).json({ error: "Lỗi khi lấy danh sách order", err });
+    if (err)
+      return res
+        .status(500)
+        .json({ error: "Lỗi khi lấy danh sách order", err });
 
     const orders = new Map();
 
-    results.forEach(row => {
+    results.forEach((row) => {
       if (!orders.has(row.order_id)) {
         orders.set(row.order_id, {
           order_id: row.order_id,
@@ -513,7 +516,7 @@ exports.getOrdersByTableId = (req, res) => {
           staff_name: row.staff_name,
           table_name: row.table_name,
           zone_name: row.zone_name,
-          items: []
+          items: [],
         });
       }
 
@@ -535,11 +538,12 @@ exports.getOrdersByTableId = (req, res) => {
 };
 
 exports.addOrderToTable = (req, res) => {
-  const { table_id, staff_id, items } = req.body;
+  const { table_id, staff_id, customer_id, items } = req.body;
 
-  if (!table_id || !staff_id || !items || items.length === 0) {
+  if (!table_id || !items || items.length === 0) {
     return res.status(400).json({ error: "Thiếu dữ liệu" });
   }
+
 
   // Kiểm tra order active (pending, preparing, completed nhưng chưa paid)
   const checkSql = `
@@ -554,12 +558,14 @@ exports.addOrderToTable = (req, res) => {
     let orderId;
 
     // Tạo order mới
+    const customerValue = customer_id || null;
+
     const createOrder = (callback) => {
       const sql = `
-        INSERT INTO orders (staff_id, table_id, total_price, status) 
-        VALUES (?, ?, 0, 'pending')
+        INSERT INTO orders (staff_id, customer_id, table_id, total_price, status) 
+        VALUES (?, ?, ?, 0, 'pending')
       `;
-      db.query(sql, [staff_id, table_id], (err2, result) => {
+      db.query(sql, [staff_id, customerValue, table_id], (err2, result) => {
         if (err2) return res.status(500).json({ error: "Lỗi tạo order", err2 });
         orderId = result.insertId;
         callback();
@@ -569,18 +575,19 @@ exports.addOrderToTable = (req, res) => {
     // Thêm items vào order
     const addItems = () => {
       let total = 0;
-      const menuIds = items.map(i => i.menu_id);
+      const menuIds = items.map((i) => i.menu_id);
 
       db.query(
         `SELECT menu_id, price FROM menu WHERE menu_id IN (?)`,
         [menuIds],
         (err3, menus) => {
-          if (err3) return res.status(500).json({ error: "Lỗi lấy giá menu", err3 });
+          if (err3)
+            return res.status(500).json({ error: "Lỗi lấy giá menu", err3 });
 
           const priceMap = {};
-          menus.forEach(m => priceMap[m.menu_id] = m.price);
+          menus.forEach((m) => (priceMap[m.menu_id] = m.price));
 
-          const values = items.map(i => {
+          const values = items.map((i) => {
             const price = priceMap[i.menu_id] || 0;
             total += price * i.quantity;
             return [orderId, i.menu_id, i.quantity, i.note || null];
@@ -590,15 +597,33 @@ exports.addOrderToTable = (req, res) => {
             `INSERT INTO order_items (order_id, menu_id, quantity, note) VALUES ?`,
             [values],
             (err4) => {
-              if (err4) return res.status(500).json({ error: "Lỗi thêm order items", err4 });
+              if (err4)
+                return res
+                  .status(500)
+                  .json({ error: "Lỗi thêm order items", err4 });
 
-              db.query(`UPDATE orders SET total_price = total_price + ? WHERE order_id = ?`, [total, orderId]);
+              db.query(
+                `UPDATE orders SET total_price = total_price + ? WHERE order_id = ?`,
+                [total, orderId]
+              );
 
-              // ✅ Emit sự kiện qua socket
+              // Emit sự kiện qua socket
               const io = req.app.get("io");
-              io.emit("orderCreated", { ...dataOrder });
+              const newOrder = {
+                order_id: orderId,
+                table_id,
+                staff_id,
+                items,
+                total, 
+                created_at: new Date(),
+              };
 
-              return res.json({ message: "Thêm món thành công", order_id: orderId });
+              io.emit("orderCreated", newOrder);
+
+              return res.json({
+                message: "Thêm món thành công",
+                order_id: orderId,
+              });
             }
           );
         }
@@ -613,7 +638,6 @@ exports.addOrderToTable = (req, res) => {
     }
   });
 };
-
 
 // Update số lượng món trong order
 exports.updateOrderItem = (req, res) => {
@@ -671,13 +695,42 @@ exports.updateStatusOrder = (req, res) => {
   const sql = `UPDATE orders SET status = ? WHERE order_id = ?`;
 
   db.query(sql, [status, order_id], (err, result) => {
-    if (err) return res.status(500).json({ error: "Lỗi cập nhật trạng thái", err });
+    if (err)
+      return res.status(500).json({ error: "Lỗi cập nhật trạng thái", err });
 
     if (result.affectedRows === 0) {
       return res.status(404).json({ error: "Không tìm thấy order" });
     }
 
     return res.json({ message: "Order đã chuyển sang completed" });
+  });
+};
+
+exports.getPendingOrders = (req, res) => {
+  const sql = `
+    SELECT 
+        o.order_id,
+        o.created_at AS order_date,
+        o.status,
+        o.total_price,
+        c.full_name AS customer_name,
+        c.phone AS customer_phone,
+        t.table_name,
+        z.zone_name
+    FROM orders o
+    LEFT JOIN users c ON o.customer_id = c.user_id
+    LEFT JOIN tables t ON o.table_id = t.table_id
+    LEFT JOIN zone z ON t.zone_id = z.zone_id
+    WHERE o.status = 'pending'
+    ORDER BY o.created_at ASC;
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: "Lỗi khi lấy danh sách pending orders", err });
+    }
+
+    res.json(results);
   });
 };
 

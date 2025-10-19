@@ -68,4 +68,11 @@ export class OrderService {
       headers: this.auth.getAuthHeaders(),
     });
   }
+
+  getPendingOrders(): Observable<any[]> {
+  return this.http.get<any[]>(`${this.apiUrl}/getPendingOrders`, {
+    headers: this.auth.getAuthHeaders(),
+  });
+}
+
 }

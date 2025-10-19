@@ -1,12 +1,20 @@
 <div class="main">
   <p-toast [breakpoints]="{ '920px': { width: '90%', right: '', left: '0' } }" />
 
+  <div class="chatbot-toggle" [class.active]="showChatbot"  (click)="toggleChatbot()">
+    <i class="pi" [ngClass]="showChatbot ? 'pi-times' : 'pi-comments'"></i>
+  </div>
+
+  <div class="chatbot-popup" *ngIf="showChatbot">
+    <app-chatbot></app-chatbot>
+  </div>
+
   <div class="customer-container">
     <!-- HEADER -->
     <header class="header">
       <div class="header-left">
-        <h2>Bàn {{ tableID || '---' }}</h2>
-        <p>Khách: {{ userData?.name || 'Khách mới' }}</p>
+        <h2>Bàn {{ tableInfor?.table_name || '---' }}</h2>
+        <p>Khách: {{ userData.full_name || 'Khách mới' }}</p>
       </div>
       <div class="header-right">
         <button class="cart-btn" (click)="showCart = true">
@@ -30,10 +38,40 @@
 
       <!-- Trang Home -->
       <section *ngIf="activePage === 'home'" class="page home">
-        <h3>Xin chào {{ userData?.name || 'Quý khách' }} 👋</h3>
-        <p>Bạn đang ngồi tại bàn <b>{{ tableInfor?.table_name || '---' }}</b></p>
-        <p>Chọn "Thực đơn" để bắt đầu order nhé!</p>
+        <div class="home-banner">
+          <img src="bg-menu03.jpg" alt="Coffee Banner">
+          <div class="banner-text">
+            <h2>Chào mừng {{ userData?.name || 'Quý khách' }}</h2>
+            <p>Bạn đang ngồi tại bàn <b>{{ tableInfor?.table_name || '---' }}</b></p>
+            <p>Hãy chọn <b>“Thực đơn”</b> để bắt đầu order nhé!</p>
+          </div>
+        </div>
+
+        <div class="home-cards">
+          <div class="card">
+            <i class="pi pi-star"></i>
+            <h4>Cà phê đặc biệt</h4>
+            <p>Đậm đà Nguyên chất Tinh tế</p>
+          </div>
+          <div class="card">
+            <i class="pi pi-heart"></i>
+            <h4>Bánh ngọt handmade</h4>
+            <p>Ngọt ngào cho ngày thêm vui</p>
+          </div>
+          <div class="card">
+            <i class="pi pi-bell"></i>
+            <h4>Dịch vụ tận tình</h4>
+            <p>Chỉ cần bấm nút, nhân viên sẽ đến ngay</p>
+          </div>
+        </div>
+
+        <div class="store-info">
+          <h3>☕ Barista Coffee</h3>
+          <p><i class="pi pi-map-marker"></i> Minh Tiến - Đại Từ - Thái Nguyên</p>
+          <p><i class="pi pi-phone"></i> 0898 284 203</p>
+        </div>
       </section>
+
 
       <!-- Trang Menu -->
       <section *ngIf="activePage === 'menu'" class="page menu">
@@ -73,69 +111,128 @@
 
       <!-- Trang Profile -->
       <section *ngIf="activePage === 'profile'" class="page profile">
-        <h3>Thông tin cá nhân</h3>
+        <ng-container *ngIf="isLoggedIn; else notLoggedIn">
+          <h3>Thông tin cá nhân</h3>
 
-        <!-- Avatar lớn, full chiều ngang -->
-        <div class="profile-avatar">
-          <img *ngIf="userData?.avatar; else defaultAvatar" [src]="urlBackend + userData?.avatar" alt="avatar">
-          <ng-template #defaultAvatar>
-            <div class="avatar-placeholder">Ảnh</div>
-          </ng-template>
-          <div class="edit-avatar-btn" (click)="changeAvatar()">
-            <i class="pi pi-pencil"></i>
-          </div>
-        </div>
-
-        <!-- Form thông tin -->
-        <div class="profile-info" *ngIf="!isChangePass">
-          <div class="form-field">
-            <label for="">Tên</label>
-            <input pInputText [(ngModel)]="userData.full_name" placeholder="Tên" [disabled]="!isEditing" />
+          <!-- Avatar -->
+          <div class="profile-avatar">
+            <img *ngIf="userData?.avatar; else defaultAvatar" [src]="urlBackend + userData?.avatar" alt="avatar">
+            <ng-template #defaultAvatar>
+              <div class="avatar-placeholder">Ảnh</div>
+            </ng-template>
+            <div class="edit-avatar-btn" (click)="changeAvatar()">
+              <i class="pi pi-pencil"></i>
+            </div>
           </div>
 
-          <div class="form-field">
-            <label for="">Email</label>
-            <input pInputText [(ngModel)]="userData.email" placeholder="Email" [disabled]="!isEditing" />
+          <!-- Form thông tin -->
+          <div class="profile-info" *ngIf="!isChangePass">
+            <div class="form-field">
+              <label for="">Tên</label>
+              <input pInputText [(ngModel)]="userData.full_name" placeholder="Tên" [disabled]="!isEditing" />
+            </div>
+
+            <div class="form-field">
+              <label for="">Email</label>
+              <input pInputText [(ngModel)]="userData.email" placeholder="Email" [disabled]="!isEditing" />
+            </div>
+
+            <div class="form-field">
+              <label for="">Số điện thoại</label>
+              <input pInputText [(ngModel)]="userData.phone" placeholder="SĐT" [disabled]="!isEditing" />
+            </div>
           </div>
 
-          <div class="form-field">
-            <label for="">Số điện thoại</label>
-            <input pInputText [(ngModel)]="userData.phone" placeholder="SĐT" [disabled]="!isEditing" />
-          </div>
-        </div>
+          <div class="changePass profile-info" *ngIf="isChangePass">
+            <div class="form-field">
+              <label for="">Mật khẩu hiện tại</label>
+              <p-password [(ngModel)]="changePassData.oldPass" [toggleMask]="true" [feedback]="false" />
+            </div>
 
-        <div class="changePass profile-info" *ngIf="isChangePass">
-          <div class="form-field">
-            <label for="">Mật khẩu hiện tại</label>
-            <!-- <input pInputText [(ngModel)]="changePassData.oldPass" type="password" /> -->
-            <p-password [(ngModel)]="changePassData.oldPass" [toggleMask]="true" [feedback]="false"/>
-          </div>
-
-          <div class="form-field">
-            <label for="">Mật khẩu mới</label>
+            <div class="form-field">
+              <label for="">Mật khẩu mới</label>
               <p-password [(ngModel)]="changePassData.newPass" [toggleMask]="true" />
+            </div>
+
+            <div class="form-field">
+              <label for="">Xác nhận mật khẩu mới</label>
+              <p-password [(ngModel)]="changePassData.confirmNewPass" [toggleMask]="true" [feedback]="false" />
+            </div>
           </div>
 
-          <div class="form-field">
-            <label for="">Xác nhận mật khẩu mới</label>
-            <p-password [(ngModel)]="changePassData.confirmNewPass" [toggleMask]="true" [feedback]="false"/>
+          <div class="action">
+            <p-button (onClick)="cancelEdit()" *ngIf="isEditing || isChangePass" severity="danger" size="small"
+              label="Huỷ"></p-button>
+            <p-button (onClick)="toggleEdit()" [label]="isEditing ? 'Lưu' : 'Cập nhật'"
+              [icon]="isEditing ? 'pi pi-save' : 'pi pi-pencil'" size="small" *ngIf="!isChangePass"></p-button>
+            <p-button (onClick)="toggleChangePass()" [label]="isChangePass ? 'Đổi' : 'Đổi mật khẩu'"
+              [icon]="isChangePass ? 'pi pi-check' : 'pi pi-lock'" size="small" *ngIf="!isEditing"></p-button>
+            <p-button label="Lịch sử" icon="pi pi-history" size="small" severity="secondary"
+              (click)="showHistoryOrder = true"></p-button>
           </div>
-        </div>
 
-        <div class="action">
-          <p-button (onClick)="cancelEdit()" *ngIf="isEditing || isChangePass" severity="danger" size="small"
-            label="Huỷ"></p-button>
-          <p-button (onClick)="toggleEdit()" [label]="isEditing ? 'Lưu' : 'Cập nhật'"
-            [icon]="isEditing ? 'pi pi-save' : 'pi pi-pencil'" [size]="'small'" *ngIf="!isChangePass"></p-button>
-          <p-button (onClick)="toggleChangePass()" [label]="isChangePass ? 'Đổi' : 'Đổi mật khẩu'"
-            [icon]="isChangePass ? 'pi pi-check' : 'pi pi-lock'" [size]="'small'" *ngIf="!isEditing"></p-button>
-        </div>
+        </ng-container>
+
+        <!-- Nếu chưa đăng nhập -->
+        <ng-template #notLoggedIn>
+          <div class="not-logged-in">
+            <h3>Bạn chưa đăng nhập</h3>
+            <p>Vui lòng đăng nhập hoặc tạo tài khoản để xem thông tin cá nhân.</p>
+            <div class="btn-group">
+              <p-button label="Đăng nhập" icon="pi pi-sign-in" (click)="showLogin = true"></p-button>
+              <p-button label="Đăng ký" icon="pi pi-user-plus" severity="secondary"
+                (click)="showRegister = true"></p-button>
+            </div>
+          </div>
+
+          <!-- Form đăng nhập -->
+          <p-dialog header="Đăng nhập" [(visible)]="showLogin" [modal]="true" [dismissableMask]="true"
+            [style]="{width:'400px'}">
+            <div class="form-field">
+              <label>Email</label>
+              <input pInputText [(ngModel)]="loginData.identifier" placeholder="Nhập email" />
+            </div>
+            <div class="form-field">
+              <label>Mật khẩu</label>
+              <p-password [(ngModel)]="loginData.password" [feedback]="false"></p-password>
+            </div>
+            <div class="action" style="margin-top:15px;">
+              <p-button label="Đăng nhập" (click)="login()" icon="pi pi-sign-in"></p-button>
+            </div>
+          </p-dialog>
+
+          <!-- Form đăng ký -->
+          <p-dialog header="Đăng ký tài khoản" [(visible)]="showRegister" [modal]="true" [dismissableMask]="true"
+            [style]="{width:'450px'}">
+            <div class="form-field">
+              <label>Họ tên</label>
+              <input pInputText [(ngModel)]="registerData.full_name" placeholder="Họ và tên" />
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input pInputText [(ngModel)]="registerData.email" placeholder="Email" />
+            </div>
+            <div class="form-field">
+              <label>Số điện thoại</label>
+              <input pInputText [(ngModel)]="registerData.phone" placeholder="SĐT" />
+            </div>
+            <div class="form-field">
+              <label>Mật khẩu</label>
+              <p-password [(ngModel)]="registerData.password" [feedback]="false"></p-password>
+            </div>
+            <div class="action" style="margin-top:15px;">
+              <p-button label="Đăng ký" (click)="register()" icon="pi pi-user-plus"></p-button>
+            </div>
+          </p-dialog>
+        </ng-template>
+
       </section>
+
 
     </main>
 
     <!-- DIALOG chi tiết món -->
-    <p-dialog header="{{ selectedItem?.menu_name }}" [(visible)]="showDetail" [modal]="true" [style]="{width:'90vw'}">
+    <p-dialog header="{{ selectedItem?.menu_name }}" [(visible)]="showDetail" [modal]="true" [style]="{height:'90vh'}">
       <div *ngIf="selectedItem">
         <img [src]="urlBackend + selectedItem.image_url" alt="{{ selectedItem.menu_name }}"
           style="width:100%;border-radius:8px;">
@@ -182,7 +279,7 @@
       <p><b>Trạng thái:</b> {{ getStatusLabel(orderData.status) }}</p>
       <p><b>Ngày tạo:</b> {{ orderData.created_at | date:'short' }}</p>
 
-      <h4>Danh sách món:</h4>
+      <!-- <h4>Danh sách món:</h4> -->
       <ul class="order-items">
         <li *ngFor="let item of orderData.items">
           <div class="order-item-left">
@@ -202,6 +299,64 @@
       </div>
     </div>
   </p-dialog>
+
+  <p-dialog header="Lịch sử order" [(visible)]="showHistoryOrder" [modal]="true" [style]="{width:'90vw'}">
+    <div *ngIf="historyOrder?.length; else noHistory">
+      <table class="order-history-table">
+        <thead>
+          <tr>
+            <th>Mã Order</th>
+            <th>Ngày</th>
+            <th>Tổng tiền</th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let order of historyOrder">
+          <tr (click)="openOrderDetail(order)">
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.order_date | date:'short' }}</td>
+            <td>{{ order.total_price | currency:'VND':'symbol' }}</td>
+          </tr>
+
+          <tr *ngIf="selectedOrder && selectedOrder.order_id === order.order_id">
+            <td colspan="3">
+              <div class="order-detail">
+                <p><b>Bàn:</b> {{ order.table_name }} ({{ order.zone_name }})</p>
+
+                <table class="order-items-table">
+                  <thead>
+                    <tr>
+                      <th>Món</th>
+                      <th>Số lượng</th>
+                      <th>Tổng</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of order.items">
+                      <td>
+                        {{ item.menu_item }}
+                      </td>
+                      <td>x{{ item.quantity }}</td>
+                      <td>{{ item.item_total | currency:'VND':'symbol' }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- <div class="order-total" style="text-align:right; margin-top:8px;">
+                  <b>Tổng cộng: {{ order.total_price | currency:'VND':'symbol' }}</b>
+                </div> -->
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noHistory>
+      <p>Chưa có lịch sử đơn hàng nào.</p>
+    </ng-template>
+  </p-dialog>
+
 
 
 </div>
