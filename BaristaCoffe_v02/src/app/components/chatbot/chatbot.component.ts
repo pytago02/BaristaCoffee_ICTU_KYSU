@@ -31,7 +31,7 @@ export class ChatbotComponent implements AfterViewChecked {
     this.chatbotService.messages$.subscribe((msgs) => {
       this.messages = msgs;
       // Cuộn sau 1 tick để đảm bảo DOM render xong
-      setTimeout(() => this.scrollToBottom(), 100);
+      // setTimeout(() => this.scrollToBottom(), 100);
     });
 
     this.urlBackend = urlbackendService.urlBackend;

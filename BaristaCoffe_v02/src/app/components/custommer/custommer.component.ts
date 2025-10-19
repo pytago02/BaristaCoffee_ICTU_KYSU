@@ -106,7 +106,6 @@ export class CustommerComponent implements OnInit {
   }
 
   getAllMenu() {
-    console.log('getAllMenu');
     this.menuService.getAllMenu().subscribe((data) => {
       this.allMenuData = data;
       this.groupedMenuData = this.groupMenuByCategory(this.allMenuData);

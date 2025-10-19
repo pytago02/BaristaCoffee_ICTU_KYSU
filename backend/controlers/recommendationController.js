@@ -17,7 +17,7 @@ const getBestsellers = (limit) => {
     const sql = `
       SELECT m.*, SUM(oi.quantity) AS sold
       FROM order_items oi
-      JOIN menu m ON m.menu_id = oi.menu_id
+      JOIN menu m ON m.menu_id = oi.menu_id AND m.is_deleted = 0
       GROUP BY m.menu_id
       ORDER BY sold DESC
       LIMIT ?`;
@@ -35,8 +35,8 @@ const getHistoryBased = (user_id, limit) => {
       SELECT m.*, SUM(oi.quantity) AS my_count
       FROM orders o
       JOIN order_items oi ON o.order_id = oi.order_id
-      JOIN menu m ON m.menu_id = oi.menu_id
-      WHERE o.customer_id = ?
+      JOIN menu m ON m.menu_id = oi.menu_id AND m.is_deleted = 0
+      WHERE o.customer_id = ? 
       GROUP BY m.menu_id
       ORDER BY my_count DESC
       LIMIT ?`;
@@ -56,8 +56,8 @@ const getPreferenceBased = (user_id, limit) => {
       JOIN menu m ON (
         m.sweetness_level = up.sweetness_level
         OR m.temperature = up.temperature
-      )
-      WHERE up.user_id = ?
+      ) AND m.is_deleted = 0
+      WHERE up.user_id = ? 
       ORDER BY RAND()
       LIMIT ?`;
     db.query(sql, [user_id, limit], (err, results) => {
@@ -73,8 +73,8 @@ const getRecommendationBased = (user_id, limit) => {
     const sql = `
       SELECT m.*, r.score
       FROM recommendations r
-      JOIN menu m ON m.menu_id = r.menu_id
-      WHERE r.user_id = ?
+      JOIN menu m ON m.menu_id = r.menu_id AND m.is_deleted = 0
+      WHERE r.user_id = ? 
       ORDER BY r.score DESC, r.generated_at DESC
       LIMIT ?`;
     db.query(sql, [user_id, limit], (err, results) => {
@@ -96,7 +96,7 @@ exports.getRecommendations = async (req, res) => {
       // Khách mới
       const bestsellers = await getBestsellers(5);
       const random = await new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM menu ORDER BY RAND() LIMIT 5`, (err, rows) =>
+        db.query(`SELECT * FROM menu WHERE menu.is_deleted = 0 ORDER BY RAND() LIMIT 5 `, (err, rows) =>
           err ? reject(err) : resolve(rows)
         );
       });
@@ -107,7 +107,7 @@ exports.getRecommendations = async (req, res) => {
       const prefs = await getPreferenceBased(user_id, 4);
       const recs = await getRecommendationBased(user_id, 4); // thêm
       const random = await new Promise((resolve, reject) => {
-        db.query(`SELECT * FROM menu ORDER BY RAND() LIMIT 4`, (err, rows) =>
+        db.query(`SELECT * FROM menu WHERE menu.is_deleted = 0 ORDER BY RAND() LIMIT 4`, (err, rows) =>
           err ? reject(err) : resolve(rows)
         );
       });
