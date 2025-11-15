@@ -5,6 +5,6 @@ import { Injectable } from '@angular/core';
 })
 export class UrlbackendService {
   constructor() {}
-  urlBackend = 'http://localhost:3000';
-  urlFrontend = 'http://localhost:4200';
+  public urlBackend = 'http://localhost:3000';
+  public urlFrontend = 'http://localhost:4200';
 }

@@ -1,8 +1,18 @@
-import { ChangeDetectorRef, Component, effect, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  effect,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { isPlatformBrowser } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { BusinessService } from '../../../services/business.service';
+import { MessageService } from 'primeng/api';
+import { UrlbackendService } from '../../../services/urlbackend.service';
 
 interface AutoCompleteCompleteEvent {
   originalEvent: Event;
@@ -14,8 +24,10 @@ interface AutoCompleteCompleteEvent {
   imports: [ImportModule, InputTextModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
+  providers: [MessageService],
 })
 export class DashboardComponent implements OnInit {
+  urlBackend = '';
   revenueData: any;
   items: any[] = [];
 
@@ -28,13 +40,154 @@ export class DashboardComponent implements OnInit {
       ? [...Array(10).keys()].map((item) => event.query + '-' + item)
       : _items;
   }
+
+  businessData: any[] = [];
+  businessDataNowMonth: any[] = [];
+
+  selectedDate: Date = new Date();
+  predictData: any;
+  quantityOrderItemsData: any;
+
   // ===============================================================================================
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private businessService: BusinessService,
+    private messageService: MessageService,
+    private urlBackendService: UrlbackendService
+  ) {
+    this.urlBackend = this.urlBackendService.urlBackend;
+  }
 
   ngOnInit() {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loadAllBusiness();
     this.initChart();
-    this.initChartPie();
-    this.initChartProduct();
+    this.getRevenueByCategory(
+      this.selectedDate.getMonth() + 1,
+      this.selectedDate.getFullYear()
+    );
+
+    this.forecasts();
+    this.getQuantityOrderItems();
+    this.getBusinessToday();
+  }
+
+  loadAllBusiness() {
+    this.businessService.getAllBusiness().subscribe({
+      next: (data) => {
+        this.businessData = [...data];
+        console.log('businessData:', this.businessData);
+        this.filterBusinessNowMonth();
+        this.initChart();
+      },
+      error: (err) => {
+        console.error('err getAllBusiness:', err);
+      },
+    });
+  }
+
+  filterBusinessNowMonth() {
+    this.businessDataNowMonth = this.businessData.filter((item: any) => {
+      return (
+        item.month === this.selectedDate.getMonth() + 1 &&
+        item.year === this.selectedDate.getFullYear()
+      );
+    }).slice(0,1);
+    console.log('businessDataNowMounth:', this.businessDataNowMonth);
+  }
+
+  updateBusiness(item: any) {
+    const dataUpdate = {
+      staff_salary: item.staff_salary,
+      eletricity_bill: item.eletricity_bill,
+      water_bill: item.water_bill,
+      rent: item.rent,
+      other: item.other,
+      month: item.month,
+      year: item.year,
+    };
+
+    this.businessService.updateBusiness(dataUpdate).subscribe({
+      next: (res) => {
+        console.log('Update success:', res);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Thành công',
+          detail: 'Cập nhật thành công!',
+        });
+        this.loadAllBusiness();
+      },
+      error: (err) => {
+        console.error('Update failed:', err);
+        alert('Cập nhật thất bại!');
+      },
+    });
+  }
+
+  getRevenueByCategory(month: number, year: number) {
+    this.businessService.getRevenueByCategory(month, year).subscribe({
+      next: (data) => {
+        console.log('Revenue by category:', data);
+
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+
+        // Chuyển dữ liệu API thành mảng label và data
+        const labels = data.map((item: any) => item.category_name);
+        const revenues = data.map((item: any) => Number(item.total_revenue));
+
+        this.dataPie = {
+          labels: labels,
+          datasets: [
+            {
+              data: revenues,
+              backgroundColor: [
+                documentStyle.getPropertyValue('--p-cyan-500'),
+                documentStyle.getPropertyValue('--p-orange-500'),
+                documentStyle.getPropertyValue('--p-green-500'),
+                documentStyle.getPropertyValue('--p-purple-500'),
+                documentStyle.getPropertyValue('--p-pink-500'),
+              ],
+              hoverBackgroundColor: [
+                documentStyle.getPropertyValue('--p-cyan-400'),
+                documentStyle.getPropertyValue('--p-orange-400'),
+                documentStyle.getPropertyValue('--p-green-400'),
+                documentStyle.getPropertyValue('--p-purple-400'),
+                documentStyle.getPropertyValue('--p-pink-400'),
+              ],
+            },
+          ],
+        };
+
+        this.optionsPie = {
+          plugins: {
+            legend: {
+              labels: {
+                usePointStyle: true,
+                color: textColor,
+              },
+            },
+            tooltip: {
+              callbacks: {
+                label: (context: any) => {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  return `${label}: ${value.toLocaleString('vi-VN')}₫`;
+                },
+              },
+            },
+          },
+        };
+
+        this.cd.markForCheck();
+      },
+      error: (err) => {
+        console.error('Error fetching revenue by category:', err);
+      },
+    });
   }
 
   // formAddExpense
@@ -45,7 +198,7 @@ export class DashboardComponent implements OnInit {
     water_bill: 0,
     rent: 0,
     other: 0,
-  }
+  };
   addExpense() {}
 
   // bieu do charRevenue
@@ -67,39 +220,58 @@ export class DashboardComponent implements OnInit {
     if (isPlatformBrowser(this.platformId)) {
       const documentStyle = getComputedStyle(document.documentElement);
       const textColor = documentStyle.getPropertyValue('--p-text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+      const textColorSecondary = documentStyle.getPropertyValue(
+        '--p-text-muted-color'
+      );
+      const surfaceBorder = documentStyle.getPropertyValue(
+        '--p-content-border-color'
+      );
+
+      // === Dữ liệu động từ businessData ===
+      const labels = this.businessData.map(
+        (item) => `T${item.month}/${item.year}`
+      );
+      const revenueData = this.businessData.map((item) => item.revenue);
+      const profitData = this.businessData.map((item) => item.net_profit);
 
       this.data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels,
         datasets: [
           {
-            label: 'Dataset 1',
+            label: 'Doanh thu (₫)',
             fill: false,
             borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            yAxisID: 'y',
+            backgroundColor: documentStyle.getPropertyValue('--p-cyan-200'),
             tension: 0.4,
-            data: [65, 59, 80, 81, 56, 55, 10],
+            data: revenueData,
           },
           {
-            label: 'Dataset 2',
+            label: 'Lợi nhuận (₫)',
             fill: false,
-            borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-            yAxisID: 'y1',
+            borderColor: documentStyle.getPropertyValue('--p-green-500'),
+            backgroundColor: documentStyle.getPropertyValue('--p-green-200'),
             tension: 0.4,
-            data: [28, 48, 40, 19, 86, 27, 90],
+            data: profitData,
           },
         ],
       };
 
       this.options = {
-        stacked: false,
+        responsive: true,
         maintainAspectRatio: false,
         aspectRatio: 0.6,
         plugins: {
           legend: {
             labels: {
               color: textColor,
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: (context: any) =>
+                `${context.dataset.label}: ${context.parsed.y.toLocaleString(
+                  'vi-VN'
+                )}₫`,
             },
           },
         },
@@ -113,30 +285,17 @@ export class DashboardComponent implements OnInit {
             },
           },
           y: {
-            type: 'linear',
-            display: true,
-            position: 'left',
             ticks: {
               color: textColorSecondary,
+              callback: (value: number) => value.toLocaleString('vi-VN') + '₫',
             },
             grid: {
-              color: surfaceBorder,
-            },
-          },
-          y1: {
-            type: 'linear',
-            display: true,
-            position: 'right',
-            ticks: {
-              color: textColorSecondary,
-            },
-            grid: {
-              drawOnChartArea: false,
               color: surfaceBorder,
             },
           },
         },
       };
+
       this.cd.markForCheck();
     }
   }
@@ -155,119 +314,155 @@ export class DashboardComponent implements OnInit {
   //   }
   // });
 
-  initChartPie() {
-    if (isPlatformBrowser(this.platformId)) {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--text-color');
-
-      this.dataPie = {
-        labels: ['A', 'B', 'C'],
-        datasets: [
-          {
-            data: [540, 325, 702],
-            backgroundColor: [
-              documentStyle.getPropertyValue('--p-cyan-500'),
-              documentStyle.getPropertyValue('--p-orange-500'),
-              documentStyle.getPropertyValue('--p-gray-500'),
-            ],
-            hoverBackgroundColor: [
-              documentStyle.getPropertyValue('--p-cyan-400'),
-              documentStyle.getPropertyValue('--p-orange-400'),
-              documentStyle.getPropertyValue('--p-gray-400'),
-            ],
-          },
-        ],
-      };
-
-      this.optionsPie = {
-        plugins: {
-          legend: {
-            labels: {
-              usePointStyle: true,
-              color: textColor,
-            },
-          },
-        },
-      };
-      this.cd.markForCheck();
-    }
-  }
-
-  // bieudoProduct
+  // initChartPie() {
+  //   this.dataPie = {
+  //     labels: [],
+  //     datasets: [
+  //       {
+  //         data: [],
+  //       },
+  //     ],
+  //   };
+  // }
   dataProduct: any;
   optionsProduct: any;
 
-  // platformId = inject(PLATFORM_ID);
-  // configService = inject(AppConfigService);
-  // designerService = inject(DesignerService);
-  // themeEffect = effect(() => {
-  //     if (this.configService.transitionComplete()) {
-  //         if (this.designerService.preset()) {
-  //             this.initChart();
-  //         }
-  //     }
-  // });
+  forecasts() {
+    this.businessService.getForecasts().subscribe({
+      next: (res) => {
+        this.predictData = res;
+        console.log('predictData:', this.predictData);
+      },
+      error: (err) => {
+        console.error('Get forecasts failed:', err);
+      },
+    });
+  }
 
-  initChartProduct() {
-    if (isPlatformBrowser(this.platformId)) {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--p-text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+  getQuantityOrderItems() {
+    this.businessService
+      .getQuantityOrderItems(
+        this.selectedDate.getMonth() + 1,
+        this.selectedDate.getFullYear()
+      )
+      .subscribe({
+        next: (data) => {
+          this.quantityOrderItemsData = data;
+          console.log('Quantity Order Items:', this.quantityOrderItemsData);
+          this.updateProductChart();
+        },
+        error: (err) => {
+          console.error('Error fetching quantity order items:', err);
+        },
+      });
+  }
 
-      this.dataProduct = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-        datasets: [
-          {
-            label: 'My First dataset',
-            backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            data: [65, 59, 80, 81, 56, 55, 40],
+  updateProductChart() {
+    if (!this.quantityOrderItemsData || !isPlatformBrowser(this.platformId))
+      return;
+
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    const textColorSecondary = documentStyle.getPropertyValue(
+      '--p-text-muted-color'
+    );
+    const surfaceBorder = documentStyle.getPropertyValue(
+      '--p-content-border-color'
+    );
+
+    // 👉 Lấy dữ liệu từ API
+    const labels = this.quantityOrderItemsData.map(
+      (item: any) => item.menu_name
+    );
+    const quantities = this.quantityOrderItemsData.map((item: any) =>
+      Number(item.total_quantity_ordered)
+    );
+
+    const colorPalette = [
+      documentStyle.getPropertyValue('--p-cyan-300'),
+      documentStyle.getPropertyValue('--p-green-300'),
+      documentStyle.getPropertyValue('--p-orange-300'),
+      documentStyle.getPropertyValue('--p-pink-300'),
+      documentStyle.getPropertyValue('--p-purple-300'),
+      documentStyle.getPropertyValue('--p-blue-300'),
+      documentStyle.getPropertyValue('--p-yellow-300'),
+      documentStyle.getPropertyValue('--p-teal-300'),
+      documentStyle.getPropertyValue('--p-indigo-300'),
+    ];
+    const colors = quantities.map(
+      (_: any, i: number) => colorPalette[i % colorPalette.length]
+    );
+
+    // 👉 Cấu hình chart
+    this.dataProduct = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Số lượng sản phẩm được order',
+          backgroundColor: colors,
+          borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
+          data: quantities,
+        },
+      ],
+    };
+
+    this.optionsProduct = {
+      maintainAspectRatio: false,
+      aspectRatio: 0.8,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
           },
-          {
-            label: 'My Second dataset',
-            backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-            borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-            data: [28, 48, 40, 19, 86, 27, 90],
-          },
-        ],
-      };
-
-      this.optionsProduct = {
-        maintainAspectRatio: false,
-        aspectRatio: 0.8,
-        plugins: {
-          legend: {
-            labels: {
-              color: textColor,
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const value = context.parsed.y || 0;
+              return `Số lượng: ${value}`;
             },
           },
         },
-        scales: {
-          x: {
-            ticks: {
-              color: textColorSecondary,
-              font: {
-                weight: 500,
-              },
-            },
-            grid: {
-              color: surfaceBorder,
-              drawBorder: false,
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColorSecondary,
+            font: {
+              weight: 500,
             },
           },
-          y: {
-            ticks: {
-              color: textColorSecondary,
-            },
-            grid: {
-              color: surfaceBorder,
-              drawBorder: false,
-            },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
           },
         },
-      };
-      this.cd.markForCheck();
-    }
+        y: {
+          ticks: {
+            color: textColorSecondary,
+            precision: 0,
+          },
+          grid: {
+            color: surfaceBorder,
+            drawBorder: false,
+          },
+        },
+      },
+    };
+
+    this.cd.markForCheck();
+  }
+
+  businessDataToDay: any;
+  getBusinessToday(){
+    this.businessService.getBusinessToday().subscribe({
+      next: (data) =>{
+        this.businessDataToDay = {...data};
+        console.log('businessDataToday:', this.businessDataToDay);
+      },
+      error: (err)=>{
+        console.error('error getBusinessToday:', err);
+      }
+    })
   }
 }

@@ -11,7 +11,49 @@
                         (onClick)="showCreateTableForm = !showCreateTableForm"></p-button>
                 </div>
 
-                <div class="create-table-container" [class.active]="showCreateTableForm">
+                <p-dialog header="Tạo bàn mới" [(visible)]="showCreateTableForm" [modal]="true"
+                    [style]="{ width: '30rem' }" [closable]="true" [draggable]="false" [resizable]="false">
+                    <form [formGroup]="formCreateTable" (ngSubmit)="onSubmit()" class="create-table-form">
+                        <div class="p-fluid form-grid">
+                            <!-- Tên bàn -->
+                            <div class="p-field">
+                                <label for="table_name">Tên bàn</label>
+                                <input pInputText id="table_name" formControlName="table_name"
+                                    placeholder="Nhập tên bàn">
+                                <small class="p-error"
+                                    *ngIf="formCreateTable.controls['table_name'].invalid && formCreateTable.controls['table_name'].touched">
+                                    Tên bàn không được để trống
+                                </small>
+                            </div>
+
+                            <!-- Khu vực -->
+                            <div class="p-field">
+                                <label for="zone_id">Khu vực</label>
+                                <p-select inputId="zone_id" formControlName="zone_id" [options]="zones"
+                                    optionLabel="zone_name" optionValue="zone_id" placeholder="-- Chọn khu vực --"
+                                    class="w-full" [appendTo]="'body'" [scrollHeight]="'120px'">
+                                </p-select>
+                                <small class="p-error"
+                                    *ngIf="formCreateTable.controls['zone_id'].invalid && formCreateTable.controls['zone_id'].touched">
+                                    Vui lòng chọn khu vực </small>
+                            </div>
+                        </div>
+
+                        <div class="message" *ngIf="message">{{ message }}</div>
+
+                        <div class="dialog-footer">
+                            <p-button label="Hủy" icon="pi pi-times" styleClass="p-button-text p-button-danger"
+                                (click)="showCreateTableForm = false">
+                            </p-button>
+                            <p-button label="Tạo bàn" icon="pi pi-check" type="submit"
+                                styleClass="p-button-sm p-button-success">
+                            </p-button>
+                        </div>
+                    </form>
+                </p-dialog>
+
+
+                <!-- <div class="create-table-container" [class.active]="showCreateTableForm">
                     <h2>Tạo bàn mới</h2>
                     <i class="pi pi-times" (click)="showCreateTableForm = false"></i>
                     <form [formGroup]="formCreateTable" (ngSubmit)="onSubmit()">
@@ -42,7 +84,7 @@
                     </form>
 
                     <div class="message" *ngIf="message">{{ message }}</div>
-                </div>
+                </div> -->
                 <p-confirmDialog></p-confirmDialog>
 
             </div>
@@ -51,80 +93,75 @@
                 <div class="zone" *ngFor="let zone of zonesData">
                     <h2>{{ zone.zone_name }}</h2>
                     <div class="tableList">
-                        <div class="table" *ngFor="let table of zone.tables" (click)="selectedTable(table)">
-                            {{ table.table_name }}
+                        <div class="table" *ngFor="let table of zone.tables" (click)="selectedTable(table)"
+                            [ngClass]="table.table_status">
+                            <span>{{ table.table_name }}</span>
+                            <span class="table-status">{{ getStatusLabel(table.table_status) }}</span>
                         </div>
                     </div>
                 </div>
 
-                <div *ngIf="showEditTable && selectedTableData" class="table-detail-container">
-                    <i class="pi pi-times btnCancel" (click)="showEditTable = false"></i>
+                <p-dialog header="Thông tin bàn" [(visible)]="showEditTable" [modal]="true" [style]="{ width: '50vw' }"
+                    [closable]="true" [draggable]="false" [resizable]="false" *ngIf="selectedTableData">
+                    <div class="table-detail">
+                        <!-- Cột trái: QR Code -->
+                        <div class="left-column" #qrCodeElement>
+                            <h3>Mã QR</h3>
+                            <qrcode [elementType]="'canvas'" [colorDark]="'#000'" [colorLight]="'#ffffff'"
+                                [qrdata]="qrData" [width]="200" [errorCorrectionLevel]="'M'">
+                            </qrcode>
 
-                    <div class="left-column">
-                        <h3>Thông tin Order</h3>
-                        <div *ngIf="selectedTableData.orders && selectedTableData.orders.length > 0; else noOrder"
-                            class="orderInfor">
-                            <div *ngFor="let order of selectedTableData.orders" class="order-card">
-                                <p><strong>Mã Order:</strong> {{ order.order_id }}</p>
-                                <p><strong>Trạng thái:</strong> {{ order.status }}</p>
-                                <p><strong>Tổng tiền:</strong> {{ order.total_price | number }} VNĐ</p>
-                                <p><strong>Ngày tạo:</strong> {{ order.created_at | date:'short' }}</p>
+                            <p-button label="Tải xuống QR Code" icon="pi pi-download" (click)="downloadQRCode()"
+                                styleClass="p-button-sm p-button-outlined p-button-info mt-2">
+                            </p-button>
+                        </div>
 
-                                <div *ngIf="order.customer">
-                                    <p><strong>Khách hàng:</strong> {{ order.customer.full_name }}</p>
+                        <!-- Cột phải: Thông tin bàn -->
+                        <div class="right-column">
+                            <h3>Thông tin Bàn</h3>
+
+                            <div class="p-fluid form-grid">
+                                <div class="p-field">
+                                    <label for="tableName">Tên bàn</label>
+                                    <input pInputText id="tableName" [(ngModel)]="selectedTableData.table_name"
+                                        placeholder="Nhập tên bàn">
                                 </div>
 
-                                <h4>Danh sách món</h4>
-                                <ul>
-                                    <li *ngFor="let item of order.items">
-                                        {{ item.menu.name }} - SL: {{ item.quantity }} - Giá: {{ item.price | number }}
-                                        VNĐ
-                                        <span *ngIf="item.note"> ({{ item.note }})</span>
-                                    </li>
-                                </ul>
+                                <div class="p-field">
+                                    <label for="tableStatus">Trạng thái</label>
+                                    <p-select id="tableStatus" [(ngModel)]="selectedTableData.table_status"
+                                        [options]="statusOptions" optionLabel="label" optionValue="value"
+                                        placeholder="-- Chọn trạng thái --" [appendTo]="'body'"
+                                        [scrollHeight]="'120px'">
+                                    </p-select>
+                                </div>
+
+                                <div class="p-field">
+                                    <label for="zone">Khu vực</label>
+                                    <p-select id="zone" [(ngModel)]="selectedTableData.zone.zone_id" [options]="zones"
+                                        optionLabel="zone_name" optionValue="zone_id" placeholder="-- Chọn khu vực --"
+                                        [appendTo]="'body'" [scrollHeight]="'120px'">
+                                    </p-select>
+                                </div>
+                            </div>
+
+                            <div class="button-group">
+                                <p-button label="Lưu" icon="pi pi-save" (click)="saveTable()"
+                                    styleClass="p-button-sm p-button-success">
+                                </p-button>
+
+                                <p-button label="Xoá" icon="pi pi-trash" (click)="deleteTable()"
+                                    styleClass="p-button-sm p-button-danger">
+                                </p-button>
                             </div>
                         </div>
-                        <ng-template #noOrder>
-                            <p>Chưa có order nào cho bàn này</p>
-                        </ng-template>
                     </div>
+                </p-dialog>
 
-                    <div class="right-column">
-                        <h3>Thông tin Bàn</h3>
-                        <div class="form-group">
-                            <label for="tableName">Tên bàn:</label>
-                            <input id="tableName" type="text" [(ngModel)]="selectedTableData.table_name"
-                                class="form-control" />
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tableStatus">Trạng thái:</label>
-                            <select id="tableStatus" [(ngModel)]="selectedTableData.table_status" class="form-control">
-                                <option *ngFor="let opt of statusOptions" [value]="opt.value">
-                                    {{ opt.label }}
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="zone">Khu vực:</label>
-                            <select id="zone" [(ngModel)]="selectedTableData.zone.zone_id" class="form-control">
-                                <option *ngFor="let z of zones" [value]="z.zone_id">{{ z.zone_name }}</option>
-                            </select>
-                        </div>
-
-                        <div class="button-group">
-                            <p-button label="Lưu" icon="pi pi-save" (onClick)="saveTable()" [size]="'small'"></p-button>
-                            <p-button label="Xoá" icon="pi pi-trash" (onClick)="deleteTable()" [size]="'small'"
-                                severity="danger"></p-button>
-                        </div>
-                    </div>
-                </div>
 
             </div>
-
-
         </div>
+
         <div class="zoneManagement">
             <div class="zoneAction action">
                 <h1>Quản lý khu vực</h1>
@@ -133,27 +170,37 @@
                         (onClick)="showCreateZoneForm = !showCreateZoneForm"></p-button>
                 </div>
 
-                <div class="create-zone-container create-table-container" [class.active]="showCreateZoneForm">
-                    <h2>Tạo khu vực mới</h2>
-                    <i class="pi pi-times" (click)="showCreateZoneForm = false"></i>
-                    <form [formGroup]="formCreateZone" (ngSubmit)="createZone()">
-                        <div class="form-group">
-                            <label for="zone_name">Tên khu vực</label>
-                            <input id="zone_name" type="text" formControlName="zone_name"
-                                placeholder="Nhập tên khu vực" />
-                            @if(formCreateZone.controls['zone_name'].invalid &&
-                            formCreateZone.controls['zone_name'].touched){
-                            <div class="error">Tên khu vực không được để trống</div>
-                            }
+                <p-dialog header="Tạo khu vực mới" [(visible)]="showCreateZoneForm" [modal]="true"
+                    [style]="{ width: '30rem' }" [closable]="true" [draggable]="false" [resizable]="false">
+                    <form [formGroup]="formCreateZone" (ngSubmit)="createZone()" class="create-zone-form">
+                        <div class="p-fluid">
+                            <div class="p-field">
+                                <label for="zone_name">Tên khu vực</label>
+                                <input pInputText id="zone_name" formControlName="zone_name" placeholder="Nhập tên khu vực">
+
+                                <small class="p-error"
+                                    *ngIf="formCreateZone.controls['zone_name'].invalid && formCreateZone.controls['zone_name'].touched">
+                                    Tên khu vực không được để trống
+                                </small>
+                            </div>
                         </div>
 
-                        <p-button label="Tạo khu vực" type="submit" [size]="'small'"></p-button>
-                    </form>
+                        <div class="dialog-footer">
+                            <p-button label="Hủy" icon="pi pi-times" styleClass="p-button-text p-button-danger"
+                                (click)="showCreateZoneForm = false">
+                            </p-button>
 
-                    @if(message){
-                    <div class="message">{{ message }}</div>
-                    }
-                </div>
+                            <p-button label="Tạo khu vực" icon="pi pi-check" type="submit"
+                                styleClass="p-button-sm p-button-success" [disabled]="formCreateZone.invalid">
+                            </p-button>
+                        </div>
+
+                        <div class="message" *ngIf="message">
+                            {{ message }}
+                        </div>
+                    </form>
+                </p-dialog>
+
             </div>
 
             <div class="card">
@@ -168,8 +215,10 @@
                         <tr>
                             <td>{{ zoneData.zone_name }}</td>
                             <td class="tdAction flex gap-1">
-                                <p-button icon="pi pi-pencil" label="Sửa" [size]="'small'" severity="warn" (onClick)="editZone(zoneData)"></p-button>
-                                <p-button icon="pi pi-trash" label="Xoá" [size]="'small'" severity="danger" (onClick)="deleteZone(zoneData.zone_id)"></p-button>
+                                <p-button icon="pi pi-pencil" label="Sửa" [size]="'small'" severity="warn"
+                                    (onClick)="editZone(zoneData)"></p-button>
+                                <p-button icon="pi pi-trash" label="Xoá" [size]="'small'" severity="danger"
+                                    (onClick)="deleteZone(zoneData.zone_id)"></p-button>
                             </td>
                         </tr>
                         @if(editingZone?.zone_id === zoneData.zone_id){
@@ -194,13 +243,5 @@
 
         </div>
 
-    </div>
-
-    <div class="chart">
-        <h1>Bàn được sử dụng nhiều</h1>
-
-        <div class="card">
-            <p-chart type="bar" [data]="basicData" [options]="basicOptions" />
-        </div>
     </div>
 </div>

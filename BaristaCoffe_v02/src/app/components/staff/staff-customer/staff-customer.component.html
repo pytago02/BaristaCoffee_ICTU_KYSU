@@ -26,9 +26,8 @@
         <div class="relative">
             <p-button label="Thêm" (onClick)="showCreateForm = true; isBackdropActive = true"></p-button>
 
-            <!-- form tao san pham -->
             <div class="create-item-container" [class.active]="showCreateForm">
-                <h2>Tạo sản phẩm</h2>
+                <h2>Tạo tài khoản</h2>
                 <i class="pi pi-times" (click)="showCreateForm = false"></i>
 
                 <div class="form-group">
@@ -138,40 +137,42 @@
                                         (onClick)="resetPassword()"></p-button>
                                 </div>
                             </div>
-
                             <!-- Cột 4:  Danh sách hoá đơn-->
                             <div class="col listOrder">
-                                <p-table [value]="orderByUserIdData">
-                                    <ng-template #header>
-                <tr>
-                    <th>id</th>
-                    <th>Tổng tiền</th>
-                    <th>Trạng thái</th>
-                    <th>Nhân viên</th>
-                    <th>Thời gian</th>
-                </tr>
-            </ng-template>
-            <ng-template #body let-item>
-                <tr (click)="goToOrder(item.order_id)">
-                    <td>{{ item.order_id }}</td>
-                    <td>{{ item.total_price | currency: 'VND'}}</td>
-                    <td>
-                        <p-badge [value]="getStatusLabel(item.status)" [severity]="stockSeverity(item)" />
+                                
+                                    <p-table [value]="orderByUserIdData" scrollable="true" scrollHeight="300px">
+                                        <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>id</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Nhân viên</th>
+                                            <th>Thời gian</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-item>
+                                        <tr (click)="goToOrder(item.order_id)">
+                                            <td>{{ item.order_id }}</td>
+                                            <td>{{ item.total_price | currency: 'VND'}}</td>
+                                            <td>
+                                                <p-badge [value]="getStatusLabel(item.status)" [severity]="stockSeverity(item)" />
+                                            </td>
+                                            <td>{{ item.staff_name }}</td>
+                                            <td>{{ item.order_date | date:'dd/MM/yyyy HH:mm'}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    </p-table>
+                                
+                            </div>
+
+                        </div>
+
                     </td>
-                    <td>{{ item.staff_name }}</td>
-                    <td>{{ item.order_date | date:'dd/MM/yyyy HH:mm'}}</td>
                 </tr>
+
             </ng-template>
         </p-table>
+
     </div>
-</div>
-
-</td>
-</tr>
-
-</ng-template>
-</p-table>
-
-</div>
 
 </div>

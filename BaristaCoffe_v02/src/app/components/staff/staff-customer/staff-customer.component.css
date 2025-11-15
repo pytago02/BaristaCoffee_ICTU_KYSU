@@ -123,14 +123,19 @@
     border-radius: 8px;
 }
 
-.listOrder{
+.listOrder {
     font-size: 14px;
     width: 500px;
-    overflow-y: auto;
+    overflow-y: hidden;
+    height: 300px;
 }
 
-.listOrder tr{
+.listOrder tr {
     cursor: pointer;
+}
+
+.listOrder p-table{
+    overflow-y: auto;
 }
 
 .create-item-container {
@@ -165,7 +170,7 @@
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
 }

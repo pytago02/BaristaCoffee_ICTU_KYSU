@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   selector: 'app-staff-customer',
   imports: [ImportModule],
   templateUrl: './staff-customer.component.html',
-  styleUrl: './staff-customer.component.css',
+  styleUrls: ['./staff-customer.component.css'],
   providers: [ConfirmationService, MessageService],
 })
 export class StaffCustomerComponent implements OnInit {

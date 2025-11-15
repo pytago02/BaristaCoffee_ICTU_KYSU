@@ -41,128 +41,146 @@
                                 (onClick)="showCreateItemForm = true"></p-button>
 
                             <!-- form tao mon -->
-                            <div class="create-item-container" [class.active]="showCreateItemForm">
-                                <h2>Tạo món mới</h2>
-                                <i class="pi pi-times" (click)="showCreateItemForm = false"></i>
+                            <p-dialog header="Tạo món mới" [(visible)]="showCreateItemForm" [modal]="true"
+                                [style]="{ width: '60vw' }" [closable]="true" [draggable]="false" [resizable]="false">
+                                <form [formGroup]="createItemData" (ngSubmit)="submitCreateItem()"
+                                    class="create-item-form p-fluid">
 
-                                <form [formGroup]="createItemData" (ngSubmit)="submitCreateItem()" class="form-grid">
-                                    <div class="form-group">
-                                        <label for="menu_name">Tên món</label>
-                                        <input id="menu_name" type="text" formControlName="menu_name"
-                                            placeholder="Nhập tên món" />
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['menu_name'].invalid && createItemData.controls['menu_name'].touched">
-                                            Tên món không được để trống
+                                    <div class="inputContent">
+                                        <div class="p-field">
+                                            <label for="menu_name">Tên món</label>
+                                            <input pInputText id="menu_name" formControlName="menu_name"
+                                                placeholder="Nhập tên món">
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['menu_name'].invalid && createItemData.controls['menu_name'].touched">
+                                                Tên món không được để trống
+                                            </small>
+                                        </div>
+
+                                        <!-- Giá nhập -->
+                                        <div class="p-field">
+                                            <label for="import_price">Giá nhập</label>
+                                            <p-inputNumber id="import_price" formControlName="import_price" [min]="0"
+                                                mode="currency" currency="VND" locale="vi-VN"
+                                                placeholder="Nhập giá nhập">
+                                            </p-inputNumber>
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['import_price'].invalid && createItemData.controls['import_price'].touched">
+                                                Giá nhập không được để trống
+                                            </small>
+                                        </div>
+
+                                        <!-- Giá bán -->
+                                        <div class="p-field">
+                                            <label for="price">Giá bán</label>
+                                            <p-inputNumber id="price" formControlName="price" [min]="0" mode="currency"
+                                                currency="VND" locale="vi-VN" placeholder="Nhập giá bán">
+                                            </p-inputNumber>
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['price'].invalid && createItemData.controls['price'].touched">
+                                                Giá bán không được để trống
+                                            </small>
+                                        </div>
+
+                                        <!-- Danh mục -->
+                                        <div class="p-field">
+                                            <label for="menu_category_id">Danh mục</label>
+                                            <p-select id="menu_category_id" formControlName="menu_category_id"
+                                                [options]="categories" optionLabel="menu_category_name"
+                                                optionValue="menu_category_id" placeholder="-- Chọn danh mục --"
+                                                [appendTo]="'body'" [scrollHeight]="'120px'">
+                                            </p-select>
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['menu_category_id'].invalid && createItemData.controls['menu_category_id'].touched">
+                                                Vui lòng chọn danh mục
+                                            </small>
+                                        </div>
+
+                                        <!-- Độ ngọt -->
+                                        <div class="p-field">
+                                            <label for="sweetness_level">Độ ngọt</label>
+                                            <p-select id="sweetness_level" formControlName="sweetness_level"
+                                                [options]="sweetness_level" optionLabel="label" optionValue="value"
+                                                placeholder="-- Chọn độ ngọt --" [appendTo]="'body'"
+                                                [scrollHeight]="'120px'">
+                                            </p-select>
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['sweetness_level'].invalid && createItemData.controls['sweetness_level'].touched">
+                                                Vui lòng chọn độ ngọt
+                                            </small>
+                                        </div>
+
+                                        <!-- Nhiệt độ -->
+                                        <div class="p-field">
+                                            <label for="temperature">Nhiệt độ</label>
+                                            <p-select id="temperature" formControlName="temperature"
+                                                [options]="temperature" optionLabel="label" optionValue="value"
+                                                placeholder="-- Chọn nhiệt độ --" [appendTo]="'body'"
+                                                [scrollHeight]="'120px'">
+                                            </p-select>
+                                            <small class="p-error"
+                                                *ngIf="createItemData.controls['temperature'].invalid && createItemData.controls['temperature'].touched">
+                                                Vui lòng chọn nhiệt độ
+                                            </small>
+                                        </div>
+
+                                        <!-- Số lượng -->
+                                        <div class="p-field">
+                                            <label for="quantity">Số lượng</label>
+                                            <p-inputNumber id="quantity" formControlName="quantity" [min]="0">
+                                            </p-inputNumber>
+                                        </div>
+
+                                        <!-- Mô tả -->
+                                        <div class="p-field">
+                                            <label for="description">Mô tả</label>
+                                            <input pInputText id="description" formControlName="description"
+                                                placeholder="Nhập mô tả">
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label for="import_price">Giá nhập</label>
-                                        <input id="import_price" type="number" formControlName="import_price"
-                                            placeholder="Nhập giá nhập" />
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['import_price'].invalid && createItemData.controls['import_price'].touched">
-                                            Giá nhập không được để trống
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="price">Giá bán</label>
-                                        <input id="price" type="number" formControlName="price"
-                                            placeholder="Nhập giá bán" />
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['price'].invalid && createItemData.controls['price'].touched">
-                                            Giá bán không được để trống
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="menu_category_id">Danh mục</label>
-                                        <select id="menu_category_id" formControlName="menu_category_id">
-                                            <option value="">-- Chọn danh mục --</option>
-                                            <option *ngFor="let cate of categories" [value]="cate.menu_category_id">
-                                                {{ cate.menu_category_name }}
-                                            </option>
-                                        </select>
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['menu_category_id'].invalid && createItemData.controls['menu_category_id'].touched">
-                                            Vui lòng chọn danh mục
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="sweetness_level">Độ ngọt</label>
-                                        <select id="sweetness_level" formControlName="sweetness_level">
-                                            <option value="">-- Chọn độ ngọt --</option>
-                                            <option *ngFor="let item of sweetness_level" [value]="item.value">{{
-                                                item.label }}</option>
-                                        </select>
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['sweetness_level'].invalid && createItemData.controls['sweetness_level'].touched">
-                                            Vui lòng chọn độ ngọt
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="temperature">Nhiệt độ</label>
-                                        <select id="temperature" formControlName="temperature">
-                                            <option value="">-- Chọn nhiệt độ --</option>
-                                            <option *ngFor="let item of temperature" [value]="item.value">{{ item.label
-                                                }}</option>
-                                        </select>
-                                        <div class="error"
-                                            *ngIf="createItemData.controls['temperature'].invalid && createItemData.controls['temperature'].touched">
-                                            Vui lòng chọn nhiệt độ
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="quantity">Số lượng</label>
-                                        <input id="quantity" type="number" formControlName="quantity" />
-                                    </div>
-
-                                    <div class="form-group col-span-3 ">
-                                        <label for="description">Mô tả</label>
-                                        <input id="description" type="text" formControlName="description"
-                                            placeholder="Nhập mô tả" />
-                                    </div>
-
-                                    <div class="form-group col-span-3 ">
+                                    <!-- Ảnh -->
+                                    <div class="p-field">
                                         <label for="image_url">Ảnh</label>
                                         <p-fileUpload name="file" accept="image/*" [showUploadButton]="false"
                                             [showCancelButton]="false" (onSelect)="onImageSelect($event)">
                                         </p-fileUpload>
                                     </div>
 
-                                    <div class="full-width">
+                                    <!-- Nút tạo món -->
+                                    <div class="dialog-footer">
                                         <p-button icon="pi pi-plus" label="Tạo món" type="submit"
-                                            [size]="'small'"></p-button>
+                                            styleClass="p-button-sm p-button-success"
+                                            [disabled]="createItemData.invalid">
+                                        </p-button>
                                     </div>
                                 </form>
-                            </div>
+                            </p-dialog>
+
                         </div>
                         <div class="relative">
                             <p-button icon="pi pi-bars" label="Tạo danh mục" [size]="'small'"
                                 (onClick)="showCreateCateForm = true"></p-button>
 
                             <!-- form tao danh muc -->
-                            <div class="create-item-container" [class.active]="showCreateCateForm">
-                                <h2>Tạo danh mục</h2>
-                                <i class="pi pi-times" (click)="showCreateCateForm = false"></i>
-
+                            <p-dialog header="Tạo món mới" [(visible)]="showCreateCateForm" [modal]="true"
+                                [style]="{ width: '30vw' }" [closable]="true" [draggable]="false" [resizable]="false">
                                 <div class="form-group">
                                     <label for="menu_category_name">Tên danh mục</label>
-                                    <input id="menu_category_name" [(ngModel)]="menuCategoryName" type="text"
+                                    <input pInputText id="menu_category_name" [(ngModel)]="menuCategoryName" type="text"
                                         placeholder="Nhập tên danh mục" />
                                 </div>
 
-                                <div class="full-width">
-                                    <p-button icon="pi pi-plus" label="Tạo danh mục" [size]="'small'"
-                                        (onClick)="createCategory()"></p-button>
-                                </div>
-
                                 <div class="message" *ngIf="message">{{ message }}</div>
-                            </div>
+
+                                <div class="dialog-footer">
+                                    <p-button icon="pi pi-plus" label="Tạo danh mục" (onClick)="createCategory()"
+                                        [size]="'small'" styleClass="p-button-sm p-button-success"
+                                        [disabled]="createItemData.invalid">
+                                    </p-button>
+                                </div>
+                            </p-dialog>
+
                         </div>
                         <div class="relative">
                             <p-button icon="pi pi-pencil" label="Sửa danh mục" [size]="'small'"

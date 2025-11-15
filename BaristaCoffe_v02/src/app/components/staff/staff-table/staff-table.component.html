@@ -79,7 +79,7 @@
             </div>
             <div class="feild">
                 <label for="">Số lượng</label>
-                <input class="w-[100px]" type="number" pInputText [(ngModel)]="selectedItemData.order_quantity">
+                <input class="w-[100px]" type="number" pInputText [(ngModel)]="selectedItemData.order_quantity" min="1">
             </div>
 
             <div class="feild">
@@ -114,7 +114,7 @@
                     <p-button icon="pi pi-times" styleClass="p-button-rounded p-button-text"
                         (click)="closeInfoTable()"></p-button>
                 </div>
-                <small class="text-color-secondary">Khu vực: {{ orderByTableIdData[0]?.zone_name }}</small>
+                <!-- <small class="text-color-secondary">Khu vực: {{ orderByTableIdData[0]?.zone_name }}</small> -->
             </div>
 
             <!-- Nội dung chính có thể cuộn -->
@@ -159,7 +159,7 @@
 
                     <div class="flex justify-content-end mt-3">
                         <h3 class="text-right text-red-500">
-                            Tổng: {{ orderByTableIdData[0]?.total_price | currency:'VND' }}
+                            Tổng hoá đơn: {{ orderByTableIdData[0]?.total_price | currency:'VND' }}
                         </h3>
                     </div>
                 </ng-container>

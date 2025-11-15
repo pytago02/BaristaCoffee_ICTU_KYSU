@@ -22,8 +22,10 @@ import { StaffMenuComponent } from './components/staff/staff-menu/staff-menu.com
 import { StaffRecipesComponent } from './components/staff/staff-recipes/staff-recipes.component';
 import { StaffIngredientComponent } from './components/staff/staff-ingredient/staff-ingredient.component';
 import { CustommerComponent } from './components/custommer/custommer.component';
+import { AnalyticsComponent } from './components/admin/analytics/analytics.component';
 
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
+import { Table } from 'primeng/table';
 
 export const routes: Routes = [
   { path: '', component: CustommerComponent },
@@ -34,6 +36,7 @@ export const routes: Routes = [
     component: AdminComponent,
     children: [
       { path: 'dashboard', component: DashboardComponent },
+      { path: 'analytics', component: AnalyticsComponent },
       { path: 'tables', component: TableComponent },
       { path: 'menus', component: MenuComponent },
       { path: 'orders', component: OrderComponent },

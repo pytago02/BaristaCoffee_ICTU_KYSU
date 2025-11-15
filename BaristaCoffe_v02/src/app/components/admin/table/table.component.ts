@@ -3,10 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   effect,
+  ElementRef,
   Inject,
   inject,
   OnInit,
   PLATFORM_ID,
+  ViewChild,
 } from '@angular/core';
 import { ImportModule } from '../../../modules/import/import.module';
 import { TableService } from '../../../services/table.service';
@@ -23,6 +25,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UrlbackendService } from '../../../services/urlbackend.service';
+import { QRCodeComponent } from 'angularx-qrcode';
 
 export interface TableData {
   table_id: number;
@@ -59,7 +62,7 @@ export interface TableData {
 
 @Component({
   selector: 'app-table',
-  imports: [ImportModule, ReactiveFormsModule, ChartModule],
+  imports: [ImportModule, ReactiveFormsModule, ChartModule, QRCodeComponent],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
   providers: [ConfirmationService, MessageService],
@@ -389,11 +392,50 @@ export class TableComponent implements OnInit {
         this.selectedTableData = data;
         this.showEditTable = true;
         console.log('selectedTableData: ', this.selectedTableData);
-        this.qrData = `${this.urlFrontEnd}/customer/?table_id=${this.selectedTableData.table_id}`;
+        this.qrData = `${this.urlFrontEnd}/?table_id=${this.selectedTableData.table_id}`;
         console.log(this.qrData);
         this.cd.detectChanges();
       },
     });
   }
 
+  @ViewChild('qrCodeElement') qrCodeElement!: ElementRef;
+  downloadQRCode(): void {
+    const canvas = this.qrCodeElement.nativeElement.querySelector('canvas');
+    if (canvas) {
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download =
+        'qr_codeTable_' +
+        this.selectedTableData.table_name +
+        '-' +
+        this.selectedTableData.table_id +
+        '.png';
+      link.click();
+    } else {
+      console.error('Không tìm thấy canvas chứa QR code');
+    }
+  }
+
+  getStatusLabel(status: string): string {
+    switch (status) {
+      case 'available':
+        return 'Sẵn sàng';
+      case 'pending':
+        return 'Chờ xác nhận';
+      case 'preparing':
+        return 'Đang chuẩn bị';
+      case 'served':
+        return 'Đã phục vụ';
+      case 'paid':
+        return 'Đã thanh toán';
+      case 'unavailable':
+        return 'Không khả dụng';
+      case 'completed':
+        return 'Đã phục vụ';
+      default:
+        return status;
+    }
+  }
 }

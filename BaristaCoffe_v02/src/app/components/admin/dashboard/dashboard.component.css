@@ -31,8 +31,8 @@ p-chart {
     padding: 20px;
     border: 1px dashed var(--border-color);
     background-color: var(--bg-main);
-    z-index: 10;
-    
+    z-index: 100;
+
     visibility: hidden;
     opacity: 0;
     transition: all 0.3s ease;
@@ -44,6 +44,38 @@ p-chart {
         visibility: unset;
     }
 }
+
+.expense-form {
+    padding: 1.5rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+}
+
+.p-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.p-field label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+    padding-top: 0;
+}
+
 
 .btnCancel {
     position: absolute;
@@ -71,6 +103,12 @@ p-chart {
     padding: 5px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+}
+
+.formAddExpense .btn {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .fillter {
@@ -115,6 +153,7 @@ p-chart {
     display: flex;
     align-items: center;
     justify-content: space-around;
+    position: relative;
 }
 
 .overView .card .infor i {
@@ -127,20 +166,36 @@ p-chart {
     font-weight: 800;
 }
 
-.overView .doanhThu{
+.overView .infor .predict {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgb(29, 163, 2);
+    position: absolute;
+    top: -10px;
+    right: 0;
+}
+
+.overView .doanhThu,
+.todayRevenue {
     background-color: var(--card-bg-revenue);
+    border-radius: 16px;
 }
 
-.overView .loiNhuan{
+.overView .loiNhuan,
+.todayOrders {
     background-color: var(--card-bg-profit);
+    border-radius: 16px;
 }
 
-.overView .tiLeLoiNhuan{
+.overView .tiLeLoiNhuan {
     background-color: var(--card-bg-profit-rate);
+    border-radius: 16px;
 }
 
-.overView .soDonHang{
-    background-color:var(--card-bg-orders);
+.overView .soDonHang,
+.todayHotItem {
+    background-color: var(--card-bg-orders);
+    border-radius: 16px;
 }
 
 .chars {
@@ -169,4 +224,75 @@ p-chart {
     height: 2px;
     background-color: var(--line-color);
     margin: 20px 0;
+}
+
+.byMonth {
+    background: var(--bg-main);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.byDay {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+    background: var(--bg-main);
+    padding: 20px;
+}
+
+.today {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.byDay .card {
+    flex: 1 0 250px;
+    min-height: 150px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.byDay .card .infor {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.byDay .card .infor i {
+    font-size: 2.5rem;
+    color: var(--text-main);
+}
+
+
+.byDay .card h2,
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.byDay .card p {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.byDay .todayHotItem img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.byDay .todayHotItem p {
+    font-size: 2rem !important;
+    font-weight: 800;
 }

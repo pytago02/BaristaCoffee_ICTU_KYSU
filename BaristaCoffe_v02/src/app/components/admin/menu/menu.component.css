@@ -27,9 +27,11 @@ button {
   border-radius: 6px;
   cursor: pointer;
 }
+
 button:hover {
   background: var(--bg-button-primary-hover);
 }
+
 button:disabled {
   background: var(--bg-button-disabled);
 }
@@ -52,6 +54,7 @@ button:disabled {
   z-index: 9;
   display: none;
 }
+
 .backdrop.active {
   display: block;
 }
@@ -71,14 +74,17 @@ button:disabled {
 .search {
   margin-top: 20px;
 }
+
 .search input {
   padding: 4px 8px;
 }
+
 .search p-floatlabel {
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
+
 .search i:hover {
   color: var(--text-danger);
 }
@@ -89,12 +95,14 @@ button:disabled {
   gap: 5px;
   overflow-y: auto;
 }
+
 .nav .filter .cate {
   padding: 8px 16px;
   margin-right: 5px;
   cursor: pointer;
   border-radius: 8px;
 }
+
 .nav .filter .cate:hover {
   color: var(--text-hover);
   background-color: var(--bg-hover);
@@ -166,6 +174,7 @@ button:disabled {
   background: var(--bg-card);
   visibility: hidden;
 }
+
 .create-item-container.active {
   visibility: visible;
 }
@@ -175,6 +184,7 @@ button:disabled {
   text-align: center;
   margin-bottom: 16px;
 }
+
 .create-item-container .pi-times {
   position: absolute;
   top: 10px;
@@ -190,6 +200,7 @@ button:disabled {
   transform: translate(-50%, -50%);
   display: none;
 }
+
 .update-item-container.active {
   display: block;
 }
@@ -200,6 +211,7 @@ button:disabled {
   width: 500px;
   overflow-y: auto;
 }
+
 .update-cate-container .pi-times {
   position: absolute;
   top: 10px;
@@ -207,6 +219,40 @@ button:disabled {
   color: var(--text-danger);
   cursor: pointer;
 }
+
 .update-cate-container .tdAction i {
   cursor: pointer;
+}
+
+
+.create-item-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.inputContent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.p-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-field label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.dialog-footer {
+  grid-column: 1 / -1;
+  /* Footer chiếm toàn bộ chiều ngang form */
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }

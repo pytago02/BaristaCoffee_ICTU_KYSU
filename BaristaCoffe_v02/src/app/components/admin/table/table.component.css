@@ -82,8 +82,8 @@
   border: 1px solid var(--border-color);
   padding: 10px;
   border-radius: 5px;
-  width: 300px;
-  height: 300px;
+  width: 500px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-main);
@@ -103,17 +103,48 @@
   border: 1px solid var(--line-color);
   border-radius: 5px;
   cursor: pointer;
-  background: var(--bg-table);
+  /* background: var(--bg-table); */
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   color: var(--bg-card);
+
 }
 
-.tableList .table:hover {
-  background-color: var(--bg-table-hover);
+.table .table-status {
+  font-size: 0.8rem;
 }
+
+/* Màu theo trạng thái */
+.available {
+  background-color: #4caf50;
+}
+
+.pending {
+  background-color: #ff9800;
+}
+
+.preparing {
+  background-color: #f44336;
+}
+
+.served {
+  background-color: #2196f3;
+}
+
+.paid {
+  background-color: #9c27b0;
+}
+
+.unavailable {
+  background-color: #9e9e9e;
+}
+
+/* .tableList .table:hover {
+  background-color: var(--bg-table-hover);
+} */
 
 .tableAction,
 .zoneAction {
@@ -223,7 +254,7 @@ button:disabled {
 }
 
 .left-column {
-  width: 400px;
+  /* width: 400px; */
   border-right: 1px dashed var(--border-color);
 }
 
@@ -281,10 +312,92 @@ h3 {
   background-color: var(--bg-button-danger);
 }
 
-.btnCancel{
+.btnCancel {
   position: absolute;
   top: 5px;
   right: 5px;
   color: var(--text-danger);
   cursor: pointer;
+}
+
+.create-table-form {
+  padding: 1rem;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.p-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-field label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 3.5rem;
+  gap: 0.5rem;
+}
+
+.message {
+  text-align: center;
+  margin-top: 1rem;
+  color: #16a34a;
+  font-weight: 500;
+}
+
+.table-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+.left-column {
+  flex: 1 1 250px;
+  text-align: center;
+}
+
+.left-column h3 {
+  margin-bottom: 1rem;
+}
+
+.left-column qrcode{
+  display: flex;
+  justify-content: center;
+}
+
+.right-column {
+  flex: 2 1 400px;
+}
+
+.p-field {
+  margin-bottom: 1rem;
+}
+
+.p-field label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+  overflow: visible !important;
 }

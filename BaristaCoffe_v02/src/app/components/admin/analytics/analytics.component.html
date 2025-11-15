@@ -1,0 +1,85 @@
+<div class="main">
+    <div class="filterTime">
+        <h2>Tháng/Năm</h2>
+        <div class=" flex ">
+            <p-datepicker [(ngModel)]="selectedDate" view="month" dateFormat="mm/yy" [readonlyInput]="true"
+                (ngModelChange)="loadData()" />
+        </div>
+    </div>
+
+    <div class="hotItems">
+        <div class="title">
+            <h1>Sản Phẩm Bán Chạy Nhất Tháng Này</h1>
+        </div>
+        <div class="content">
+            <div class="card image">
+                <img [src]="urlBackend + quantityOrderItemsData?.[0]?.image_url" alt="">
+                <span>{{ quantityOrderItemsData?.[0]?.menu_name }}</span>
+            </div>
+
+            <div class="card quantity">
+                <h2>Số lượng</h2>
+                <div class="infor">
+                    <i class="pi pi-shopping-cart"></i>
+                    <span>{{ quantityOrderItemsData?.[0]?.total_quantity_ordered }}</span>
+                </div>
+            </div>
+
+            <div class="card revenue">
+                <h2>Doanh thu</h2>
+                <div class="infor">
+                    <i class="pi pi-wallet"></i>
+                    <span>{{ quantityOrderItemsData?.[0]?.total_quantity_ordered * quantityOrderItemsData?.[0]?.price |
+                        number:'1.0-0'}}₫</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="char">
+        <div class="title">
+            <h1>Tăng trưởng theo tháng</h1>
+        </div>
+        <p-chart type="line" [data]="chartData" [options]="chartOptions" class="h-20rem" />
+    </div>
+
+
+    <div class="cardTable card">
+        <p-table [value]="quantityOrderItemsData" [rows]="5" [rowsPerPageOptions]="[5, 10, 20]" [paginator]="true"
+            [tableStyle]="{ 'min-width': '60rem' }">
+            <ng-template #caption>
+                <div class="flex items-center justify-between">
+                    <span class="text-xl font-bold">Top bán chạy</span>
+                    <p-button icon="pi pi-refresh" rounded raised />
+                </div>
+            </ng-template>
+            <ng-template #header>
+                <tr>
+                    <th>Tên</th>
+                    <th>Ảnh</th>
+                    <th>Giá vốn</th>
+                    <th>Giá bán</th>
+                    <th>Số lượng</th>
+                    <th>Doanh thu thuần</th>
+                    <th>Lợi nhuận thuần</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-product>
+                <tr>
+                    <td>{{ product.menu_name }}</td>
+                    <td>
+                        <img [src]="urlBackend + product.image_url" [alt]="product.menu_name" class="w-24 rounded" />
+                    </td>
+                    <td>{{ product.import_price | currency:'VND':'symbol' }}</td>
+                    <td>{{ product.price | currency:'VND':'symbol'}}</td>
+                    <td>{{product.total_quantity_ordered}}</td>
+                    <td>{{product.price * product.total_quantity_ordered | currency:'VND':'symbol'}}</td>
+                    <td>{{(product.price - product.import_price) * product.total_quantity_ordered |
+                        currency:'VND':'symbol'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+
+</div>

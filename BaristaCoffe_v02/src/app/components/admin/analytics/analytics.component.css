@@ -1,0 +1,105 @@
+.main {}
+
+.filterTime {
+    display: flex;
+    /* align-items: center; */
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-main);
+}
+
+.hotItems {
+    padding: 20px;
+    border-radius: 16px;
+    background-color: var(--bg-main);
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: flex;
+    /* flex-direction: column; */
+    gap: 20px;
+}
+
+.card {
+    flex: 1 0 250px;
+    height: 150px;
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.card .infor {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.card .infor i {
+    font-size: 2.5rem;
+    color: var(--text-main);
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.card span {
+    font-size: 2.5rem;
+    font-weight: 800;
+}
+
+.card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.hotItems .image {
+    display: flex;
+    background-color: var(--card-bg-revenue);
+}
+
+.quantity {
+    background-color: var(--card-bg-profit);
+}
+
+.revenue {
+    background-color: var(--card-bg-profit-rate);
+
+}
+
+.char {
+    margin-top: 20px;
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+/* .cardTable {
+    margin-top: 20px;
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+} */
+
+.cardTable .text-xl{
+    font-size: 26px;
+}
+
+.cardTable td img {
+    height: 100px;
+    width: 100px;
+    object-fit: cover;
+}

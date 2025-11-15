@@ -1,3 +1,4 @@
+// index.js
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -16,6 +17,12 @@ const recipesRouter = require("./routers/recipesRouter");
 const recommendationRoutes = require("./routers/recommendationRoutes");
 const requestRouter = require("./routers/requestRouter");
 const chatbotRouter = require('./routers/chatbotRoute');
+const modelRouter = require("./routers/modelRouter");
+const businessrouter = require("./routers/businessRouter");
+
+// auto train & predict job
+require("./ml/autoTrainPredict");
+
 
 const app = express();
 app.use(cors());
@@ -36,6 +43,8 @@ app.use("/recipes", recipesRouter);
 app.use("/recommendations", recommendationRoutes);
 app.use("/request", requestRouter);
 app.use("/chatbot", chatbotRouter);
+app.use("/model", modelRouter);
+app.use("/business", businessrouter);
 
 // Test route
 app.get("/", (req, res) => {
