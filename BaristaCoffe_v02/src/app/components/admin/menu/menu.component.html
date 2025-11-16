@@ -186,52 +186,75 @@
                             <p-button icon="pi pi-pencil" label="Sửa danh mục" [size]="'small'"
                                 (onClick)="showUpdateCateForm = true"></p-button>
                             <!-- Form sửa cate -->
-                            <div class="update-cate-container create-item-container"
-                                [class.active]="showUpdateCateForm">
-                                <h2>Sửa danh mục</h2>
-                                <i class="pi pi-times" (click)="showUpdateCateForm = false"></i>
+                        <p-dialog header="Sửa danh mục"
+          [(visible)]="showUpdateCateForm"
+          [modal]="true"
+          [style]="{ width: '500px' }"
+          [closable]="true"
+          [draggable]="false"
+          [resizable]="false">
 
-                                <div>
-                                    <p-table [value]="categories" stripedRows>
-                                        <ng-template #header>
-                                            <tr>
-                                                <th [style.width.px]="300">Tên danh mục</th>
-                                                <th>Hành động</th>
-                                            </tr>
-                                        </ng-template>
-                                        <ng-template #body let-categories>
-                                            <tr>
-                                                <td>{{ categories.menu_category_name }}</td>
-                                                <td class="tdAction">
-                                                    <p-button icon="pi pi-pencil" label="Sửa" [size]="'small'"
-                                                        severity="warn"
-                                                        (onClick)="showUpdateCategory(categories)"></p-button>
-                                                    <p-button icon="pi pi-trash" label="Xoá" [size]="'small'"
-                                                        severity="danger"
-                                                        (onClick)="deleteCategory(categories.menu_category_id)"></p-button>
-                                                </td>
-                                            </tr>
-                                            @if(editingCate?.menu_category_id === categories.menu_category_id){
-                                            <tr>
-                                                <td>
-                                                    <input type="text" pInputText
-                                                        [(ngModel)]="editingCate.menu_category_name"
-                                                        placeholder="Nhập tên khu vực" [pSize]="'large'" />
-                                                </td>
-                                                <td>
-                                                    <div class="editingZoneBtn tdAction">
-                                                        <p-button label="Lưu" (onClick)="updateCategory()"
-                                                            [size]="'small'" [severity]="'success'"></p-button>
-                                                        <p-button label="Huỷ" (onClick)="editingCate = null"
-                                                            [size]="'small'" [severity]="'secondary'"></p-button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            }
-                                        </ng-template>
-                                    </p-table>
-                                </div>
+    <div>
+        <p-table [value]="categories" stripedRows>
+            
+            <!-- Header -->
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 300px;">Tên danh mục</th>
+                    <th>Hành động</th>
+                </tr>
+            </ng-template>
+
+            <!-- Body -->
+            <ng-template pTemplate="body" let-categories>
+                <tr>
+                    <td>{{ categories.menu_category_name }}</td>
+                    <td class="tdAction">
+                        <p-button icon="pi pi-pencil" label="Sửa" size="small"
+                            severity="warn"
+                            (onClick)="showUpdateCategory(categories)">
+                        </p-button>
+
+                        <p-button icon="pi pi-trash" label="Xoá" size="small"
+                            severity="danger"
+                            (onClick)="deleteCategory(categories.menu_category_id)">
+                        </p-button>
+                    </td>
+                </tr>
+
+                <!-- Hàng edit -->
+                @if (editingCate?.menu_category_id === categories.menu_category_id) {
+                    <tr>
+                        <td>
+                            <input pInputText type="text"
+                                [(ngModel)]="editingCate.menu_category_name"
+                                placeholder="Nhập tên danh mục"
+                                style="width: 100%;" />
+                        </td>
+                        <td>
+                            <div class="tdAction editingZoneBtn">
+                                <p-button label="Lưu"
+                                    size="small"
+                                    severity="success"
+                                    (onClick)="updateCategory()">
+                                </p-button>
+
+                                <p-button label="Huỷ"
+                                    size="small"
+                                    severity="secondary"
+                                    (onClick)="editingCate = null">
+                                </p-button>
                             </div>
+                        </td>
+                    </tr>
+                }
+            </ng-template>
+
+        </p-table>
+    </div>
+
+</p-dialog>
+
                         </div>
                         <p-button icon="pi pi-refresh" rounded raised (onClick)="resetTable(dt)" [size]="'small'" />
                     </div>
@@ -253,7 +276,7 @@
                 </tr>
             </ng-template>
             <ng-template #body let-product class="body">
-                <tr>
+                <tr [class.active] = "product.is_active === 0 || product.quantity === 0">
                     <td>{{ product.menu_name }}</td>
                     <td>
                         <img [src]="backendURL + product.image_url" [alt]="product.menu_name"
@@ -283,78 +306,103 @@
         </p-table>
 
         <!-- Form sửa món -->
-        <div class="update-item-container create-item-container" [class.active]="showUpdateItemForm">
-            <h2>Sửa món</h2>
-            <i class="pi pi-times" (click)="showUpdateItemForm = false"></i>
+        <p-dialog header="Sửa món" [(visible)]="showUpdateItemForm" [modal]="true" [style]="{ width: '60vw' }"
+            [closable]="true" [draggable]="false" [resizable]="false">
 
-            <form [formGroup]="updateItemData" (ngSubmit)="submitUpdateItem()" class="form-grid">
-                <div class="form-group">
-                    <label for="menu_name">Tên món</label>
-                    <input id="menu_name" type="text" formControlName="menu_name" placeholder="Nhập tên món" />
+            <form [formGroup]="updateItemData" (ngSubmit)="submitUpdateItem()" class="create-item-form p-fluid">
+
+                <div class="inputContent">
+
+                    <!-- Tên món -->
+                    <div class="p-field">
+                        <label for="menu_name">Tên món</label>
+                        <input pInputText id="menu_name" formControlName="menu_name" placeholder="Nhập tên món">
+                    </div>
+
+                    <!-- Giá nhập -->
+                    <div class="p-field">
+                        <label for="import_price">Giá nhập</label>
+                        <p-inputNumber id="import_price" formControlName="import_price" [min]="0" mode="currency"
+                            currency="VND" locale="vi-VN" placeholder="Nhập giá nhập">
+                        </p-inputNumber>
+                    </div>
+
+                    <!-- Giá bán -->
+                    <div class="p-field">
+                        <label for="price">Giá bán</label>
+                        <p-inputNumber id="price" formControlName="price" [min]="0" mode="currency" currency="VND"
+                            locale="vi-VN" placeholder="Nhập giá bán">
+                        </p-inputNumber>
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div class="p-field">
+                        <label for="menu_category_id">Danh mục</label>
+                        <p-select id="menu_category_id" formControlName="menu_category_id" [options]="categories"
+                            optionLabel="menu_category_name" optionValue="menu_category_id"
+                            placeholder="-- Chọn danh mục --" [appendTo]="'body'" [scrollHeight]="'120px'">
+                        </p-select>
+                    </div>
+
+                    <!-- Độ ngọt -->
+                    <div class="p-field">
+                        <label for="sweetness_level">Độ ngọt</label>
+                        <p-select id="sweetness_level" formControlName="sweetness_level" [options]="sweetness_level"
+                            optionLabel="label" optionValue="value" placeholder="-- Chọn độ ngọt --" [appendTo]="'body'"
+                            [scrollHeight]="'120px'">
+                        </p-select>
+                    </div>
+
+                    <!-- Nhiệt độ -->
+                    <div class="p-field">
+                        <label for="temperature">Nhiệt độ</label>
+                        <p-select id="temperature" formControlName="temperature" [options]="temperature"
+                            optionLabel="label" optionValue="value" placeholder="-- Chọn nhiệt độ --"
+                            [appendTo]="'body'" [scrollHeight]="'120px'">
+                        </p-select>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="p-field">
+                        <label for="is_active">Trạng thái</label>
+                        <p-select id="is_active" formControlName="is_active" [options]="is_active" optionLabel="label"
+                            optionValue="value" placeholder="-- Chọn trạng thái --" [appendTo]="'body'"
+                            [scrollHeight]="'120px'">
+                        </p-select>
+                    </div>
+
+                    <!-- Số lượng -->
+                    <div class="p-field">
+                        <label for="quantity">Số lượng</label>
+                        <p-inputNumber id="quantity" formControlName="quantity" [min]="0"> </p-inputNumber>
+                    </div>
+
+                    <!-- Mô tả -->
+                    <div class="p-field">
+                        <label for="description">Mô tả</label>
+                        <input pInputText id="description" formControlName="description" placeholder="Nhập mô tả">
+                    </div>
+
                 </div>
 
-                <div class="form-group">
-                    <label for="import_price">Giá nhập</label>
-                    <input id="import_price" type="number" formControlName="import_price" />
-                </div>
-
-                <div class="form-group">
-                    <label for="price">Giá bán</label>
-                    <input id="price" type="number" formControlName="price" />
-                </div>
-
-                <div class="form-group">
-                    <label for="menu_category_id">Danh mục</label>
-                    <select id="menu_category_id" formControlName="menu_category_id">
-                        <option *ngFor="let cate of categories" [value]="cate.menu_category_id">
-                            {{ cate.menu_category_name }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="sweetness_level">Độ ngọt</label>
-                    <select id="sweetness_level" formControlName="sweetness_level">
-                        <option *ngFor="let item of sweetness_level" [value]="item.value">{{ item.label }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="temperature">Nhiệt độ</label>
-                    <select id="temperature" formControlName="temperature">
-                        <option *ngFor="let item of temperature" [value]="item.value">{{ item.label }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="is_active">Trạng thái</label>
-                    <select id="is_active" formControlName="is_active">
-                        <option *ngFor="let item of is_active" [value]="item.value">{{ item.label }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="quantity">Số lượng</label>
-                    <input id="quantity" type="number" formControlName="quantity" />
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="description">Mô tả</label>
-                    <input id="description" type="text" formControlName="description" />
-                </div>
-
-                <div class="form-group col-span-3">
+                <!-- Ảnh -->
+                <div class="p-field">
                     <label for="image_url">Ảnh</label>
                     <p-fileUpload name="file" accept="image/*" [showUploadButton]="false" [showCancelButton]="false"
                         (onSelect)="onUpdateImageSelect($event)">
                     </p-fileUpload>
                 </div>
 
-                <div class="full-width">
-                    <p-button icon="pi pi-save" label="Cập nhật" type="submit" [size]="'small'"></p-button>
+                <!-- Nút cập nhật -->
+                <div class="dialog-footer">
+                    <p-button icon="pi pi-save" label="Cập nhật" type="submit" styleClass="p-button-sm p-button-primary"
+                        [disabled]="updateItemData.invalid">
+                    </p-button>
                 </div>
+
             </form>
-        </div>
+
+        </p-dialog>
 
     </div>
 

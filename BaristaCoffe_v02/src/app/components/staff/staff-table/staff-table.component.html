@@ -209,7 +209,7 @@
                         <td>{{ item.table_name }}</td>
                         <td>{{ item.zone_name }}</td>
                         <td>{{ item.customer_name || 'Khách lẻ'}}</td>
-                        <td>{{ item.order_date || item.time | date:'HH:mm - dd/MM':'GMT+7' }}</td>
+                        <td>{{ item.order_date || item.time || item.create_at | date:'HH:mm - dd/MM':'GMT+7' }}</td>
                         <td>
                             <p-button icon="pi pi-check" label="Xong" (click)="markDone(item)"></p-button>
                         </td>

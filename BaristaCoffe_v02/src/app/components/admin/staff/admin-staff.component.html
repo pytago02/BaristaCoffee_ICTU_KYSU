@@ -25,43 +25,69 @@
         <div class="relative">
             <p-button label="Thêm" (onClick)="showCreateForm = true; isBackdropActive = true"></p-button>
 
-            <!-- form tao san pham -->
-            <div class="create-item-container" [class.active]="showCreateForm">
-                <h2>Tạo sản phẩm</h2>
-                <i class="pi pi-times" (click)="showCreateForm = false"></i>
+            <!-- form tao tai khoan nv -->
+            <p-dialog header="Tạo nhân viên"
+          [(visible)]="showCreateForm"
+          [modal]="true"
+          [style]="{ width: '30vw' }"
+          [closable]="true"
+          [draggable]="false"
+          [resizable]="false">
 
-                <div class="form-group">
-                    <label for="full_name">Họ tên</label>
-                    <input pInputText id="full_name" [(ngModel)]="addItemData.full_name" type="text"
-                        placeholder="Nhập họ tên nhân viên" />
+    <form class="p-fluid">
 
-                </div>
+        <!-- Họ tên -->
+        <div class="p-field">
+            <label for="full_name">Họ tên</label>
+            <input pInputText id="full_name" [(ngModel)]="addItemData.full_name" name="full_name"
+                   placeholder="Nhập họ tên nhân viên">
+        </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input pInputText id="email" [(ngModel)]="addItemData.email" type="text" placeholder="Nhập email" />
-                </div>
+        <!-- Email -->
+        <div class="p-field">
+            <label for="email">Email</label>
+            <input pInputText id="email" [(ngModel)]="addItemData.email" name="email"
+                   placeholder="Nhập email">
+        </div>
 
-                <div class="form-group">
-                    <label for="phone">Số điện thoại</label>
-                    <input pInputText id="phone" [(ngModel)]="addItemData.phone" type="text" placeholder="Nhập số điện thoại"/>
-                </div>
+        <!-- Số điện thoại -->
+        <div class="p-field">
+            <label for="phone">Số điện thoại</label>
+            <input pInputText id="phone" [(ngModel)]="addItemData.phone" name="phone"
+                   placeholder="Nhập số điện thoại">
+        </div>
 
-                <div class="form-group">
-                    <label for="role">Vị trí</label>
-                    <p-select [options]="roleList" [(ngModel)]="addItemData.role" optionLabel="name" optionValue="value"
-                        placeholder="Vị trí công việc" class="w-full" />
-                </div>
+        <!-- Vị trí -->
+        <div class="p-field">
+            <label for="role">Vị trí</label>
+            <p-select id="role"
+                      [options]="roleList"
+                      [(ngModel)]="addItemData.role"
+                      name="role"
+                      optionLabel="name"
+                      optionValue="value"
+                      placeholder="Vị trí công việc"
+                      class="w-full">
+            </p-select>
+        </div>
 
-                <div class="form-group">
-                    <p>Mật khẩu được đặt mặc định là : 1</p>
-                </div>
+        <!-- Thông báo mật khẩu mặc định -->
+        <div class="p-field">
+            <p>Mật khẩu được đặt mặc định là: 1</p>
+        </div>
 
-                <div class="full-width">
-                    <p-button icon="pi pi-plus" label="Tạo tài khoản" [size]="'small'"
-                        (onClick)="createUser()"></p-button>
-                </div>
-            </div>
+        <!-- Nút tạo tài khoản -->
+        <div class="dialog-footer">
+            <p-button icon="pi pi-plus" label="Tạo tài khoản"
+                      styleClass="p-button-sm p-button-success"
+                      (onClick)="createUser()">
+            </p-button>
+        </div>
+
+    </form>
+
+</p-dialog>
+
         </div>
 
     </div>

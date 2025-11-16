@@ -503,14 +503,17 @@ export class StaffTableComponent implements OnInit, OnDestroy {
     if (type === 'call_staff') {
       this.dialogTitle = '📞 Yêu cầu gọi nhân viên';
       this.dialogData = this.callStaffRequests;
+      console.log(this.dialogData);
       this.typeRequest = type;
     } else if (type === 'payment') {
       this.dialogTitle = '💳 Yêu cầu thanh toán';
       this.dialogData = this.paymentRequests;
+      console.log(this.dialogData);
       this.typeRequest = type;
     } else {
       this.dialogTitle = '🍽️ Yêu cầu đặt món';
       this.dialogData = this.pendingOrders;
+      console.log(this.dialogData);
       this.typeRequest = type;
     }
   }

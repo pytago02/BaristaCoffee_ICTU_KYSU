@@ -123,6 +123,11 @@ button:disabled {
   gap: 5px;
 }
 
+tr.active {
+    background-color: #f8d7da !important;
+    color: #721c24;
+}
+
 .card tr th {
   font-size: 0.8rem;
   padding: 12px 8px;

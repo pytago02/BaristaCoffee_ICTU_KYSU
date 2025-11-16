@@ -159,3 +159,49 @@
   flex-direction: column;
   margin-bottom: 12px;
 }
+
+/*  */
+.update-cate-container .pi-times {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: var(--text-danger);
+  cursor: pointer;
+}
+
+.update-cate-container .tdAction i {
+  cursor: pointer;
+}
+
+
+.create-item-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.inputContent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.p-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-field label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.dialog-footer {
+  grid-column: 1 / -1;
+  /* Footer chiếm toàn bộ chiều ngang form */
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

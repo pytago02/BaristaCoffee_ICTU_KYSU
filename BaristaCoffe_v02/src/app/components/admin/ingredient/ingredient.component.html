@@ -28,44 +28,62 @@
             <p-button label="Thêm" (onClick)="showCreateForm = true; isBackdropActive = true"></p-button>
 
             <!-- form tao san pham -->
-            <div class="create-item-container" [class.active]="showCreateForm">
-                <h2>Tạo sản phẩm</h2>
-                <i class="pi pi-times" (click)="showCreateForm = false"></i>
+            <p-dialog header="Tạo sản phẩm"
+          [(visible)]="showCreateForm"
+          [modal]="true"
+          [style]="{ width: '30vw' }"
+          [closable]="true"
+          [draggable]="false"
+          [resizable]="false">
 
-                <div class="form-group">
-                    <label for="name">Tên sản phẩm</label>
-                    <input pInputText id="name" [(ngModel)]="addItemData.name" type="text"
-                        placeholder="Nhập tên sản phẩm" />
+    <form class="p-fluid">
 
-                </div>
+        <!-- Tên sản phẩm -->
+        <div class="p-field">
+            <label for="name">Tên sản phẩm</label>
+            <input pInputText id="name" [(ngModel)]="addItemData.name" name="name"
+                   placeholder="Nhập tên sản phẩm">
+        </div>
 
-                <div class="form-group">
-                    <label for="unit">Đơn vị</label>
-                    <input pInputText id="unit" [(ngModel)]="addItemData.unit" type="text" placeholder="Nhập đơn vị" />
-                </div>
+        <!-- Đơn vị -->
+        <div class="p-field">
+            <label for="unit">Đơn vị</label>
+            <input pInputText id="unit" [(ngModel)]="addItemData.unit" name="unit"
+                   placeholder="Nhập đơn vị">
+        </div>
 
-                <div class="form-group">
-                    <label for="stock_quantity">Số lượng</label>
-                    <input pInputText id="stock_quantity" [(ngModel)]="addItemData.stock_quantity" type="number" />
-                </div>
+        <!-- Số lượng -->
+        <div class="p-field">
+            <label for="stock_quantity">Số lượng</label>
+            <input pInputText id="stock_quantity" [(ngModel)]="addItemData.stock_quantity" name="stock_quantity" type="number">
+        </div>
 
-                <div class="form-group">
-                    <label for="min_stock">Số lượng tối thiểu</label>
-                    <input pInputText id="min_stock" [(ngModel)]="addItemData.min_stock" type="number" />
-                </div>
+        <!-- Số lượng tối thiểu -->
+        <div class="p-field">
+            <label for="min_stock">Số lượng tối thiểu</label>
+            <input pInputText id="min_stock" [(ngModel)]="addItemData.min_stock" name="min_stock" type="number">
+        </div>
 
-                <div class="form-group col-span-3 ">
-                    <label for="image_url">Ảnh</label>
-                    <p-fileUpload name="file" accept="image/*" [showUploadButton]="false" [showCancelButton]="false"
-                        (onSelect)="onImageSelect($event)">
-                    </p-fileUpload>
-                </div>
+        <!-- Ảnh -->
+        <div class="p-field">
+            <label for="image_url">Ảnh</label>
+            <p-fileUpload name="file" accept="image/*" [showUploadButton]="false" [showCancelButton]="false"
+                          (onSelect)="onImageSelect($event)">
+            </p-fileUpload>
+        </div>
 
-                <div class="full-width">
-                    <p-button icon="pi pi-plus" label="Tạo sản phẩm" [size]="'small'"
-                        (onClick)="createItem()"></p-button>
-                </div>
-            </div>
+        <!-- Nút tạo sản phẩm -->
+        <div class="dialog-footer">
+            <p-button icon="pi pi-plus" label="Tạo sản phẩm"
+                      styleClass="p-button-sm p-button-success"
+                      (onClick)="createItem()">
+            </p-button>
+        </div>
+
+    </form>
+
+</p-dialog>
+
         </div>
 
     </div>
